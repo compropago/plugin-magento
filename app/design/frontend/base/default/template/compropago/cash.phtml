@@ -1,0 +1,45 @@
+<?php
+/**
+ *
+ * Form payment cash 
+ *
+ * @author Oswaldo Lopez (waldix86@gmail.com)
+ */
+?>
+
+<?php  $_code= $this->getMethodCode();
+       $_model = $this->getMethod();    
+       $_getProviders = $_model->getProviders(); 
+?>
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/compropago/compropago.css'); ?>" />
+<ul id="payment_form_<?php  echo $_code ?>" style="<?php echo !$_model->showLogoProviders() ? 'display:none' : 'display:block' ?>" >       
+    <label for="p_method_compropago" style="cursor:pointer;">
+        <?php  if (!$_model->showLogoProviders())
+    	{ ?>     
+	       <li>
+	       		<select id="<?php echo $_code ?>_store"
+	                    name="payment[store_code]">
+	            	<?php foreach ($_getProviders as $_provider): ?>                	
+				    	<option value="<?php echo $_provider['internal_name'] ?>"><?php echo $_provider['name'] ?></option>
+			    	<?php endforeach; ?>
+	       		</select>
+	       </li>
+	    <?php } else { ?>
+	    	<li>	    
+		        <div class="row stores-compact" style="padding: 30px 30px 5px; opacity: 1;" id="<?php echo $_code ?>_store">
+		       		<?php foreach ($_getProviders as $_provider): ?> 
+				        <div class="col-sm-6 col-md-2 element-box">
+				            <input id="<?php echo $_code ?>_<?php echo $_provider['internal_name'] ?>" type="radio" style="float: left;" name="payment[store_code]" value="<?php echo $_provider['internal_name'] ?>" image-label="<?php echo $_provider['internal_name'] ?>">
+				            <label for="<?php echo $_code ?>_<?php echo $_provider['internal_name'] ?>" class="provider-description" onclick="document.getElementById('p_method_compropago').click()">
+				            	<img src="<?php echo $_provider['image_medium'] ?>">
+				           	</label>
+				        </div>
+		         	<?php endforeach; ?>	         
+		       </div>
+		    </li>
+	    <?php } ?>
+	</label>
+</ul>
+<div>
+    <?php echo $this->getMethod()->getConfigData('message');?>
+</div>

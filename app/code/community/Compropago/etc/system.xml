@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+   <sections>
+        <payment>
+            <groups>
+                <compropago translate="label" module="compropago">
+                    <label><![CDATA[Pago en efectivo - ComproPago]]></label>
+                    <sort_order>670</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Habilitar</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </active>
+                        <title translate="label,comment">
+                            <label>Título</label>
+                            <comment>
+                                <![CDATA[
+                                    Este campo se mostrará como etiqueta de metodo de pago.
+                                ]]>
+                            </comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </title>
+			<client_id translate="label">
+                            <label>Llave Publica</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </client_id>
+                        <client_secret translate="label">
+                            <label>Llave Privada</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </client_secret>                        
+                        <provider translate="label">
+                            <label>Habilitar Logos para Establecimientos</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </provider>
+                        <order_status_new translate="label">
+                            <label>Elegir estado de nuevas ordenes</label>
+                            <comment>
+                            <![CDATA[
+                                Ir a "system -> OrderStatuses" y asignar una nueva orden de estado personalizada en la opción de 'new'.                  
+                            ]]>
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_order_status</source_model>
+                            <sort_order>19</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </order_status_new>
+                        <order_status_approved translate="label">
+                            <label>Elegir estado de ordenes aprobadas</label>
+                            <comment>
+                                <![CDATA[
+                                    Ir a "system -> OrderStatuses" y asignar una nueva orden de estado personalizada en la opción de 'new'.
+                                ]]>
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_order_status</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </order_status_approved>
+                        <order_status_in_process translate="label">
+                            <label>Elegir estado de ordenes pendientes</label>
+                            <comment>
+                                <![CDATA[
+                                    Ir a "system -> OrderStatuses" y asignar una nueva orden de estado personalizada en la opción de 'new'.
+                                ]]>
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_order_status</source_model>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </order_status_in_process>
+                        <order_status_cancelled translate="label">
+                            <label>Elegir el estado de las ordenes canceladas</label>
+                            <comment>
+                                <![CDATA[
+                                    Ir a "system -> OrderStatuses" y asignar una nueva orden de estado personalizada en la opción de 'new'.   
+                                ]]>
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_order_status</source_model>
+                            <sort_order>23</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </order_status_cancelled>
+                    </fields>
+                </compropago>
+            </groups>
+        </payment>
+    </sections>
+</config>
