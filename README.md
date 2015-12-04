@@ -19,7 +19,7 @@ Este modulo provee el servicio de ComproPago para poder generar intensiones de p
 
 ![Carga Archivo](https://cloud.githubusercontent.com/assets/1311937/11578093/02a4da92-99e8-11e5-8ce9-40a54eb3d0af.png)
 
-4.- Verificamos que la instalación fue correcta y procedemos a oprimir el botón de "Refresh".
+4.- Verificamos que la instalación fue correcta y procedemos a oprimir el botón de **Refresh** para actualizar la pantalla.
 
 ![pluginsuccess](https://cloud.githubusercontent.com/assets/1311937/11578179/acc31ab6-99e8-11e5-8113-a0dbed22dda3.png)
 
@@ -34,11 +34,16 @@ Este modulo provee el servicio de ComproPago para poder generar intensiones de p
 ---
 <a name="howto"></a>
 ## ¿Cómo trabaja el modulo?
-Una vez que el cliente sabe que comprar y continua con el proceso de compra entrará a la opción de elegir metodo de pago justo aqui aparece la opción de pagar con ComproPago<br /><br />
+Una vez que el cliente sabe que comprar y continua con el proceso de compra entrará a la opción de elegir metodo de pago justo aqui aparece la opción de pagar con ComproPago, seleccionamos el establecimiento de nuestra conveniencia y le damos continuar<br />
 
-Una vez que el cliente completa su orden de compra iniciara el proceso para generar su intensión de pago, el cliente selecciona el establecimiento y recibe las instrucciones para realizar el pago.
+![captura de pantalla 2015-12-03 a las 16 40 13](https://cloud.githubusercontent.com/assets/1311937/11578258/4f564c26-99e9-11e5-85e8-5423acd2d6a3.png) <br />
+
+Al completar el proceso de compra dentro de la tienda el sistema nos proporcionara un recibo de pago como el siguiente, solo falta realizar el pago en el establecimiento que seleccionamos.
+
 
 Una vez que el cliente genero su intención de pago, dentro del panel de control de ComproPago la orden se muestra como "PENDIENTE" esto significa que el usuario esta por ir a hacer el deposito.
+
+![ComproPago](https://raw.github.com/compropago/plugin-magento/master/README.img/19.png) 
 
 ---
 <a name="setup"></a>
