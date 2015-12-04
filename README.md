@@ -36,7 +36,7 @@ Este modulo provee el servicio de ComproPago para poder generar intensiones de p
 ## ¿Cómo trabaja el modulo?
 Una vez que el cliente sabe que comprar y continua con el proceso de compra entrará a la opción de elegir metodo de pago justo aqui aparece la opción de pagar con ComproPago, seleccionamos el establecimiento de nuestra conveniencia y le damos continuar<br />
 
-![captura de pantalla 2015-12-03 a las 16 40 13](https://cloud.githubusercontent.com/assets/1311937/11578258/4f564c26-99e9-11e5-85e8-5423acd2d6a3.png) <br />
+![pago](https://cloud.githubusercontent.com/assets/1311937/11578379/880b359e-99ea-11e5-8967-f6e43e604ea5.png) <br />
 
 Al completar el proceso de compra dentro de la tienda el sistema nos proporcionara un recibo de pago como el siguiente, solo falta realizar el pago en el establecimiento que seleccionamos.
 
