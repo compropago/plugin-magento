@@ -11,13 +11,17 @@ Este modulo provee el servicio de ComproPago para poder generar intensiones de p
 <a name="install"></a>
 ## Instalación:
 
-1. Descargar el Archivo **.tgz** del siguiente link [https://s3.amazonaws.com/compropago/plugins/magento/ComproPago-1.0.0.tgz](https://s3.amazonaws.com/compropago/plugins/magento/ComproPago-1.0.0.tgz)
+1.- Descargar el Archivo **.tgz** del siguiente link [https://s3.amazonaws.com/compropago/plugins/magento/ComproPago-1.0.0.tgz](https://s3.amazonaws.com/compropago/plugins/magento/ComproPago-1.0.0.tgz)
 
 2.- En el panel de administración de Magento ingresamos y nos dirigimos a **System -> Magento Connect -> Magento Connect Manager** 
 
-3.- Cargamos el archivo descargado en la parte que dice **Direct package file upload** y oprimimos el botón **Upload**.
+3.- Cargamos el archivo en la parte que dice **Direct package file upload** y oprimimos el botón **Upload**.
+
+![Carga Archivo](https://cloud.githubusercontent.com/assets/1311937/11578093/02a4da92-99e8-11e5-8ce9-40a54eb3d0af.png)
 
 4.- Verificamos que la instalación fue correcta y procedemos a oprimir el botón de "Refresh".
+
+![pluginsuccess](https://cloud.githubusercontent.com/assets/1311937/11578179/acc31ab6-99e8-11e5-8113-a0dbed22dda3.png)
 
 5.- En el panel de administración ir a **System -> Cache Management** y limpiar la cache de todos los directorios. 
 
