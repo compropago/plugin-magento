@@ -75,7 +75,7 @@ Una vez que el cliente genero su intención de pago, dentro del panel de control
 ![ComproPago](https://raw.github.com/compropago/plugin-magento/master/README.img/9.png)
 
 3. Dar click en el botón "Probar" y verificamos que el servidor de la tienda esta respondiendo, debera aparecer el mensaje de "Order not valid"
-![ComproPago](https://raw.github.com/compropago/plugin-magento/master/README.img/10.png)
+![webhook](https://cloud.githubusercontent.com/assets/1311937/11578636/d1597bf0-99ec-11e5-8def-fc44e6ca603e.png)
 
 ---
 
