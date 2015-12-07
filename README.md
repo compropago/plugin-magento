@@ -6,6 +6,7 @@ Este modulo provee el servicio de ComproPago para poder generar intensiones de p
 * [¿Cómo trabaja el modulo?](#howto)
 * [Configuración](#setup)
 * [Sincronización con los webhooks](#webhook)
+* [Pasos para actualizar a nueva versión Plugin](*upgrade)
 
 
 <a name="install"></a>
@@ -61,7 +62,6 @@ Una vez que el cliente genero su intención de pago, dentro del panel de control
 ![ComproPago](https://raw.github.com/compropago/plugin-magento/master/README.img/7.png) 
 
 
-
 ---
 
 <a name="webhook"></a>
@@ -80,3 +80,25 @@ Una vez que el cliente genero su intención de pago, dentro del panel de control
 ---
 
 Una vez completado estos pasos el proceso de instalación queda completado.
+
+---
+
+<a name="upgrade"></a>
+## Pasos para Actualizar a nueva versión de Plugin
+
+1. Si ya tenemos instalado el plugin de Compropago en nuestro Ecommerce para eliminarlo vamos a realizar un borrado de los siguientes archivos.
+
+![files](https://cloud.githubusercontent.com/assets/1311937/11634984/5e9a7a66-9cd9-11e5-8583-c93bef106696.png)
+
+2. Una vez que eliminamos los archivos anteriores, vamos al panel de administración de Magento, **System -> Cache Management** y limpiar la cache de todos los directorios. 
+
+![Cache Management](https://raw.github.com/compropago/plugin-magento/master/README.img/3.png)<br />
+
+3. Ahora eliminamos el webhook que dimos de alta en nuestro panel de Compropago cuando instalamos el plugin anterior.
+
+![webhook2](https://cloud.githubusercontent.com/assets/1311937/11635215/d5a410f8-9cda-11e5-8c36-bac2f35d3b60.png)
+
+4.- Ya que tenemos eliminado el Plugin anterior, procedemos a realizar la instalación del nuevo plugin. [Instalación](#install)
+
+
+
