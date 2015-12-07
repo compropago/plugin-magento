@@ -6,7 +6,7 @@ Este modulo provee el servicio de ComproPago para poder generar intensiones de p
 * [¿Cómo trabaja el modulo?](#howto)
 * [Configuración](#setup)
 * [Sincronización con los webhooks](#webhook)
-* [Pasos para actualizar a nueva versión Plugin](*upgrade)
+* [Pasos para actualizar a nueva versión Plugin](#upgrade)
 
 
 <a name="install"></a>
