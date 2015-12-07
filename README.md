@@ -6,7 +6,7 @@ Este modulo provee el servicio de ComproPago para poder generar intensiones de p
 * [¿Cómo trabaja el modulo?](#howto)
 * [Configuración](#setup)
 * [Sincronización con los webhooks](#webhook)
-* [Pasos para actualizar a nueva versión Plugin](#upgrade)
+* [Pasos para actualizar el Plugin](#upgrade)
 
 
 <a name="install"></a>
@@ -82,7 +82,7 @@ Una vez completado estos pasos el proceso de instalación queda completado.
 ---
 
 <a name="upgrade"></a>
-## Pasos para Actualizar a nueva versión de Plugin
+## Pasos para Actualizar el Plugin
 
 1.- Si ya tenemos instalado el plugin de Compropago en nuestro Ecommerce para eliminarlo vamos a realizar un borrado de los siguientes archivos.
 
