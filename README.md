@@ -51,13 +51,13 @@ Una vez que el cliente genero su intención de pago, dentro del panel de control
 <a name="setup"></a>
 ## Configurar ComproPago
 
-1. Para iniciar la configuración ir a **System -> Configuration -> Sales -> Payment Methods**. Seleccionar **ComproPago**.
+1.- Para iniciar la configuración ir a **System -> Configuration -> Sales -> Payment Methods**. Seleccionar **ComproPago**.
 
 ![paymentmethod](https://cloud.githubusercontent.com/assets/1311937/11578545/3f896320-99ec-11e5-9900-f9268b05fc58.png)
 
 ***Nota:*** La opción de **Habilitar Logos** es para mostrar las imagenes de los establecimientos con los que procesamos pagos
 
-2. Agregar la **llave privada** y **llave pública**, esta se puede encontrar en el apartado de configuración dentro del panel de control de ComproPago. [https://compropago.com/panel/configuracion](https://compropago.com/panel/configuracion)
+2.- Agregar la **llave privada** y **llave pública**, esta se puede encontrar en el apartado de configuración dentro del panel de control de ComproPago. [https://compropago.com/panel/configuracion](https://compropago.com/panel/configuracion)
 <br />
 ![ComproPago](https://raw.github.com/compropago/plugin-magento/master/README.img/7.png) 
 
@@ -67,17 +67,15 @@ Una vez que el cliente genero su intención de pago, dentro del panel de control
 <a name="webhook"></a>
 ## Sincronización con la notificación Webhook
 
-1. Ir al area de **Webhooks** en ComproPago [https://compropago.com/panel/webhooks](https://compropago.com/panel/webhooks)
+1.- Ir al area de **Webhooks** en ComproPago [https://compropago.com/panel/webhooks](https://compropago.com/panel/webhooks)
 
-2. Introducir la dirección: ***[direcciondetusitio.com]***/index.php/compropago/webhook/ 
+2.- Introducir la dirección: ***[direcciondetusitio.com]***/index.php/compropago/webhook/ 
    Para el caso en donde exista un idioma instalado la dirección deberia ser: ***[direcciondetusitio.com]***/index.php/compropago/webhook/
 
 ![ComproPago](https://raw.github.com/compropago/plugin-magento/master/README.img/9.png)
 
-3. Dar click en el botón "Probar" y verificamos que el servidor de la tienda esta respondiendo, debera aparecer el mensaje de "Order not valid"
+3.- Dar click en el botón "Probar" y verificamos que el servidor de la tienda esta respondiendo, debera aparecer el mensaje de "Order not valid"
 ![webhook](https://cloud.githubusercontent.com/assets/1311937/11578636/d1597bf0-99ec-11e5-8def-fc44e6ca603e.png)
-
----
 
 Una vez completado estos pasos el proceso de instalación queda completado.
 
@@ -86,15 +84,15 @@ Una vez completado estos pasos el proceso de instalación queda completado.
 <a name="upgrade"></a>
 ## Pasos para Actualizar a nueva versión de Plugin
 
-1. Si ya tenemos instalado el plugin de Compropago en nuestro Ecommerce para eliminarlo vamos a realizar un borrado de los siguientes archivos.
+1.- Si ya tenemos instalado el plugin de Compropago en nuestro Ecommerce para eliminarlo vamos a realizar un borrado de los siguientes archivos.
 
 ![files](https://cloud.githubusercontent.com/assets/1311937/11634984/5e9a7a66-9cd9-11e5-8583-c93bef106696.png)
 
-2. Una vez que eliminamos los archivos anteriores, vamos al panel de administración de Magento, **System -> Cache Management** y limpiar la cache de todos los directorios. 
+2.- Una vez que eliminamos los archivos anteriores, vamos al panel de administración de Magento, **System -> Cache Management** y limpiar la cache de todos los directorios. 
 
 ![Cache Management](https://raw.github.com/compropago/plugin-magento/master/README.img/3.png)<br />
 
-3. Ahora eliminamos el webhook que dimos de alta en nuestro panel de Compropago cuando instalamos el plugin anterior.
+3.- Ahora eliminamos el webhook que dimos de alta en nuestro panel de Compropago cuando instalamos el plugin anterior.
 
 ![webhook2](https://cloud.githubusercontent.com/assets/1311937/11635215/d5a410f8-9cda-11e5-8c36-bac2f35d3b60.png)
 
