@@ -96,7 +96,7 @@ Una vez completado estos pasos el proceso de instalación queda completado.
 
 ![webhook2](https://cloud.githubusercontent.com/assets/1311937/11635215/d5a410f8-9cda-11e5-8c36-bac2f35d3b60.png)
 
-4.- Ya que tenemos eliminado el Plugin anterior, procedemos a realizar la instalación del nuevo plugin. [Instalación](#install)
+4.- Ya que tenemos eliminado el Plugin anterior, procedemos a realizar la instalación del nuevo plugin. [Vease Aquí](#install)
 
 
 
