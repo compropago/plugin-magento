@@ -59,7 +59,7 @@ Una vez que el cliente genero su intención de pago, dentro del panel de control
 
 2.- Agregar la **llave privada** y **llave pública**, esta se puede encontrar en el apartado de configuración dentro del panel de control de ComproPago. [https://compropago.com/panel/configuracion](https://compropago.com/panel/configuracion)
 <br />
-![ComproPago](https://raw.github.com/compropago/plugin-magento/master/README.img/7.png) 
+![keys](https://cloud.githubusercontent.com/assets/1311937/11645106/35a6f52e-9d17-11e5-99d3-cfe432b3f30c.png)
 
 
 ---
@@ -72,7 +72,7 @@ Una vez que el cliente genero su intención de pago, dentro del panel de control
 2.- Introducir la dirección: ***[direcciondetusitio.com]***/index.php/compropago/webhook/ 
    Para el caso en donde exista un idioma instalado la dirección deberia ser: ***[direcciondetusitio.com]***/index.php/compropago/webhook/
 
-![ComproPago](https://raw.github.com/compropago/plugin-magento/master/README.img/9.png)
+![addwbh](https://cloud.githubusercontent.com/assets/1311937/11645166/b7f3a658-9d17-11e5-87f4-3ddc51b50635.png)<br />
 
 3.- Dar click en el botón "Probar" y verificamos que el servidor de la tienda esta respondiendo, debera aparecer el mensaje de "Order not valid"
 ![webhook](https://cloud.githubusercontent.com/assets/1311937/11578636/d1597bf0-99ec-11e5-8def-fc44e6ca603e.png)
