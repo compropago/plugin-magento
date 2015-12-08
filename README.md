@@ -45,7 +45,7 @@ Al completar el proceso de compra dentro de la tienda el sistema nos proporciona
 
 Una vez que el cliente genero su intención de pago, dentro del panel de control de ComproPago la orden se muestra como "PENDIENTE" esto significa que el usuario esta por ir a hacer el deposito.
 
-![ComproPago](https://raw.github.com/compropago/plugin-magento/master/README.img/19.png) 
+![orden](https://cloud.githubusercontent.com/assets/1311937/11645320/39e380ec-9d19-11e5-9a99-a82317dff0b3.png)
 
 ---
 <a name="setup"></a>
