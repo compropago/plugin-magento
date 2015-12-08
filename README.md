@@ -26,11 +26,11 @@ Este modulo provee el servicio de ComproPago para poder generar intensiones de p
 
 5.- En el panel de administración ir a **System -> Cache Management** y limpiar la cache de todos los directorios. 
 
-![Cache Management](https://raw.github.com/compropago/plugin-magento/master/README.img/3.png)<br />
+![cache](https://cloud.githubusercontent.com/assets/1311937/11644976/3f863196-9d16-11e5-9068-03120e99720c.png)<br />
 
 6.- Ir a **System -> IndexManagement** seleccionar todos los directorios y dar click en Reindex Data y Submit.
 
-![Index Managment](https://raw.github.com/compropago/plugin-magento/master/README.img/4.png)
+![index](https://cloud.githubusercontent.com/assets/1311937/11644989/4fdfb65c-9d16-11e5-9a3b-51e812c1c01a.png)
 
 ---
 <a name="howto"></a>
