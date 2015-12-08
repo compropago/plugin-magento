@@ -84,7 +84,7 @@ Una vez completado estos pasos el proceso de instalación queda completado.
 <a name="upgrade"></a>
 ## Pasos para actualizar plugin
 
-1.- Si ya tenemos instalado el plugin de Compropago en nuestro Ecommerce para eliminarlo vamos a realizar un borrado de los siguientes archivos.
+1.- Si ya tenemos instalado el plugin de Compropago anterior [v0.0.1](https://github.com/compropago/plugin-magento-deprecated) en nuestro Ecommerce para eliminarlo vamos a realizar un borrado de los siguientes archivos.
 
 ![files](https://cloud.githubusercontent.com/assets/1311937/11634984/5e9a7a66-9cd9-11e5-8583-c93bef106696.png)
 
