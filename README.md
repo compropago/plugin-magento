@@ -90,7 +90,7 @@ Una vez completado estos pasos el proceso de instalación queda completado.
 
 2.- Una vez que eliminamos los archivos anteriores, vamos al panel de administración de Magento, **System -> Cache Management** y limpiar la cache de todos los directorios. 
 
-![Cache Management](https://raw.github.com/compropago/plugin-magento/master/README.img/3.png)<br />
+![cache](https://cloud.githubusercontent.com/assets/1311937/11644976/3f863196-9d16-11e5-9068-03120e99720c.png)<br />
 
 3.- Ahora eliminamos el webhook que dimos de alta en nuestro panel de Compropago cuando instalamos el plugin anterior.
 
