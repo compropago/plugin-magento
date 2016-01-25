@@ -4,6 +4,6 @@
   "license": "Apache-2.0",
     "require": {
     "php": ">=5.3",
-    "compropago/php-sdk": "^1.0",
+    "compropago/php-sdk": "^1.0"
   }
 }
