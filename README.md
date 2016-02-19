@@ -12,7 +12,7 @@ Este modulo provee el servicio de ComproPago para poder generar intensiones de p
 <a name="install"></a>
 ## Instalación:
 
-1.- Descargar el Archivo **.tgz** del siguiente link [https://s3.amazonaws.com/compropago/plugins/magento/ComproPago-1.0.0.tgz](https://s3.amazonaws.com/compropago/plugins/magento/ComproPago-1.0.0.tgz)
+1.- Descargar el Archivo **.tgz** del siguiente link [https://s3.amazonaws.com/compropago/plugins/magento/Compropago_Payment_Extension-1.0.2.tgz](https://s3.amazonaws.com/compropago/plugins/magento/Compropago_Payment_Extension-1.0.2.tgz)
 
 2.- En el panel de administración de Magento ingresamos y nos dirigimos a **System -> Magento Connect -> Magento Connect Manager** 
 
