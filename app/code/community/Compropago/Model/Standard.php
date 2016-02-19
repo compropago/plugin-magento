@@ -22,11 +22,17 @@ class Compropago_Model_Standard extends Mage_Payment_Model_Method_Abstract
         {        
             $data = new Varien_Object($data);
         }
+        $store_code = $data->getStoreCode();
+        
+        //Verificamos si seleccionaron un establecimiento si no les dejamos por default OXXO
+        if (empty($store_code)){
+         $store_code = 'OXXO';                                 
+        }
 
         //Verificamos si existe el customer
         if($customer->getFirstname()){
             $info = array(
-                "payment_type" => $data->getStoreCode(),
+                "payment_type" => $store_code,
                 "customer_name" => htmlentities($customer->getFirstname()),
                 "customer_email" => htmlentities($customer->getEmail())
             );
@@ -36,17 +42,17 @@ class Compropago_Model_Standard extends Mage_Payment_Model_Method_Abstract
             $billingAddress = $quote->getBillingAddress();
             $billing = $billingAddress->getData();  
             $info = array(
-                "payment_type" => $data->getStoreCode(),
+                "payment_type" => $store_code,
                 "customer_name" => htmlentities($billing['firstname']),
                 "customer_email" => htmlentities($billing['email'])
             );
         }                       
 
         $infoInstance = $this->getInfoInstance();
-        $infoInstance->setAdditionalData(serialize($info));
-        
+        $infoInstance->setAdditionalData(serialize($info)); 
+
         return $this;
-    }    
+    }  
     
     public function initialize($paymentAction, $stateObject)
     {
@@ -79,7 +85,7 @@ class Compropago_Model_Standard extends Mage_Payment_Model_Method_Abstract
         $order1 = Mage::getModel('sales/order')->loadByIncrementId($orderNumber); 
 
          foreach ($order1->getAllItems() as $item) {                                        
-            $name .= $item->getName();
+            $name += $item->getName();
         }        
         
         // obtener datos del pago en info y asignar monto total
@@ -87,9 +93,12 @@ class Compropago_Model_Standard extends Mage_Payment_Model_Method_Abstract
         $info = unserialize($infoIntance->getAdditionalData());
         $info['order_id'] = $orderNumber;
         $info['order_price'] = $grandTotal;
-        $info['order_name'] = $name;        
+        $info['order_name'] = $name;  
+        $info['image_url'] = '';       
         $info['client_secret'] = trim($this->getConfigData('client_secret'));
         $info['client_id'] = trim($this->getConfigData('client_id')); 
+
+        $logo = $this->getConfigData('logo_success_src') ? Mage::getDesign()->getSkinUrl('images/compropago/'.$this->getConfigData('logo_success_src')) : Mage::getDesign()->getSkinUrl(Mage::getStoreConfig('design/header/logo_src'));
                
         // enviar pago        
         try
@@ -101,71 +110,15 @@ class Compropago_Model_Standard extends Mage_Payment_Model_Method_Abstract
         {            
             Mage::throwException($error->getMessage());
         }
-     
-        // respuesta del servicio
-        if ($response == null)
-        {            
-            Mage::throwException("El servicio de Compropago no se encuentra disponible.");
-        }
-        
-        if ($response['type'] == "error")
-        {            
-            $errorMessage = $response['message'] . "\n";                        
-            Mage::throwException($errorMessage);
-        }
- 
 
-        if($response['api_version'] == '1.0'){
-            $expiration_date = $response['expiration_date'];
-            $reference = $response['short_payment_id'];
-            $instructions = $response['payment_instructions'];        
-            $step_1 = $instructions['step_1'];
-            $step_2 = $instructions['step_2'];
-            $step_3 = $instructions['step_3'];
-            $bank_number = $instructions['details']['bank_account_number'];
-            $bank_name = $instructions['details']['bank_name'];
-            $note_extra_comition = $instructions['note_extra_comition'];
-            $note_expiration_date = $instructions['note_expiration_date'];
-            $api_version = $response['api_version'];            
-        } elseif ($response['api_version'] == '1.1') {
-            $expiration_date = $response['exp_date'];
-            $reference = $response['short_id'];
-            $instructions = $response['instructions'];        
-            $step_1 = $instructions['step_1'];
-            $step_2 = $instructions['step_2'];
-            $step_3 = $instructions['step_3'];
-            $bank_number = $instructions['details']['bank_account_number'];
-            $bank_name = $instructions['details']['bank_name'];
-            $note_extra_comition = $instructions['note_extra_comition'];
-            $note_expiration_date = $instructions['note_expiration_date'];  
-            $api_version = $response['api_version'];           
-        } elseif ($response['api_version'] == '1.2') {
-            $expiration_date = $response['exp_date'];
-            $reference = $response['short_id'];
-            $instructions = $response['instructions'];        
-            $step_1 = $instructions['step_1'];
-            $step_2 = $instructions['step_2'];
-            $step_3 = $instructions['step_3'];
-            $bank_number = $instructions['details']['bank_account_number'];
-            $bank_name = $instructions['details']['bank_name'];
-            $note_extra_comition = $instructions['note_extra_comition'];
-            $note_expiration_date = $instructions['note_expiration_date'];
-            $api_version = $response['api_version'];
-        }        
-        //$store_image = $response['charge']['store_image'];      
-                
-        Mage::getSingleton('core/session')->setExpirationDate($expiration_date);
-        Mage::getSingleton('core/session')->setReference($reference);
-        Mage::getSingleton('core/session')->setStep1($step_1);
-        Mage::getSingleton('core/session')->setStep2($step_2);
-        //Mage::getSingleton('core/session')->setStep2($step_2);
-        Mage::getSingleton('core/session')->setStep3($step_3);
-        Mage::getSingleton('core/session')->setBankNumber($bank_number);
-        Mage::getSingleton('core/session')->setBankName($bank_name);
-        Mage::getSingleton('core/session')->setNoteExtraComition($note_extra_comition);
-        Mage::getSingleton('core/session')->setNoteExpirationDate($note_expiration_date);
-        Mage::getSingleton('core/session')->setApiVersion($api_version);
-               
+        if(isset($response['api_version']) && $response['api_version'] == '1.0'){
+            $id = $response['payment_id'];          
+        } elseif (isset($response['api_version']) && $response['api_version'] == '1.1') {
+            $id = $response['id'];       
+        }       
+        
+        Mage::getSingleton('core/session')->setCompropagoId($id);
+        
         return $this;
     }
 
@@ -197,7 +150,7 @@ class Compropago_Model_Standard extends Mage_Payment_Model_Method_Abstract
         $response = json_decode($this->_response,true);
 
         // respuesta del servicio    
-        if ($response['type'] == "error")
+        if (isset($response['type']) && $response['type'] == "error")
         {
             $errorMessage = $response['message'] . "\n";                        
             Mage::throwException($errorMessage);

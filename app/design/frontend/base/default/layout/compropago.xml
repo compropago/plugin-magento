@@ -27,12 +27,24 @@
 
 -->
 <layout version="0.1.0">
-    <checkout_onepage_success translate="label">
-	<reference name="head">
+    <checkout_onepage_index>
+	    <reference name="head">
             <action method="addCss">
                 <path>css/compropago/compropago.css</path>
-		<params>media="screen, print"</params>
+            </action>
+            <action method="addJs">		        
+		        <script>compropago/compropago.js</script>
             </action>
         </reference>
+    </checkout_onepage_index>
+    <checkout_onepage_success>
+        <reference name="head">
+            <action method="addCss">
+                <path>css/compropago/compropago.css</path>
+            </action>
+            <action method="addJs">             
+                <script>compropago/compropago.js</script>
+            </action>
+        </reference>        
     </checkout_onepage_success>
 </layout>
