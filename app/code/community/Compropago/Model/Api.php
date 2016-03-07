@@ -65,8 +65,6 @@ class Compropago_Model_Api
         curl_setopt($ch, CURLOPT_URL, $this->_url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_USERPWD, $username . ":");
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST"); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);     
@@ -81,12 +79,12 @@ class Compropago_Model_Api
         $response = json_decode($this->_response,true);
 
         // respuesta del servicio
-        if (empty($response))
+        if ($response == null)
         {            
             Mage::throwException("El servicio de Compropago no se encuentra disponible.");
         }
         
-        if (isset($response['type']) && $response['type'] == "error")
+        if ($response['type'] == "error")
         {            
             $errorMessage = $response['message'] . "\n";                        
             Mage::throwException($errorMessage);
