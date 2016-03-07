@@ -1,3 +1,4 @@
+
 <?php
 /**
  * API para el consumo de los servicios
@@ -12,7 +13,6 @@ class Compropago_Model_Api
      * @var string 
      */
     protected $_url = 'https://api.compropago.com/v1/charges';
-
     /**
      * respuesta sin parsear del servicio
      * @var string
@@ -43,9 +43,7 @@ class Compropago_Model_Api
         {
             throw new Exception('parameter is not an array');
         }
-
         $info['url'] = $this->_url;
-
         // datos para la peticion del servicio
         $data = array(
             'order_id'        => $info['order_id'],
@@ -56,42 +54,34 @@ class Compropago_Model_Api
             'customer_email'     => $info['customer_email'],
             'payment_type'               => $info['payment_type']
         );
-
         $username = $info['client_secret'];
         $password = $info['client_id'];
-
         // consumo del servicio
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->_url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_USERPWD, $username . ":");
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST"); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);     
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
         // Blindly accept the certificate
         $this->_response = curl_exec($ch);
         curl_close($ch);
-
         // tratamiento de la respuesta del servicio
         $response = json_decode($this->_response,true);
-
         // respuesta del servicio
-        if (empty($response))
+        if ($response == null)
         {            
             Mage::throwException("El servicio de Compropago no se encuentra disponible.");
         }
         
-        if (isset($response['type']) && $response['type'] == "error")
+        if ($response['type'] == "error")
         {            
             $errorMessage = $response['message'] . "\n";                        
             Mage::throwException($errorMessage);
         }
-
         
         return $response;
     }
@@ -104,5 +94,4 @@ class Compropago_Model_Api
     {
         return $this->_response;
     }     
-
 }

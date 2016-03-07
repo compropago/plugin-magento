@@ -6,22 +6,18 @@
 */
 class Compropago_WebhookController extends Mage_Core_Controller_Front_Action{
     protected $_model = null;
-    
     public function _construct() {
         $this->_model = Mage::getModel('compropago/Standard');
     }
-
     public function indexAction(){
         $params = $this->getRequest()->getParams();
         $body = @file_get_contents('php://input');
         $event_json = json_decode($body);
-
         if(isset($event_json)){
             if ($event_json->{'api_version'} === '1.1') {
                 if ($event_json->{'id'}){
                     $order = $this->verifyOrder($event_json->{'id'}); 
                     $type = $order['type'];
-
                     if (isset($order['id'])){
                         if ($order['id'] === $event_json->{'id'}) {
                             $order_id = $order['order_info']['order_id'];
@@ -37,7 +33,6 @@ class Compropago_WebhookController extends Mage_Core_Controller_Front_Action{
                 if ($event_json->data->object->{'id'}){
                     $order = $this->verifyOrder($event_json->data->object->{'id'}); 
                     $type = $order['type'];
-
                     if (isset($order['data']['object']['id'])){
                         if ($order['data']['object']['id'] === $event_json->data->object->{'id'}) {
                             $order_id = $order['data']['object']['payment_details']['product_id'];  
@@ -55,10 +50,8 @@ class Compropago_WebhookController extends Mage_Core_Controller_Front_Action{
             echo 'Order not valid';
         }                           
     }
-
     public function changeStatus($order_id, $type){     
         $_order = Mage::getModel('sales/order')->loadByIncrementId($order_id);         
-
         switch ($type) {    
             case 'charge.pending':
                 $status = $this->_model->getConfigData('order_status_in_process');
@@ -90,10 +83,8 @@ class Compropago_WebhookController extends Mage_Core_Controller_Front_Action{
                 $message = "";    
                 $_order->addStatusToHistory($status, $message,true);         
         }
-
         $_order->save();
     }
-
     public function verifyOrder($id){
         $url = 'https://api.compropago.com/v1/charges/';
         $url .=  $id;   

@@ -24,16 +24,15 @@
  * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-
 -->
 <layout version="0.1.0">
     <checkout_onepage_index>
-	    <reference name="head">
+        <reference name="head">
             <action method="addCss">
                 <path>css/compropago/compropago.css</path>
             </action>
-            <action method="addJs">		        
-		        <script>compropago/compropago.js</script>
+            <action method="addJs">             
+                <script>compropago/compropago.js</script>
             </action>
         </reference>
     </checkout_onepage_index>

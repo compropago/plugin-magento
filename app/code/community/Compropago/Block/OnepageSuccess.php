@@ -1,5 +1,5 @@
-<?php
 
+<?php
 	class Compropago_Block_OnepageSuccess extends Mage_Checkout_Block_Onepage_Success
 	{
 	// Write your custom methods
