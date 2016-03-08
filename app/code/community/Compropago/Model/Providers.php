@@ -21,8 +21,8 @@ class Compropago_Model_Providers
 
     private function getProviders()
     {
-        $privateKey = "sk_test_56e31883637446b1b";
-        $publicKey = "pk_test_8781245a88240f9cf";
+        /*$privateKey = "sk_test_56e31883637446b1b";
+        $publicKey = "pk_test_8781245a88240f9cf";*/
 
         $url = 'https://api.compropago.com/v1/providers/';
         $url.= 'true';
@@ -31,7 +31,7 @@ class Compropago_Model_Providers
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_USERPWD, $privateKey . ":" . $publicKey);
+        curl_setopt($ch, CURLOPT_USERPWD, "" . ":" . "");
 
         // Blindly accept the certificate
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
