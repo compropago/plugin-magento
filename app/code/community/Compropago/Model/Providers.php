@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Arthur
- * Date: 04/03/16
- * Time: 13:51
+ * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
 
 class Compropago_Model_Providers
@@ -24,22 +21,17 @@ class Compropago_Model_Providers
 
     private function getProviders()
     {
-        if (trim(Mage::getStoreConfig("payment/compropago/client_secret")) == ''
-            || trim(Mage::getStoreConfig("payment/compropago/client_id")) == ''
-        ) {
-            Mage::throwException("Datos incompletos del servicio, contacte al administrador del sitio");
-        }
+        $privateKey = "sk_test_56e31883637446b1b";
+        $publicKey = "pk_test_8781245a88240f9cf";
 
         $url = 'https://api.compropago.com/v1/providers/';
         $url.= 'true';
-        $username = trim(Mage::getStoreConfig("payment/compropago/client_secret"));
-        $password = trim(Mage::getStoreConfig("payment/compropago/client_id"));
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_USERPWD, $username . ":" . $password);
+        curl_setopt($ch, CURLOPT_USERPWD, $privateKey . ":" . $publicKey);
 
         // Blindly accept the certificate
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
