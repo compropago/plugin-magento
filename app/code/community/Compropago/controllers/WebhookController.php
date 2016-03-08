@@ -6,6 +6,7 @@
 */
 class Compropago_WebhookController extends Mage_Core_Controller_Front_Action{
     protected $_model = null;
+    
     public function _construct() {
         $this->_model = Mage::getModel('compropago/Standard');
     }
