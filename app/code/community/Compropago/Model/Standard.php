@@ -59,7 +59,7 @@ class Compropago_Model_Standard extends Mage_Payment_Model_Method_Abstract
         }
 
         // Set the default state of the new order.
-        $state = Mage_Sales_Model_Order::STATE_PENDING_PAYMENT; // state now = 'pending_payment'
+        $state = $this->getConfigData('order_status_new'); // state now = 'pending'
         $stateObject->setState($state);
         $stateObject->setStatus($state);
         $stateObject->setIsNotified(false);
