@@ -1,46 +1,86 @@
 <?php
 /**
- *
  * Form payment cash
  *
+ * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  * @author Oswaldo Lopez (waldix86@gmail.com)
  */
 ?>
 
-<?php  $_code= $this->getMethodCode();
-$_model = $this->getMethod();
-$_getProviders = $_model->getProviders();
+<?php
+$_code          = $this->getMethodCode();
+$_model         = $this->getMethod();
+$_getProviders  = $_model->getProviders();
 ?>
-<img id="image_providers" onload="loadImage(this);" src="<?php echo $this->getSkinUrl('images/compropago/providers.png') ?>" class="image_providers_compropago">
-<ul id="payment_form_<?php  echo $_code ?>" style="display:none" >
-    <label class="label-instructions">Selecciona un establecimiento para realizar el pago en efectivo:</label>
-    <?php  if (!$_model->showLogoProviders())
-    { ?>
-        <li>
-            <select id="<?php echo $_code ?>_store"
-                    name="payment[store_code]">
-                <?php foreach ($_getProviders as $_provider): ?>
-                    <option value="<?php echo $_provider['internal_name'] ?>"><?php echo $_provider['name'] ?></option>
-                <?php endforeach; ?>
-            </select>
-        </li>
-    <?php } else { ?>
-        <li>
-            <div class="row stores-compact" style="padding: 5px 15px; opacity: 1; width:100%; margin-bottom:70px;" id="<?php echo $_code ?>_store">
-                <?php foreach ($_getProviders as $_provider): ?>
-                    <!--<php if($_provider['internal_name'] == 'OXXO' || $_provider['internal_name'] == 'SEVEN_ELEVEN' || $_provider['internal_name'] == 'EXTRA' || $_provider['internal_name'] == 'CHEDRAUI'): ?>-->
-                    <div class="element-box">
-                        <label for="<?php echo $_code ?>_<?php echo $_provider['internal_name'] ?>" class="provider-description <?php echo $_provider['internal_name'] == 'OXXO' ? 'seleccion_store' : '' ?>" onclick="seleccionar(this,'<?php echo $_provider['internal_name'] ?>');">
-                            <img src="<?php echo $_provider['image_medium'] ?>" class="image_provider">
-                        </label>
-                    </div>
-                    <!--<php endif; ?>-->
-                <?php endforeach; ?>
-                <input id="store_code_selected" type="hidden" name="payment[store_code]" value="">
-            </div>
-        </li>
-    <?php } ?>
-</ul>
-<div>
-    <?php echo $this->getMethod()->getConfigData('message');?>
-</div>
+
+<script>
+    paymentcheck = document.querySelector("#p_method_compropago");
+    provider = document.querySelector("#store_code_selected");
+    paymentcheck.checked = true;
+
+    btn = document.querySelector("button[ onclick^=payment ]");
+    btn.setAttribute("onclick"," ");
+
+    phone = document.querySelector("[title=Telephone]").value;
+    document.querySelector("#customer_phone").value = phone;
+
+    btn.addEventListener("click",function(evt){
+        evt.preventDefault();
+
+        if(paymentcheck.checked){
+            if(provider.value == ""){
+                alert("Seleccione una tienda para realizar el pago");
+            }else{
+                payment.save();
+            }
+        }else{
+            payment.save();
+        }
+    });
+</script>
+
+
+<div style="overflow: hidden;">
+    <ul id="payment_form_<?php  echo $_code; ?>" style="display: none">
+        <label class="label-instructions">Selecciona un establecimiento para realizar el pago en efectivo:</label>
+        <?php  if (!$_model->showLogoProviders()) { ?>
+
+            <li>
+                <select id="<?php echo $_code; ?>_store" name="payment[store_code]">
+                    <?php foreach ($_getProviders as $_provider){ ?>
+                        <option value="<?php echo $_provider['internal_name']; ?>"><?php echo $_provider['name']; ?></option>
+                    <?php } ?>
+                </select>
+            </li>
+
+        <?php } else { ?>
+            <li>
+                <div class="row stores-compact" style="padding: 5px 15px; opacity: 1; width:100%; margin-bottom:70px;" id="<?php echo $_code; ?>_store">
+                    <?php foreach ($_getProviders as $_provider){ ?>
+
+                        <div class="element-box">
+                            <label
+                                id="cp-provider"
+                                data-provider="<?php echo $_provider['internal_name']; ?>"
+                                for="<?php echo $_code; ?>_<?php echo $_provider['internal_name']; ?>"
+                                class="provider-description "
+                                onclick="seleccionar(this);"
+                                style="margin: 6px !important;">
+                                <img src="<?php echo $_provider['image_medium']; ?>" class="image_provider" style="margin: 0 !important;">
+                            </label>
+                        </div>
+
+                    <?php } ?>
+                    <input id="store_code_selected" type="hidden" name="payment[store_code]" value="">
+                    <input type="hidden" id="customer_phone" name="payment[customer_phone]" value="">
+                </div>
+            </li>
+        <?php } ?>
+    </ul>
+    <div>
+        <?php echo $this->getMethod()->getConfigData('message');?>
+    </div>
+</div> 
+
+
+
