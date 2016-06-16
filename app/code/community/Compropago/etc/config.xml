@@ -29,10 +29,10 @@
                 <class>Compropago_Block</class>
             </compropago>
         <checkout>
-            <rewrite>
-                <onepage_success>Compropago_Block_OnepageSuccess</onepage_success>
-            </rewrite>
-        </checkout>
+                <rewrite>
+                    <onepage_success>Compropago_Block_OnepageSuccess</onepage_success>
+                </rewrite>
+            </checkout>
         </blocks>                
         <payment>
             <groups>

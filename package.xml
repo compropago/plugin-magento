@@ -1,18 +1,34 @@
 <?xml version="1.0"?>
 <package>
-    <name>ComproPago</name>
-    <version>1.0.0</version>
+    <name>Compropago_Payment_Extension</name>
+    <version>1.1.0</version>
     <stability>stable</stability>
     <license uri="http://opensource.org/licenses/osl-3.0.php">OSL v3.0</license>
     <channel>community</channel>
     <extends/>
-    <summary>Extension for cash payments in Compropago.</summary>
-    <description>It is a tool that allows us to process cash payments in shop.</description>
-    <notes>Fixed minor Bugs</notes>
-    <authors><author><name>Oswaldo Lopez Garcia</name><user>waldix</user><email>waldix@compropago.com</email></author></authors>
-    <date>2015-12-02</date>
-    <time>23:32:12</time>
-    <contents><target name="mageetc"><dir name="modules"><file name="Compropago.xml" hash="884374bb8a46b5ac9a62cd8b9f351401"/></dir></target><target name="magecommunity"><dir name="Compropago"><dir name="Block"><file name="Form.php" hash="af36f6b19af072a247cceff2b9d1f452"/><file name="OnepageSuccess.php" hash="d575b5abb647c41017b6d40efb3ee8cb"/></dir><dir name="Helper"><file name="Data.php" hash="5d3d5f4f86f2cec56315a1b02cc3d308"/></dir><dir name="Model"><file name="Api.php" hash="9e7cec75a14a7c265a3df3a5ca49ea8d"/><file name="Standard.php" hash="1c7f8196af4cc52328ac7b2ab17b745a"/></dir><dir name="controllers"><file name="WebhookController.php" hash="64c404a7a78bb027a313bb1f9c08460b"/></dir><dir name="etc"><file name="config.xml" hash="26776d50679f9c07924f5ab0a7beeb76"/><file name="system.xml" hash="e8ed2f32718cdde0dd7085413cb933b1"/></dir></dir></target><target name="magedesign"><dir name="frontend"><dir name="base"><dir name="default"><dir name="template"><dir name="compropago"><file name="cash.phtml" hash="441605a8d946d7e8b1d8fe86d608bb52"/><file name="onepage_success.phtml" hash="03f07a1201aff4e93eee803fa7467990"/></dir></dir><dir name="layout"><file name="compropago.xml" hash="9f6f7683177f45b3be20ac2edbec5100"/></dir></dir></dir></dir></target><target name="mageskin"><dir name="frontend"><dir name="base"><dir name="default"><dir name="css"><dir name="compropago"><file name="compropago.css" hash="d1530f6b1a520b0b829c12089722799c"/></dir></dir><dir name="images"><dir name="compropago"><file name="warning.png" hash="e30bf5b88671a415ca7771b3e5dd9c19"/></dir></dir></dir></dir></dir></target></contents>
+    <summary>This extension allows you to receive cash payments in the convenience store Mexico:OXXO, 7Eleven, Elektra....</summary>
+    <description>ComproPago is the fastest and largest cash payments platform in Mexico. &#xD;
+&#xD;
+This extension allows you receive cash payments in Oxxo, 7eleven, Extra, Benavides, Coppel and other convenience stores across Mexico. &#xD;
+&#xD;
+Some of the benefits of adding ComproPago as a payment method in your online store are: The fastest confirmation time in the industry: less than 8 hours. &#xD;
+&#xD;
+The largest convenience store network in the whole country. &#xD;
+&#xD;
+The possibility of requesting your funds and receiving them in your bank account within 24 hours. &#xD;
+&#xD;
+Besides you will be able to: Automatically update your order status both in your online store and in ComproPago&#x2019;s account. &#xD;
+&#xD;
+Send email notifications for pending orders and reminder notifications to increase conversion rates.</description>
+    <notes>## 10/06/2016 v1.1.0&#xD;
+* Feature: Seleccion de proveedores&#xD;
+* Feature: Normalizacion de vista de seleccion de proveedores&#xD;
+* Feature: Validacion de proveedor obligatorio&#xD;
+* Feature: Captura de telefono de cliente</notes>
+    <authors><author><name>Oswaldo Lopez Garcia</name><user>waldix</user><email>waldix@compropago.com</email></author><author><name>Eduardo Aguilar</name><user>eduardoay</user><email>eduardo.aguilar@compropago.com</email></author></authors>
+    <date>2016-06-15</date>
+    <time>22:54:28</time>
+    <contents><target name="mageetc"><dir name="modules"><file name="Compropago.xml" hash="884374bb8a46b5ac9a62cd8b9f351401"/></dir></target><target name="magecommunity"><dir name="Compropago"><dir><dir name="Block"><file name="Form.php" hash="3433488444c881f51228924453689c4a"/><file name="OnepageSuccess.php" hash="7873729a10083644d735ce193e2b1752"/></dir><dir name="Helper"><file name="Data.php" hash="5d3d5f4f86f2cec56315a1b02cc3d308"/></dir><dir name="Model"><file name="Api.php" hash="a054a9fbb89867753f2d37561219e827"/><file name="Providers.php" hash="14a80d69659ee43913745a40c59c25cf"/><file name="Standard.php" hash="20e788a3d496d991cc827e8f668681cf"/></dir><dir name="controllers"><file name="WebhookController.php" hash="775c3bffa75a3765ad65d96652356482"/></dir><dir name="etc"><file name="config.xml" hash="26776d50679f9c07924f5ab0a7beeb76"/><file name="system.xml" hash="63d480092fa87465736d905668e3110a"/></dir></dir><file name=".DS_Store" hash="eb03774a462f5cc9f379a3cc14db34f0"/></dir></target><target name="magedesign"><dir name="frontend"><dir name="base"><dir name="default"><dir name="template"><dir name="compropago"><file name="cash.phtml" hash="5d0b597a3f811b22b22b7cb280f9f883"/><file name="onepage_success.phtml" hash="b85d49f5e82ed292da8e0d7c555d0fc4"/></dir></dir><dir name="layout"><file name="compropago.xml" hash="b4c43eb397d0a9ce59b35377ef70e0ed"/></dir></dir></dir></dir></target><target name="mageskin"><dir name="frontend"><dir name="base"><dir name="default"><dir name="css"><dir name="compropago"><file name="compropago.css" hash="c31f0093851df11b1782c68a81e9fa86"/></dir></dir></dir></dir></dir></target><target name="mage"><dir name="js"><dir name="compropago"><file name="compropago.js" hash="a54eee5266f30f33c3355d0ac770e8f0"/></dir></dir></target></contents>
     <compatible/>
     <dependencies><required><php><min>5.2.0</min><max>6.0.0</max></php></required></dependencies>
 </package>

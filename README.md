@@ -1,102 +1,86 @@
-#Plugin para Magento 1.7.x, 1.8.x y 1.9.x
+Plugin para Magento 1.7.x, 1.8.x, 1.9.x - ComproPago
+====================================================
+## Descripción
+Este modulo provee el servicio de ComproPago para poder generar intenciones de pago dentro de la plataforma Magento.
 
-Este modulo provee el servicio de ComproPago para poder generar intensiones de pago dentro de la plataforma Magento.
+Con ComproPago puede recibir pagos en OXXO, 7Eleven y muchas tiendas más en todo México.
 
-* [Instalación](#install)
-* [¿Cómo trabaja el modulo?](#howto)
-* [Configuración](#setup)
-* [Sincronización con los webhooks](#webhook)
-* [Pasos para actualizar plugin](#upgrade)
+[Registrarse en ComproPago ] (https://compropago.com)
 
 
-<a name="install"></a>
+## Ayuda y Soporte de ComproPago
+
+- [Centro de ayuda y soporte](https://compropago.com/ayuda-y-soporte)
+- [Solicitar Integración](https://compropago.com/integracion)
+- [Guía para Empezar a usar ComproPago](https://compropago.com/ayuda-y-soporte/como-comenzar-a-usar-compropago)
+- [Información de Contacto](https://compropago.com/contacto)
+
+## Requerimientos
+* [Magento 1.7.x, 1.8.x, 1.9.x](https://magento.com/)
+* [PHP >= 5.2](http://www.php.net/)
+* [PHP JSON extension](http://php.net/manual/en/book.json.php)
+* [PHP cURL extension](http://php.net/manual/en/book.curl.php)
+
 ## Instalación:
 
-1.- Descargar el Archivo **.tgz** del siguiente link [https://s3.amazonaws.com/compropago/plugins/magento/Compropago_Payment_Extension-1.0.2.tgz](https://s3.amazonaws.com/compropago/plugins/magento/Compropago_Payment_Extension-1.0.2.tgz)
+1. Copiar el enlace proprocionado por **Magento Connect** desde [aquí][Magento-Connect]
+2. En el panel de administración de Magento ingresamos y nos dirigimos a **System -> Magento Connect -> Magento Connect Manager**
+3. Pegamos el link obtenido en la sección **Install New Extension** y oprimimos el botón **Install**.
+4. Verificamos que la instalación fue correcta y procedemos a oprimir el botón de **Refresh** para actualizar la pantalla.
 
-2.- En el panel de administración de Magento ingresamos y nos dirigimos a **System -> Magento Connect -> Magento Connect Manager** 
 
-3.- Cargamos el archivo en la parte que dice **Direct package file upload** y oprimimos el botón **Upload**.
-
-![Carga Archivo](https://cloud.githubusercontent.com/assets/1311937/11578093/02a4da92-99e8-11e5-8ce9-40a54eb3d0af.png)
-
-4.- Verificamos que la instalación fue correcta y procedemos a oprimir el botón de **Refresh** para actualizar la pantalla.
-
-![pluginsuccess](https://cloud.githubusercontent.com/assets/1311937/11578179/acc31ab6-99e8-11e5-8113-a0dbed22dda3.png)
-
-5.- En el panel de administración ir a **System -> Cache Management** y limpiar la cache de todos los directorios. 
-
-![cache](https://cloud.githubusercontent.com/assets/1311937/11644976/3f863196-9d16-11e5-9068-03120e99720c.png)<br />
-
-6.- Ir a **System -> IndexManagement** seleccionar todos los directorios y dar click en Reindex Data y Submit.
-
-![index](https://cloud.githubusercontent.com/assets/1311937/11644989/4fdfb65c-9d16-11e5-9a3b-51e812c1c01a.png)
-
----
-<a name="howto"></a>
 ## ¿Cómo trabaja el modulo?
-Una vez que el cliente sabe que comprar y continua con el proceso de compra entrará a la opción de elegir metodo de pago justo aqui aparece la opción de pagar con ComproPago, seleccionamos el establecimiento de nuestra conveniencia y le damos continuar
+Una vez que el cliente sabe que comprar y continua con el proceso de compra entrará a la opción de elegir metodo de pago
+justo aqui aparece la opción de pagar con ComproPago, seleccionamos el establecimiento de nuestra conveniencia y le
+damos continuar
 
-![pago](https://cloud.githubusercontent.com/assets/1311937/11578379/880b359e-99ea-11e5-8967-f6e43e604ea5.png) <br />
+Al completar el proceso de compra dentro de la tienda el sistema nos proporcionara un recibo de pago como el siguiente,
+solo falta realizar el pago en el establecimiento que seleccionamos.
 
-Al completar el proceso de compra dentro de la tienda el sistema nos proporcionara un recibo de pago como el siguiente, solo falta realizar el pago en el establecimiento que seleccionamos.
-
-![success](https://cloud.githubusercontent.com/assets/1311937/11578435/269f7846-99eb-11e5-9111-a721863fee00.png) <br />
-
-Una vez que el cliente genero su intención de pago, dentro del panel de control de ComproPago la orden se muestra como "PENDIENTE" esto significa que el usuario esta por ir a hacer el deposito.
-
-![orden](https://cloud.githubusercontent.com/assets/1311937/11645320/39e380ec-9d19-11e5-9a99-a82317dff0b3.png)
-
----
-<a name="setup"></a>
-## Configurar ComproPago
-
-1.- Para iniciar la configuración ir a **System -> Configuration -> Sales -> Payment Methods**. Seleccionar **ComproPago**.
-
-![paymentmethod](https://cloud.githubusercontent.com/assets/1311937/11578545/3f896320-99ec-11e5-9900-f9268b05fc58.png)
-
-***Nota:*** La opción de **Habilitar Logos** es para mostrar las imagenes de los establecimientos con los que procesamos pagos
-
-2.- Agregar la **llave privada** y **llave pública**, esta se puede encontrar en el apartado de configuración dentro del panel de control de ComproPago. [https://compropago.com/panel/configuracion](https://compropago.com/panel/configuracion)
-<br />
-![keys](https://cloud.githubusercontent.com/assets/1311937/11645106/35a6f52e-9d17-11e5-99d3-cfe432b3f30c.png)
-
+Una vez que el cliente genero su intención de pago, dentro del panel de control de ComproPago la orden se muestra como
+"PENDIENTE" esto significa que el usuario esta por ir a hacer el deposito.
 
 ---
 
-<a name="webhook"></a>
+## Configurar el plugin
+
+1. Para iniciar la configuración ir a **System -> Configuration -> Sales -> Payment Methods**. Seleccionar
+   **ComproPago**. ***Nota:*** La opción de **Habilitar Logos** es para mostrar las imagenes de los establecimientos con
+   los que procesamos pagos
+2. Agregar la **llave privada** y **llave pública**, esta se puede encontrar en el apartado de configuración dentro del
+   [panel de control de ComproPago][Compropago-Panel].
+
+---
+
 ## Sincronización con la notificación Webhook
-
-1.- Ir al area de **Webhooks** en ComproPago [https://compropago.com/panel/webhooks](https://compropago.com/panel/webhooks)
-
-2.- Introducir la dirección: ***[direcciondetusitio.com]***/index.php/compropago/webhook/ 
-   Para el caso en donde exista un idioma instalado la dirección deberia ser: ***[direcciondetusitio.com]***/index.php/compropago/webhook/
-
-![addwbh](https://cloud.githubusercontent.com/assets/1311937/11645166/b7f3a658-9d17-11e5-87f4-3ddc51b50635.png)<br />
-
-3.- Dar click en el botón "Probar" y verificamos que el servidor de la tienda esta respondiendo, debera aparecer el mensaje de "Order not valid"
-![webhook](https://cloud.githubusercontent.com/assets/1311937/11578636/d1597bf0-99ec-11e5-8def-fc44e6ca603e.png)
+1. Ir al area de [Webhooks][Compropago-Webhooks] en ComproPago.
+2. Introducir la dirección: **http://direcciondetusitio.com/index.php/compropago/webhook/**
+3. Dar click en el botón "Probar" y verificamos que el servidor de la tienda esta respondiendo, debera aparecer el
+   mensaje de "Probando el WebHook?, Ruta correcta."
 
 Una vez completado estos pasos el proceso de instalación queda completado.
 
----
+## Documentación
+### Documentación ComproPago Plugin Magento
 
-<a name="upgrade"></a>
-## Pasos para actualizar plugin
+### Documentación de ComproPago
+**[API de ComproPago](https://compropago.com/documentacion/api)**
 
-1.- Si ya tenemos instalado Compropago en su versión anterior [v0.0.1](https://github.com/compropago/plugin-magento-deprecated), para eliminarlo vamos a realizar un borrado de los siguientes archivos.
-
-![files](https://cloud.githubusercontent.com/assets/1311937/11634984/5e9a7a66-9cd9-11e5-8583-c93bef106696.png)
-
-2.- Una vez que eliminamos los archivos anteriores, vamos al panel de administración de Magento, **System -> Cache Management** y limpiar la cache de todos los directorios. 
-
-![cache](https://cloud.githubusercontent.com/assets/1311937/11644976/3f863196-9d16-11e5-9068-03120e99720c.png)<br />
-
-3.- Ahora eliminamos el webhook que dimos de alta en nuestro panel de Compropago cuando instalamos el plugin anterior.
-
-![webhook2](https://cloud.githubusercontent.com/assets/1311937/11635215/d5a410f8-9cda-11e5-8c36-bac2f35d3b60.png)
-
-4.- Ya que tenemos eliminado el Plugin anterior, procedemos a realizar la instalación del nuevo plugin. [Vease Aquí](#install)
+ComproPago te ofrece un API tipo REST para integrar pagos en efectivo en tu comercio electrónico o tus aplicaciones.
 
 
+**[General](https://compropago.com/documentacion)**
 
+Información de Comisiones y Horarios, como Transferir tu dinero y la Seguridad que proporciona ComproPAgo
+
+
+**[Herramientas](https://compropago.com/documentacion/boton-pago)**
+* Botón de pago
+* Modo de pruebas/activo
+* WebHooks
+* Librerías y Plugins
+* Shopify
+
+[Magento-Connect]: https://www.magentocommerce.com/magento-connect/compropago-oxxo-seven-eleven-extra-chedraui-elektra.html
+[Compropago-Panel]: https://compropago.com/panel/configuracion
+[Compropago-Webhooks]: https://compropago.com/panel/webhooks
