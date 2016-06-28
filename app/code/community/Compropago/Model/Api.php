@@ -46,14 +46,16 @@ class Compropago_Model_Api
         $info['url'] = $this->_url;
 
         $data = array(
-            'order_id'        => $info['order_id'],
+            'order_id'           => $info['order_id'],
             'order_price'        => $info['order_price'],
             'order_name'         => $info['order_name'],
-            'image_url'            => $info['image_url'],
-            'customer_name'         => $info['customer_name'],
+            'image_url'          => $info['image_url'],
+            'customer_name'      => $info['customer_name'],
             'customer_email'     => $info['customer_email'],
             'customer_phone'     => $info['customer_phone'],
-            'payment_type'               => $info['payment_type']
+            'payment_type'       => $info['payment_type'],
+            'app_client_name'    => 'magento',
+            'app_client_version' => Mage::getVersion()
         );
 
         $ch = curl_init();
