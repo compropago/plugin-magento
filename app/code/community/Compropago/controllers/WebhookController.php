@@ -5,11 +5,22 @@
  *  @author waldix (waldix86@gmail.com)
  */
 class Compropago_WebhookController extends Mage_Core_Controller_Front_Action{
+
+    /**
+     * @var null
+     */
     protected $_model = null;
 
+    /**
+     * Constructor
+     */
     public function _construct() {
         $this->_model = Mage::getModel('compropago/Standard');
     }
+
+    /**
+     * Recepcion de parametros de la orden
+     */
     public function indexAction(){
         $params = $this->getRequest()->getParams();
         $body = @file_get_contents('php://input');
@@ -17,6 +28,7 @@ class Compropago_WebhookController extends Mage_Core_Controller_Front_Action{
 
         if(isset($event_json)){
             if ($event_json->{'api_version'} === '1.1') {
+
                 if ($event_json->{'id'}){
                     $order = $this->verifyOrder($event_json->{'id'});
                     $type = $order['type'];
@@ -46,13 +58,19 @@ class Compropago_WebhookController extends Mage_Core_Controller_Front_Action{
                     } else {
                         echo 'Order not valid';
                     }
-
                 }
             }
         } else {
             echo 'Order not valid';
         }
     }
+
+    /**
+     * Cambio de estatus de la orden
+     *
+     * @param $order_id
+     * @param $type
+     */
     public function changeStatus($order_id, $type){
         $_order = Mage::getModel('sales/order')->loadByIncrementId($order_id);
         switch ($type) {
@@ -108,6 +126,13 @@ class Compropago_WebhookController extends Mage_Core_Controller_Front_Action{
         }
         $_order->save();
     }
+
+    /**
+     * Verificacion de orden recivida.
+     *
+     * @param $id
+     * @return mixed
+     */
     public function verifyOrder($id){
         $url = 'https://api.compropago.com/v1/charges/';
         $url .=  $id;
