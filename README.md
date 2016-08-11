@@ -17,7 +17,7 @@ Con ComproPago puede recibir pagos en OXXO, 7Eleven y muchas tiendas más en tod
 
 ## Requerimientos
 * [Magento 1.7.x, 1.8.x, 1.9.x](https://magento.com/)
-* [PHP >= 5.2](http://www.php.net/)
+* [PHP >= 5.5](http://www.php.net/)
 * [PHP JSON extension](http://php.net/manual/en/book.json.php)
 * [PHP cURL extension](http://php.net/manual/en/book.curl.php)
 
