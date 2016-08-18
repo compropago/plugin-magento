@@ -19,12 +19,21 @@
  * Compropago $Library
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
+
+require_once(Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php');
+
+use CompropagoSdk\Client;
+
 class Compropago_CpPayment_Model_Observer
 {
 
-    public function registerWebhook($observer)
+    public function checkWebhook(Varien_Event_Observer $observer)
     {
-       die("Entra Compropago Observer");
+        Mage::log(
+            "Compropago Webhook updated",
+            null,
+            'compropago-webhook-updates.log'
+        );
     }
 
 }

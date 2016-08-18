@@ -44,23 +44,24 @@
                 </setup>
             </cppayment_setup>
         </resources>
+    </global>
 
 
-        <!-- EVENTOS ESCUCHADOS DEL PLUGIN -->
+
+    <!-- EVENTOS ESCUCHADOS DEL PLUGIN -->
+    <adminhtml>
         <events>
-
-            <!-- Cambios en la configuracion de los metodos de pago -->
             <admin_system_config_changed_section_payment>
                 <observers>
-                    <cppayment>
-                        <type>model</type>
+                    <cppayment_check_webhook>
                         <class>cppayment/observer</class>
-                        <method>registerWebhook</method>
-                    </cppayment>
+                        <method>checkWebhook</method>
+                    </cppayment_check_webhook>
                 </observers>
             </admin_system_config_changed_section_payment>
         </events>
-    </global>
+    </adminhtml>
+
 
 
     <!-- RUTEO DEL WEBHOOK -->
