@@ -24,7 +24,7 @@ class Compropago_CpPayment_Model_Observer
 
     public function registerWebhook($observer)
     {
-        Mage::throwException("Entra Compropago Observer");
+       die("Entra Compropago Observer");
     }
 
 }
