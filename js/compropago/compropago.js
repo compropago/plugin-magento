@@ -1,8 +1,3 @@
-/**
- * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
- * @author Oswaldo Lopez
- */
-
 function seleccionar(t){
     provider = t.getAttribute("data-provider");
     seleccionados = document.querySelectorAll("#cp-provider");
@@ -35,12 +30,12 @@ function seleccionar(t){
 }
 
 
-window.onload = function(){	
-	$$("#co-payment-form input[type=radio]").each(function(input){
+window.onload = function(){
+    $$("#co-payment-form input[type=radio]").each(function(input){
         input.observe("click", function(t){
             if(t.getAttribute("id") == "cp-provider"){
                 seleccionar(t);
             }
-		});
-	});
-}; 
+        });
+    });
+};
