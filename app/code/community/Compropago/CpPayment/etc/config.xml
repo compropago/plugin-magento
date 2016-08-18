@@ -44,6 +44,22 @@
                 </setup>
             </cppayment_setup>
         </resources>
+
+
+        <!-- EVENTOS ESCUCHADOS DEL PLUGIN -->
+        <events>
+
+            <!-- Cambios en la configuracion de los metodos de pago -->
+            <admin_system_config_changed_section_payment>
+                <observers>
+                    <cppayment>
+                        <type>model</type>
+                        <class>cppayment/observer</class>
+                        <method>registerWebhook</method>
+                    </cppayment>
+                </observers>
+            </admin_system_config_changed_section_payment>
+        </events>
     </global>
 
 
@@ -66,22 +82,6 @@
             </updates>
         </layout>
     </frontend>
-
-
-    <!-- EVENTOS ESCUCHADOS DEL PLUGIN -->
-    <events>
-
-        <!-- Cambios en la configuracion de los metodos de pago -->
-        <admin_system_config_changed_section_payment>
-            <observers>
-                <Compropago_cppayment_model_observer>
-                    <type>singleton</type>
-                    <class>Compropago_CpPayment_Model_Observer</class>
-                    <method>registerWebhook</method>
-                </Compropago_cppayment_model_observer>
-            </observers>
-        </admin_system_config_changed_section_payment>
-    </events>
 
 
     <!-- ACTIVACION COMO METODO DE PAGO -->
