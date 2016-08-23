@@ -44,12 +44,9 @@
                 </setup>
             </cppayment_setup>
         </resources>
-    </global>
 
 
 
-    <!-- EVENTOS ESCUCHADOS DEL PLUGIN -->
-    <adminhtml>
         <events>
             <admin_system_config_changed_section_payment>
                 <observers>
@@ -60,6 +57,13 @@
                 </observers>
             </admin_system_config_changed_section_payment>
         </events>
+    </global>
+
+
+
+    <!-- EVENTOS ESCUCHADOS DEL PLUGIN -->
+    <adminhtml>
+
     </adminhtml>
 
 
