@@ -47,7 +47,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
         /**
          * Se captura la informacion enviada desde compropago
          */
-        $request = @file_get_contents('php://input');
+        $request = @file_get_contents('php://input'); 
 
 
         /**
