@@ -52,6 +52,20 @@ class Compropago_CpPayment_Model_Observer
                 'url'       => $webhook
             ));
 
+            
+            
+            
+            $retro = $model->hookRetro(
+                (int)trim($model->getConfigData('active')) == 1 ? true : false,
+                $model->getConfigData('compropago_publickey'),
+                $model->getConfigData('compropago_privatekey'),
+                (int)trim($model->getConfigData('compropago_mode')) == 1 ? true : false
+            );
+
+            if($retro[0]){
+                Mage::getSingleton('adminhtml/session')->addWarning($retro[1]);
+            }
+
         }catch (Exception $e){
             Mage::throwException($e->getMessage());
         }

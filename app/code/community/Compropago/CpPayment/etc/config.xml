@@ -96,7 +96,7 @@
                 <active>1</active>
                 <model>cppayment/standard</model>
                 <order_status>pending</order_status>
-                <title>ComproPago Payment Method</title>
+                <title>Pago en efectivo - ComproPago</title>
                 <allowspecific>0</allowspecific>
                 <payment_action>sale</payment_action>
             </cppayment>
