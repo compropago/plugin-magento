@@ -221,8 +221,8 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                 'orderId'              => $storedId,
                 'date'                 => $date,
                 'compropagoId'         => $response->getId(),
-                'compropagoStatus'     => $response->getStatus(),
-                'compropagoStatusLast' => $response->getStatus(),
+                'compropagoStatus'     => $response->getType(),
+                'compropagoStatusLast' => $res[0]['compropagoStatus'],
                 'ioIn'                 => $ioin,
                 'ioOut'                => $ioout
             ));
