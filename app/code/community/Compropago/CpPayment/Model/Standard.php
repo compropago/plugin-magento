@@ -22,6 +22,7 @@ require_once(Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 
 
 use CompropagoSdk\Client;
 use CompropagoSdk\Models\PlaceOrderInfo;
+use CompropagoSdk\Tools\Validations;
 
 class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abstract
 {
@@ -255,5 +256,75 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
     public function showLogoProviders()
     {
         return (int)trim($this->getConfigData("compropago_showlogo")) == 1 ? true : false;
+    }
+
+
+    /**
+     * Despliegue de retroalimentacion en el panel de administración
+     * 
+     * @param bool   $enabled
+     * @param string $publickey
+     * @param string $privatekey
+     * @param bool   $live
+     * @return array
+     */
+    public function hookRetro($enabled, $publickey, $privatekey, $live)
+    {
+        $error = array(
+            false,
+            '',
+            'yes'
+        );
+
+        if($enabled){
+            if(!empty($publickey) && !empty($privatekey) ){
+                try{
+                    $client = new Client(
+                        $publickey,
+                        $privatekey,
+                        $live
+                    );
+                    $compropagoResponse = Validations::evalAuth($client);
+                    //eval keys
+                    if(!Validations::validateGateway($client)){
+                        $error[1] = 'Invalid Keys, The Public Key and Private Key must be valid before using this module.';
+                        $error[0] = true;
+                    }else{
+                        if($compropagoResponse->mode_key != $compropagoResponse->livemode){
+                            $error[1] = 'Your Keys and Your ComproPago account are set to different Modes.';
+                            $error[0] = true;
+                        }else{
+                            if($live != $compropagoResponse->livemode){
+                                $error[1] = 'Your Store and Your ComproPago account are set to different Modes.';
+                                $error[0] = true;
+                            }else{
+                                if($live != $compropagoResponse->mode_key){
+                                    $error[1] = 'ComproPago ALERT:Your Keys are for a different Mode.';
+                                    $error[0] = true;
+                                }else{
+                                    if(!$compropagoResponse->mode_key && !$compropagoResponse->livemode){
+                                        $error[1] = 'WARNING: ComproPago account is Running in TEST Mode, NO REAL OPERATIONS';
+                                        $error[0] = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }catch (Exception $e) {
+                    $error[2] = 'no';
+                    $error[1] = $e->getMessage();
+                    $error[0] = true;
+                }
+            }else{
+                $error[1] = 'The Public Key and Private Key must be set before using ComproPago';
+                $error[2] = 'no';
+                $error[0] = true;
+            }
+        }else{
+            $error[1] = 'ComproPago is not Enabled';
+            $error[2] = 'no';
+            $error[0] = true;
+        }
+        return $error;
     }
 }

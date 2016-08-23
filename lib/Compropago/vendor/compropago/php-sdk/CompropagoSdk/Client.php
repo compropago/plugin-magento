@@ -28,13 +28,11 @@ namespace CompropagoSdk;
  */
 class Client
 {
-    const VERSION="2.0.0-alfa";
+    const VERSION="2.0.0";
 
-    #const API_LIVE_URI='http://api-staging-compropago.herokuapp.com/v1/';
-    #const API_SANDBOX_URI='http://api-staging-compropago.herokuapp.com/v1/';
-
-    #const API_LIVE_URI='https://node-test-cp.herokuapp.com/v1/';
-    //const API_SANDBOX_URI='https://node-test-cp.herokuapp.com/v1/';
+    /* Only for ComproPago Developpers */
+    # const API_LIVE_URI='http://api-staging-compropago.herokuapp.com/v1/';
+    # const API_SANDBOX_URI='http://api-staging-compropago.herokuapp.com/v1/';
 
     const API_LIVE_URI='http://api.compropago.com/v1/';
     const API_SANDBOX_URI='http://api.compropago.com/v1/';
