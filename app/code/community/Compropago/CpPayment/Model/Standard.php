@@ -291,22 +291,18 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                         $error[0] = true;
                     }else{
                         if($compropagoResponse->mode_key != $compropagoResponse->livemode){
-                            // compropagoKey vs compropago Mode
                             $error[1] = 'Your Keys and Your ComproPago account are set to different Modes.';
                             $error[0] = true;
                         }else{
                             if($live != $compropagoResponse->livemode){
-                                // store Mode vs compropago Mode
                                 $error[1] = 'Your Store and Your ComproPago account are set to different Modes.';
                                 $error[0] = true;
                             }else{
                                 if($live != $compropagoResponse->mode_key){
-                                    // store Mode vs compropago Keys
                                     $error[1] = 'ComproPago ALERT:Your Keys are for a different Mode.';
                                     $error[0] = true;
                                 }else{
                                     if(!$compropagoResponse->mode_key && !$compropagoResponse->livemode){
-                                        //can process orders but watch out, NOT live operations just testing
                                         $error[1] = 'WARNING: ComproPago account is Running in TEST Mode, NO REAL OPERATIONS';
                                         $error[0] = true;
                                     }
@@ -315,9 +311,8 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                         }
                     }
                 }catch (Exception $e) {
-                    //something went wrong on the SDK side
                     $error[2] = 'no';
-                    $error[1] = $e->getMessage(); //may not be show or translated
+                    $error[1] = $e->getMessage();
                     $error[0] = true;
                 }
             }else{
