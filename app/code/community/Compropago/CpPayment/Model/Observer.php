@@ -52,8 +52,9 @@ class Compropago_CpPayment_Model_Observer
                 'url'       => $webhook
             ));
 
-            
-            
+
+            /* Retroalimentación en el panel de administración
+             ------------------------------------------------------------------------*/
             
             $retro = $model->hookRetro(
                 (int)trim($model->getConfigData('active')) == 1 ? true : false,
