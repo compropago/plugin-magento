@@ -260,12 +260,12 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
 
 
     /**
-     * despliegue de retroalimentacion en el panel de administración
+     * Despliegue de retroalimentacion en el panel de administración
      * 
-     * @param $enabled
-     * @param $publickey
-     * @param $privatekey
-     * @param $live
+     * @param bool   $enabled
+     * @param string $publickey
+     * @param string $privatekey
+     * @param bool   $live
      * @return array
      */
     public function hookRetro($enabled, $publickey, $privatekey, $live)
