@@ -19,12 +19,42 @@
  * Compropago $Library
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
+
+require_once(Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php');
+
+use CompropagoSdk\Client;
+
 class Compropago_CpPayment_Model_Observer
 {
 
-    public function registerWebhook($observer)
+    public function checkWebhook($observer)
     {
-        Mage::throwException("Entra Compropago Observer");
+        $webhook = Mage::getBaseUrl() . "cpwebhook";
+        $model = Mage::getModel('cppayment/Standard');
+
+        try{
+            $client = new Client(
+                $model->getConfigData('compropago_publickey'),
+                $model->getConfigData('compropago_privatekey'),
+                (int)trim($model->getConfigData('compropago_mode')) == 1 ? true : false
+            );
+
+            $response = $client->api->createWebhook($webhook);
+            $time = time();
+
+            $DB = Mage::getSingleton('core/resource')->getConnection('core_write');
+            $prefix = Mage::getConfig()->getTablePrefix();
+
+            $DB->insert($prefix."compropago_webhook_transactions", array(
+                'webhookId' => $response->id,
+                'updated'   => $time,
+                'status'    => $response->status,
+                'url'       => $webhook
+            ));
+
+        }catch (Exception $e){
+            Mage::throwException($e->getMessage());
+        }
     }
 
 }
