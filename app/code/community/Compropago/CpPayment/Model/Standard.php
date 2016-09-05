@@ -34,6 +34,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
     protected $_isInitializeNeeded     = true;
 
 
+
     /**
      * Asignacion inicial de informacion
      *
@@ -107,14 +108,19 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
 
         $sessionCheckout = Mage::getSingleton('checkout/session');
         $quoteId         = $sessionCheckout->getQuoteId();
+
         $quote           = Mage::getSingleton('checkout/session')->getQuote($quoteId);
         $orderId         = $quote->getReservedOrderId();
+
         $order           = Mage::getModel('sales/order')->loadByIncrementId($orderId);
         $grandTotal      = (float)$order->getBaseGrandTotal();
+
         $convertQuote    = Mage::getSingleton('sales/convert_quote');
         $order           = $convertQuote->toOrder($quote);
         $orderNumber     = $order->getIncrementId();
+
         $order1          = Mage::getModel('sales/order')->loadByIncrementId($orderNumber);
+        $order1->setVisibleOnFront(1);
 
 
         $name = "";
@@ -155,6 +161,32 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
             }
 
             Mage::getSingleton('core/session')->setCompropagoId($response->getId());
+
+
+
+            /* ************************************************************************
+                                    ASIGNAR COMPRA AL USUARIO
+            ************************************************************************ */
+
+
+
+            $customer = Mage::getSingleton('customer/session')->getCustomer();
+
+            if(empty($order1->getCustomerId())){
+                Mage::throwException('La orden '. $orderNumber .' no tiene dueño');
+            }
+
+
+
+
+            // Start New Sales Order Quote
+            /*$quote = Mage::getModel('sales/quote');
+            $order = Mage::getModel('sales/order');
+            $order->setQuote($quote);
+            $order->setCustomer($customer);
+            $order->setPayment($this);
+            $order->setShipping($customer->getShippingRelatedInfo());
+            $order->save();*/
 
 
 
