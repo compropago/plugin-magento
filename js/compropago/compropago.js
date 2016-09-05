@@ -7,6 +7,10 @@ function seleccionar(elem){
     }
 
     elem.classList.add("cp-selected");
+
+    provider = elem.getAttribute('data-provider');
+
+    document.querySelector('store_code_selected').value = provider;
 }
 
 
