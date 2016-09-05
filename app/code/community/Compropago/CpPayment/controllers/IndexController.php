@@ -63,7 +63,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
          * las llaves de compropago y el modo de ejecucion de la tienda
          */
         $publickey     = $this->_model->getConfigData('compropago_publickey');
-        $privatekey    = $this->_model->getConfigData('compropago_privatekey');;
+        $privatekey    = $this->_model->getConfigData('compropago_privatekey');
         $live          = (int)trim($this->_model->getConfigData('compropago_mode')) == 1 ? true : false;
 
 

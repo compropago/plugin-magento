@@ -9,9 +9,6 @@ $_getProviders  = $_model->getProviders();
     provider = document.querySelector("#store_code_selected");
     paymentcheck.checked = true;
 
-    btn = document.querySelector("button[ onclick^=payment ]");
-    btn.setAttribute("onclick"," ");
-
     phone = document.querySelector("[title=Telephone]").value;
     document.querySelector("#customer_phone").value = phone;
 
@@ -31,42 +28,37 @@ $_getProviders  = $_model->getProviders();
 </script>
 
 
+
 <div style="overflow: hidden;">
-    <ul id="payment_form_<?php  echo $_code; ?>" style="display: block">
-        <div class="label-instructions">Selecciona un establecimiento para realizar el pago en efectivo:</div>
+    <ul id="payment_form_<?php  echo $_code; ?>" style="display: none">
+        <h2>Selecciona el establecimeinto para realizar tu pago:</h2>
 
         <?php  if (!$_model->showLogoProviders()) { ?>
 
             <li>
                 <div id="<?php echo $_code; ?>_store">
-                    <select id="store_code_selected" name="payment[store_code]">
+                    <select class="provider-select" id="store_code_selected" name="payment[store_code]" style="background-size: 9px 6px !important; width: 100%; background-origin: content-box !important;">
                         <?php foreach ($_getProviders as $_provider){ ?>
                             <option value="<?php echo $_provider->internal_name; ?>"><?php echo $_provider->name; ?></option>
                         <?php } ?>
                     </select>
                     <input type="hidden" id="customer_phone" name="payment[customer_phone]" value="">
                 </div>
-
             </li>
 
         <?php } else { ?>
             <li>
-                <div class="row stores-compact" style="padding: 5px 15px; opacity: 1; width:100%; margin-bottom:70px;" id="<?php echo $_code; ?>_store">
-                    <?php foreach ($_getProviders as $_provider){ ?>
+                <div class="row stores-compact" id="<?php echo $_code; ?>_store">
+                        <?php foreach ($_getProviders as $_provider){ ?>
 
-                        <div class="element-box">
-                            <label
-                                id="cp-provider"
-                                data-provider="<?php echo $_provider->internal_name; ?>"
-                                for="<?php echo $_code; ?>_<?php echo $_provider->internal_name; ?>"
-                                class="provider-description "
-                                onclick="seleccionar(this);"
-                                style="margin: 6px !important;">
-                                <img src="<?php echo $_provider->image_medium; ?>" class="image_provider" style="margin: 0 !important;" alt="<?php echo $_provider->name; ?>">
-                            </label>
-                        </div>
+                                <label class="cp-provider">
+                                    <img src="<?php echo $_provider->image_medium; ?>"
+                                         alt="<?php echo $_provider->name; ?>"
+                                         onclick="seleccionar(this);"
+                                         data-provider="<?php echo $_provider->internal_name; ?>">
+                                </label>
 
-                    <?php } ?>
+                        <?php } ?>
                     <input id="store_code_selected" type="hidden" name="payment[store_code]" value="">
                     <input type="hidden" id="customer_phone" name="payment[customer_phone]" value="">
                 </div>
