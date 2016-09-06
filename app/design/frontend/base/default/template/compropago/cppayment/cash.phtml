@@ -9,6 +9,9 @@ $_getProviders  = $_model->getProviders();
     provider = document.querySelector("#store_code_selected");
     paymentcheck.checked = true;
 
+    btn = document.querySelector("button[ onclick^=payment ]");
+    btn.setAttribute("onclick"," ");
+
     phone = document.querySelector("[title=Telephone]").value;
     document.querySelector("#customer_phone").value = phone;
 
@@ -25,6 +28,7 @@ $_getProviders  = $_model->getProviders();
             payment.save();
         }
     });
+    setBack(document.getElementById("store_code_selected").value.toLowerCase());
 </script>
 
 
