@@ -1,18 +1,12 @@
 function seleccionar(elem){
-    console.log("entra seleccion");
-    allproviders = document.querySelectorAll(".cp-provider img");
-
+    allproviders = document.querySelectorAll(".cp-provider");
     for(var x = 0; x < allproviders.length; x++){
         allproviders[x].classList.remove("cp-selected");
     }
-
     elem.classList.add("cp-selected");
-
     provider = elem.getAttribute('data-provider');
-    document.querySelector('store_code_selected').value = provider;
+    document.getElementById('store_code_selected').value = provider;
 }
-
-
 window.onload = function(){
     $$("#co-payment-form input[type=radio]").each(function(input){
         input.observe("click", function(t){
@@ -28,7 +22,8 @@ document.addEventListener("click", someListener);
 var flagC = false;
 
 function setBack(types) {
-    var dropShops = document.getElementById("store_code_selected");
+    var dropShops = document.getElementById("store_code_selected"),
+    back = '';
     switch (types) {
         case 'oxxo':
             back = 'https://compropago.com/assets/print/receipt-oxxo-btn-mini.png';

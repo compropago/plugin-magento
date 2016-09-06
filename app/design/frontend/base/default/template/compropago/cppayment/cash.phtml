@@ -29,7 +29,7 @@ $_getProviders  = $_model->getProviders();
 
 
 
-<div style="overflow: hidden;">
+<div>
     <ul id="payment_form_<?php  echo $_code; ?>" style="display: none">
         <h2>Selecciona el establecimeinto para realizar tu pago:</h2>
 
@@ -51,11 +51,13 @@ $_getProviders  = $_model->getProviders();
                 <div class="row stores-compact" id="<?php echo $_code; ?>_store">
                         <?php foreach ($_getProviders as $_provider){ ?>
 
-                                <label class="cp-provider">
+                                <label class="cp-provider"
+                                  onclick="seleccionar(this);"
+                                  data-provider="<?php echo $_provider->internal_name; ?>"
+                                >
                                     <img src="<?php echo $_provider->image_medium; ?>"
                                          alt="<?php echo $_provider->name; ?>"
-                                         onclick="seleccionar(this);"
-                                         data-provider="<?php echo $_provider->internal_name; ?>">
+                                         >
                                 </label>
 
                         <?php } ?>
