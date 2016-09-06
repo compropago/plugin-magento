@@ -15,6 +15,9 @@ $_getProviders  = $_model->getProviders();
     phone = document.querySelector("[title=Telephone]").value;
     document.querySelector("#customer_phone").value = phone;
 
+    btn = document.querySelector("button[ onclick^=payment ]");
+    btn.setAttribute("onclick"," ");
+
     btn.addEventListener("click",function(evt){
         evt.preventDefault();
 

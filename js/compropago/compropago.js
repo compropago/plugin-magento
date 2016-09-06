@@ -7,6 +7,8 @@ function seleccionar(elem){
     provider = elem.getAttribute('data-provider');
     document.getElementById('store_code_selected').value = provider;
 }
+
+
 window.onload = function(){
     $$("#co-payment-form input[type=radio]").each(function(input){
         input.observe("click", function(t){
