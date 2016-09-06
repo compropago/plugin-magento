@@ -18,11 +18,11 @@
  * Compropago $Library
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
-
 require_once(Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php');
 
 use CompropagoSdk\Client;
 use CompropagoSdk\Models\PlaceOrderInfo;
+use CompropagoSdk\Tools\Validations;
 
 class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abstract
 {
@@ -32,6 +32,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
     protected $_canUseForMultiShipping = false;
     protected $_canUseInternal         = false;
     protected $_isInitializeNeeded     = true;
+
 
 
     /**
@@ -66,6 +67,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
             $quote = $sessionCheckout->getQuote();
             $billingAddress = $quote->getBillingAddress();
             $billing = $billingAddress->getData();
+
             $info = array(
                 "payment_type" => $store_code,
                 "customer_name" => htmlentities($billing['firstname']),
@@ -105,25 +107,31 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
         $stateObject->setIsNotified(false);
 
         $sessionCheckout = Mage::getSingleton('checkout/session');
-        $quoteId = $sessionCheckout->getQuoteId();
+        $quoteId         = $sessionCheckout->getQuoteId();
 
-        $quote = Mage::getSingleton('checkout/session')->getQuote($quoteId);
-        $orderId = $quote->getReservedOrderId();
-        $order = Mage::getModel('sales/order')->loadByIncrementId($orderId);
-        $grandTotal = (float)$order->getBaseGrandTotal();
+        $quote           = Mage::getSingleton('checkout/session')->getQuote($quoteId);
+        $orderId         = $quote->getReservedOrderId();
 
-        $convertQuote = Mage::getSingleton('sales/convert_quote');
-        $order = $convertQuote->toOrder($quote);
-        $orderNumber = $order->getIncrementId();
-        $order1 = Mage::getModel('sales/order')->loadByIncrementId($orderNumber);
+        $order           = Mage::getModel('sales/order')->loadByIncrementId($orderId);
+        $grandTotal      = (float)$order->getBaseGrandTotal();
+
+        $convertQuote    = Mage::getSingleton('sales/convert_quote');
+        $order           = $convertQuote->toOrder($quote);
+        $orderNumber     = $order->getIncrementId();
+
+        $order1          = Mage::getModel('sales/order')->loadByIncrementId($orderNumber);
+        $order1->setVisibleOnFront(1);
+
 
         $name = "";
         foreach ($order1->getAllItems() as $item) {
             $name .= $item->getName();
         }
 
+
         $infoIntance = $this->getInfoInstance();
         $info = unserialize($infoIntance->getAdditionalData());
+
 
         $order = new PlaceOrderInfo(
             $orderNumber,
@@ -137,6 +145,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
             Mage::getVersion()
         );
 
+
         try
         {
             $client = new Client(
@@ -148,10 +157,85 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
             $response = $client->api->placeOrder($order);
 
             if (empty($response->getId())) {
-                Mage::throwException("El servicio de Compropago no se encuentra disponible.");
+                Mage::throwException("El servicio de ComproPago no se encuentra disponible.");
             }
 
             Mage::getSingleton('core/session')->setCompropagoId($response->getId());
+
+
+
+            /* ************************************************************************
+                                    ASIGNAR COMPRA AL USUARIO
+            ************************************************************************ */
+
+
+
+            $customer = Mage::getSingleton('customer/session')->getCustomer();
+
+            if(empty($order1->getCustomerId())){
+                Mage::throwException('La orden '. $orderNumber .' no tiene dueño');
+            }
+
+
+
+
+            // Start New Sales Order Quote
+            /*$quote = Mage::getModel('sales/quote');
+            $order = Mage::getModel('sales/order');
+            $order->setQuote($quote);
+            $order->setCustomer($customer);
+            $order->setPayment($this);
+            $order->setShipping($customer->getShippingRelatedInfo());
+            $order->save();*/
+
+
+
+            /* ************************************************************************
+                                    RUTINAS DE BASE DE DATOS
+            ************************************************************************ */
+
+
+
+            $DB = Mage::getSingleton('core/resource')->getConnection('core_write');
+            $prefix = Mage::getConfig()->getTablePrefix();
+
+            $date = time();
+            $ioin = base64_encode(serialize($order));
+            $ioout = base64_encode(serialize($response));
+
+
+
+            /* TABLE compropago_orders
+             ------------------------------------------------------------------------*/
+
+
+            $DB->insert($prefix."compropago_orders", array(
+                'date'             => $date,
+                'modified'         => $date,
+                'compropagoId'     => $response->getId(),
+                'compropagoStatus' => $response->getStatus(),
+                'storeCartId'      => $orderNumber,
+                'storeOrderId'     => $orderNumber,
+                'storeExtra'       => 'COMPROPAGO_PENDING',
+                'ioIn'             => $ioin,
+                'ioOut'            => $ioout
+            ));
+
+
+            /* TABLE compropago_transactions
+             ------------------------------------------------------------------------*/
+
+            $DB->insert($prefix."compropago_transactions", array(
+                'orderId'              => $orderNumber,
+                'date'                 => $date,
+                'compropagoId'         => $response->getId(),
+                'compropagoStatus'     => $response->getStatus(),
+                'compropagoStatusLast' => $response->getStatus(),
+                'ioIn'                 => $ioin,
+                'ioOut'                => $ioout
+            ));
+
+
         }catch (Exception $error){
             Mage::throwException($error->getMessage());
         }
@@ -173,21 +257,15 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
             (int)trim($this->getConfigData('compropago_mode')) == 1 ? true : false
         );
 
-
         $sessionCheckout = Mage::getSingleton('checkout/session');
-        $quoteId = $sessionCheckout->getQuoteId();
-
-
-        $quote = Mage::getSingleton('checkout/session')->getQuote($quoteId);
-        $orderId = $quote->getReservedOrderId();
-        $order = Mage::getModel('sales/order')->loadByIncrementId($orderId);
-        $grandTotal = (float)$order->getBaseGrandTotal();
-
+        $quoteId         = $sessionCheckout->getQuoteId();
+        $quote           = Mage::getSingleton('checkout/session')->getQuote($quoteId);
+        $orderId         = $quote->getReservedOrderId();
+        $order           = Mage::getModel('sales/order')->loadByIncrementId($orderId);
+        $grandTotal      = (float)$order->getBaseGrandTotal();
 
         $providers = $client->api->listProviders(false, $grandTotal);
-
-
-        $filter = explode(',', $this->getConfigData('compropago_provider_available'));
+        $filter    = explode(',', $this->getConfigData('compropago_provider_available'));
 
         $record = array();
         foreach ($providers as $provider){
@@ -209,7 +287,76 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
      */
     public function showLogoProviders()
     {
-
         return (int)trim($this->getConfigData("compropago_showlogo")) == 1 ? true : false;
+    }
+
+
+    /**
+     * Despliegue de retroalimentacion en el panel de administración
+     * 
+     * @param bool   $enabled
+     * @param string $publickey
+     * @param string $privatekey
+     * @param bool   $live
+     * @return array
+     */
+    public function hookRetro($enabled, $publickey, $privatekey, $live)
+    {
+        $error = array(
+            false,
+            '',
+            'yes'
+        );
+
+        if($enabled){
+            if(!empty($publickey) && !empty($privatekey) ){
+                try{
+                    $client = new Client(
+                        $publickey,
+                        $privatekey,
+                        $live
+                    );
+                    $compropagoResponse = Validations::evalAuth($client);
+                    //eval keys
+                    if(!Validations::validateGateway($client)){
+                        $error[1] = 'Invalid Keys, The Public Key and Private Key must be valid before using this module.';
+                        $error[0] = true;
+                    }else{
+                        if($compropagoResponse->mode_key != $compropagoResponse->livemode){
+                            $error[1] = 'Your Keys and Your ComproPago account are set to different Modes.';
+                            $error[0] = true;
+                        }else{
+                            if($live != $compropagoResponse->livemode){
+                                $error[1] = 'Your Store and Your ComproPago account are set to different Modes.';
+                                $error[0] = true;
+                            }else{
+                                if($live != $compropagoResponse->mode_key){
+                                    $error[1] = 'ComproPago ALERT:Your Keys are for a different Mode.';
+                                    $error[0] = true;
+                                }else{
+                                    if(!$compropagoResponse->mode_key && !$compropagoResponse->livemode){
+                                        $error[1] = 'WARNING: ComproPago account is Running in TEST Mode, NO REAL OPERATIONS';
+                                        $error[0] = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }catch (Exception $e) {
+                    $error[2] = 'no';
+                    $error[1] = $e->getMessage();
+                    $error[0] = true;
+                }
+            }else{
+                $error[1] = 'The Public Key and Private Key must be set before using ComproPago';
+                $error[2] = 'no';
+                $error[0] = true;
+            }
+        }else{
+            $error[1] = 'ComproPago is not Enabled';
+            $error[2] = 'no';
+            $error[0] = true;
+        }
+        return $error;
     }
 }

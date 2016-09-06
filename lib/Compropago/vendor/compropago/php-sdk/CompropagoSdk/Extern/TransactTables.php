@@ -80,6 +80,7 @@ class TransactTables
             `webhookId` varchar(50) not null,
             `updated` integer not null,
             `status` varchar(50) not null,
+            `url` text not null,
             primary key(id)
             )ENGINE=MyISAM DEFAULT CHARSET=utf8  DEFAULT COLLATE utf8_general_ci  AUTO_INCREMENT=1 ;'
         );

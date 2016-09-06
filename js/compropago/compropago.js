@@ -1,32 +1,15 @@
-function seleccionar(t){
-    provider = t.getAttribute("data-provider");
-    seleccionados = document.querySelectorAll("#cp-provider");
-    store_code = document.querySelector('#store_code_selected');
+function seleccionar(elem){
+    console.log("entra seleccion");
+    allproviders = document.querySelectorAll(".cp-provider img");
 
-    for(var x = 0; x < seleccionados.length; x++){
-        seleccionados[x].setAttribute("style",
-            "box-shadow: 0px 0px 0px 0px transparent;"+
-            "-webkit-box-shadow: 0px 0px 0px 0px transparent;"+
-            "-moz-box-shadow: 0px 0px 0px 0px transparent;"+
-            "margin: 6px !important;"
-        );
+    for(var x = 0; x < allproviders.length; x++){
+        allproviders[x].classList.remove("cp-selected");
     }
 
-    for (var i = 0; i < seleccionados.length; i++) {
-        seleccionados[i].className = seleccionados[i].className.replace(/\bseleccion_store\b/,'');
-    }
+    elem.classList.add("cp-selected");
 
-    t.setAttribute("style",
-        "box-shadow: 0px 0px 2px 4px rgba(0,170,239,1);"+
-        "-webkit-box-shadow: 0px 0px 2px 4px rgba(0,170,239,1);"+
-        "-moz-box-shadow: 0px 0px 2px 4px rgba(0,170,239,1);"+
-        "margin: 6px !important;"
-    );
-
-    if(t.className.search("seleccion_store") == -1){
-        t.className += "seleccion_store";
-        store_code.value = provider;
-    }
+    provider = elem.getAttribute('data-provider');
+    document.querySelector('store_code_selected').value = provider;
 }
 
 

@@ -1,5 +1,6 @@
 Plugin para Magento 1.7.x, 1.8.x, 1.9.x - ComproPago
 ====================================================
+
 ## Descripción
 Este modulo provee el servicio de ComproPago para poder generar intenciones de pago dentro de la plataforma Magento.
 

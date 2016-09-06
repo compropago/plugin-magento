@@ -44,7 +44,21 @@
                 </setup>
             </cppayment_setup>
         </resources>
+
+
+        <!-- EVENTOS ESCUCHADOS DEL PLUGIN -->
+        <events>
+            <admin_system_config_changed_section_payment>
+                <observers>
+                    <cppayment_check_webhook>
+                        <class>cppayment/observer</class>
+                        <method>checkWebhook</method>
+                    </cppayment_check_webhook>
+                </observers>
+            </admin_system_config_changed_section_payment>
+        </events>
     </global>
+
 
 
     <!-- RUTEO DEL WEBHOOK -->
@@ -68,22 +82,6 @@
     </frontend>
 
 
-    <!-- EVENTOS ESCUCHADOS DEL PLUGIN -->
-    <events>
-
-        <!-- Cambios en la configuracion de los metodos de pago -->
-        <admin_system_config_changed_section_payment>
-            <observers>
-                <Compropago_cppayment_model_observer>
-                    <type>singleton</type>
-                    <class>Compropago_CpPayment_Model_Observer</class>
-                    <method>registerWebhook</method>
-                </Compropago_cppayment_model_observer>
-            </observers>
-        </admin_system_config_changed_section_payment>
-    </events>
-
-
     <!-- ACTIVACION COMO METODO DE PAGO -->
     <default>
         <payment>
@@ -91,7 +89,7 @@
                 <active>1</active>
                 <model>cppayment/standard</model>
                 <order_status>pending</order_status>
-                <title>ComproPago Payment Method</title>
+                <title>Pago en efectivo - ComproPago</title>
                 <allowspecific>0</allowspecific>
                 <payment_action>sale</payment_action>
             </cppayment>
