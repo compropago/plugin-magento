@@ -8,6 +8,7 @@
 }
 #cppayment_store .provider-select {
     -webkit-appearance: none;
+    -moz-appearance: none;
     outline: 0;
     border: 0;
     background: none;
