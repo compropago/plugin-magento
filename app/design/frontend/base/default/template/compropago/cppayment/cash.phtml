@@ -37,7 +37,7 @@ $_getProviders  = $_model->getProviders();
 
             <li>
                 <div id="<?php echo $_code; ?>_store">
-                    <select class="provider-select" id="store_code_selected" name="payment[store_code]" style="background-size: 9px 6px !important; width: 100%; background-origin: content-box !important;">
+                    <select class="provider-select" id="store_code_selected" name="payment[store_code]">
                         <?php foreach ($_getProviders as $_provider){ ?>
                             <option value="<?php echo $_provider->internal_name; ?>"><?php echo $_provider->name; ?></option>
                         <?php } ?>

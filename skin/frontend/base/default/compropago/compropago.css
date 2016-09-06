@@ -1,57 +1,27 @@
-.provider-select {
-    height: 2.4375rem;
-    padding: 0.5rem;
-    border: 1px solid #cacaca;
-    margin: 0 0 1rem;
-    font-size: 1rem;
-    font-family: inherit;
-    line-height: normal;
-    color: #0a0a0a;
-    background-color: #fefefe;
-    border-radius: 0;
+#cppayment_store {
+    background: url(https://compropago.com/assets/terminal/select-input.png) no-repeat;
+    width: 298px;
+    height: 39px;
+    position: relative;
+    background-size: 100% auto;
+    max-width: 100%;
+}
+#cppayment_store .provider-select {
     -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='32' height='24' viewBox='0 0 32 24'><polygon points='0,0 32,0 16,24' style='fill: rgb%28138, 138, 138%29'></polygon></svg>");
-    -webkit-background-size: 9px 6px !important;
-    background-size: 9px 6px !important;
-    background-position: right -1rem center;
-    -webkit-background-origin: content-box !important;
-    background-origin: content-box !important;
-    background-repeat: no-repeat;
-    padding-right: 1.5rem;
-    width: 100%;
-}
-
-.cp-provider {
-    float: left;
-    margin: 0 1em 1em 0 !important;
-}
-
-.cp-provider img {
-    width: 100px !important;
-    opacity: 0.6 !important;
-    transition-property: all;
-    transition-duration: 0.4s;
-}
-
-.cp-provider img:hover {
-    opacity: 1 !important;
-}
-
-.cp-selected {
-    opacity: 1 !important;
-    box-shadow: 0px 0px 2px 4px rgba(0, 170, 239, 1);
-    -webkit-box-shadow: 0px 0px 2px 4px rgba(0, 170, 239, 1);
-    -moz-box-shadow: 0px 0px 2px 4px rgba(0, 170, 239, 1);
-}
-
-#cppayment_store select {
     outline: 0;
-    color: # #636363;
+    border: 0;
+    background: none;
+    height: 100%;
+    width: 100%;
+    padding-left: 62px;
+    box-sizing: border-box;
+    text-transform: uppercase;
+    font-size: 14px;
+    background-size: auto 70%;
+    background-position: 2px 6px;
+    background-repeat: no-repeat;
 }
-
 #payment_form_cppayment h2 {
-    font-size: 15px;
-    font-weight: bold;
-    margin-top: 1em;
+    font-size: 16px;
+    margin: .5em 0;
 }
