@@ -15,9 +15,6 @@ $_getProviders  = $_model->getProviders();
     phone = document.querySelector("[title=Telephone]").value;
     document.querySelector("#customer_phone").value = phone;
 
-    btn = document.querySelector("button[ onclick^=payment ]");
-    btn.setAttribute("onclick"," ");
-
     btn.addEventListener("click",function(evt){
         evt.preventDefault();
 
@@ -31,6 +28,7 @@ $_getProviders  = $_model->getProviders();
             payment.save();
         }
     });
+    
     setBack(document.getElementById("store_code_selected").value.toLowerCase());
 </script>
 
