@@ -170,23 +170,24 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
 
 
 
-            $customer = Mage::getSingleton('customer/session')->getCustomer();
+            $customer = Mage::getModel('customer/customer');
+            $customer->setWebsiteId(1);
+            $customer->loadByEmail($info['customer_email']);
 
-            if(empty($order1->getCustomerId())){
-                Mage::throwException('La orden '. $orderNumber .' no tiene dueño');
-            }
-
-
-
+            //$orderbyid = Mage::getModel('sales/order')->loadByIncrementId('10000001'); // 10000001 is just an example replace with yours
+            /*$order1->setCustomerId($customer->getId());
+            $order1->setCustomerFirstname($customer->getFirstname());
+            $order1->setCustomerLastname($customer->getLastname());
+            $order1->setCustomerEmail($customer->getEmail());
+            $order1->save();*/
 
             // Start New Sales Order Quote
-            /*$quote = Mage::getModel('sales/quote');
-            $order = Mage::getModel('sales/order');
-            $order->setQuote($quote);
-            $order->setCustomer($customer);
-            $order->setPayment($this);
-            $order->setShipping($customer->getShippingRelatedInfo());
-            $order->save();*/
+            $quote = Mage::getModel('sales/quote');
+            $order1->setQuote($quote);
+            $order1->setCustomer($customer);
+            $order1->setPayment($this);
+            $order1->setShipping($customer->getShippingRelatedInfo());
+            $order1->save();
 
 
 

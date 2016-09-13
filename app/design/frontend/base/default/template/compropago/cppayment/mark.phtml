@@ -18,27 +18,6 @@
  * Compropago $Library
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
+?>
 
-
-class Compropago_CpPayment_Block_Form extends Mage_Payment_Block_Form
-{
-    protected function _construct()
-    {
-        parent::_construct();
-        $this->setTemplate('compropago/cppayment/cash.phtml');
-    }
-
-    public function getMethod()
-    {
-        return parent::getMethod();
-    }
-
-    public function getMethodLabelAfterHtml()
-    {
-        $mark = Mage::getConfig()->getBlockClassName('core/template');
-        $mark = new $mark;
-        $mark->setTemplate('compropago/cppayment/mark.phtml');
-
-        return $mark->toHtml();
-    }
-}
+<img class="v-middle" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'cppayment/gitmerge.gif' ?>" alt="Compropago-Logo">
