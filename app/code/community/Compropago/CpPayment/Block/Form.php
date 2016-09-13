@@ -33,12 +33,27 @@ class Compropago_CpPayment_Block_Form extends Mage_Payment_Block_Form
         return parent::getMethod();
     }
 
+
+    /**
+     * Render template for Payment Method Lebel in checkout
+     *
+     * @return mixed
+     */
     public function getMethodLabelAfterHtml()
     {
-        $mark = Mage::getConfig()->getBlockClassName('core/template');
-        $mark = new $mark;
-        $mark->setTemplate('compropago/cppayment/mark.phtml');
+        $model = Mage::getModel('cppayment/standard');
 
-        return $mark->toHtml();
+        $logo = (int)trim($model->getConfigData('compropago_show_title_logo')) == 1 ? true : false;
+
+        if($logo){
+            $mark = Mage::getConfig()->getBlockClassName('core/template');
+            $mark = new $mark;
+            $mark->setTemplate('compropago/cppayment/mark.phtml');
+            $final = $mark->toHtml();
+        }else{
+            $final = $model->getConfigData('compropago_title');
+        }
+
+        return $final;
     }
 }
