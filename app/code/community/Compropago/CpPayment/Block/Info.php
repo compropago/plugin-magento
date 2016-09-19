@@ -14,12 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /**
  * Compropago $Library
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
-?>
-<div>
-    <img class="v-middle" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'cppayment/compropago-logo.png' ?>" alt="Compropago-Logo">
-</div>
+class Compropago_CpPayment_Block_Info extends Mage_Payment_Block_Info
+{
 
+    public function __construct()
+    {
+        $this->setTemplate('compropago/cppayment/info.phtml');
+    }
+
+}
