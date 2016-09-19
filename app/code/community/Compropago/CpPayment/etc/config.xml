@@ -88,10 +88,14 @@
             <cppayment>
                 <active>1</active>
                 <model>cppayment/standard</model>
-                <order_status>pending</order_status>
                 <title>Pago en efectivo - ComproPago</title>
                 <allowspecific>0</allowspecific>
                 <payment_action>sale</payment_action>
+                <compropago_show_title_logo>1</compropago_show_title_logo>
+                <compropago_order_status_new>pending</compropago_order_status_new>
+                <compropago_order_status_approved>processing</compropago_order_status_approved>
+                <compropago_order_status_in_process>pending</compropago_order_status_in_process>
+                <compropago_order_status_cancelled>canceled</compropago_order_status_cancelled>
             </cppayment>
         </payment>
     </default>

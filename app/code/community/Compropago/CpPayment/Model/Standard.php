@@ -28,6 +28,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
 {
     protected $_code                   = 'cppayment';
     protected $_formBlockType          = 'cppayment/form';
+    protected $_infoBlockType          = 'cppayment/info';
 
     protected $_canUseForMultiShipping = false;
     protected $_canUseInternal         = false;
@@ -170,23 +171,24 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
 
 
 
-            $customer = Mage::getSingleton('customer/session')->getCustomer();
+            $customer = Mage::getModel('customer/customer');
+            $customer->setWebsiteId(1);
+            $customer->loadByEmail($info['customer_email']);
 
-            if(empty($order1->getCustomerId())){
-                Mage::throwException('La orden '. $orderNumber .' no tiene dueño');
-            }
-
-
-
+            $orderbyid = Mage::getModel('sales/order')->loadByIncrementId($orderNumber);
+            $orderbyid->setCustomerId($customer->getId());
+            $orderbyid->setCustomerFirstname($customer->getFirstname());
+            $orderbyid->setCustomerLastname($customer->getLastname());
+            $orderbyid->setCustomerEmail($customer->getEmail());
+            $orderbyid->save();
 
             // Start New Sales Order Quote
             /*$quote = Mage::getModel('sales/quote');
-            $order = Mage::getModel('sales/order');
-            $order->setQuote($quote);
-            $order->setCustomer($customer);
-            $order->setPayment($this);
-            $order->setShipping($customer->getShippingRelatedInfo());
-            $order->save();*/
+            $order1->setQuote($quote);
+            $order1->setCustomer($customer);
+            $order1->setPayment($this);
+            $order1->setShipping($customer->getShippingRelatedInfo());
+            $order1->save();*/
 
 
 
@@ -199,8 +201,8 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
             $DB = Mage::getSingleton('core/resource')->getConnection('core_write');
             $prefix = Mage::getConfig()->getTablePrefix();
 
-            $date = time();
-            $ioin = base64_encode(serialize($order));
+            $date  = time();
+            $ioin  = base64_encode(serialize($order));
             $ioout = base64_encode(serialize($response));
 
 
@@ -279,6 +281,22 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
         return $record;
     }
 
+    /**
+     * Esconde texto de titulo si se indico uso de logo
+     *
+     * @param $is_info
+     * @return mixed|string
+     */
+    public function getTitle($is_info = false)
+    {
+        if($is_info){
+            return $this->getConfigData('title');
+        }else{
+            $logo = (int)trim($this->getConfigData('compropago_show_title_logo')) == 1 ? true : false;
+            return $logo ? "" : $this->getConfigData('title');
+        }
+    }
+
 
     /**
      * verificacion de muestra de logos
@@ -293,7 +311,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
 
     /**
      * Despliegue de retroalimentacion en el panel de administración
-     * 
+     *
      * @param bool   $enabled
      * @param string $publickey
      * @param string $privatekey

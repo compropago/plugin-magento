@@ -8,6 +8,10 @@
                 <script>compropago/compropago.js</script>
             </action>
         </reference>
+
+        <reference name="">
+
+        </reference>
     </checkout_onepage_index>
 
 
