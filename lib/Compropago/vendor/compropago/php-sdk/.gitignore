@@ -1,0 +1,9 @@
+.buildpath
+.project
+.settings
+composer.lock
+dev-notes
+vendor
+.DS_Store
+phpunit.xml
+.idea

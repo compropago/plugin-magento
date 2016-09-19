@@ -1,46 +1,85 @@
-/**
- * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
- * @author Oswaldo Lopez
- */
-
-function seleccionar(t){
-    provider = t.getAttribute("data-provider");
-    seleccionados = document.querySelectorAll("#cp-provider");
-    store_code = document.querySelector('#store_code_selected');
-
-    for(var x = 0; x < seleccionados.length; x++){
-        seleccionados[x].setAttribute("style",
-            "box-shadow: 0px 0px 0px 0px transparent;"+
-            "-webkit-box-shadow: 0px 0px 0px 0px transparent;"+
-            "-moz-box-shadow: 0px 0px 0px 0px transparent;"+
-            "margin: 6px !important;"
-        );
+function seleccionar(elem){
+    allproviders = document.querySelectorAll(".cp-provider");
+    for(var x = 0; x < allproviders.length; x++){
+        allproviders[x].classList.remove("cp-selected");
     }
-
-    for (var i = 0; i < seleccionados.length; i++) {
-        seleccionados[i].className = seleccionados[i].className.replace(/\bseleccion_store\b/,'');
-    }
-
-    t.setAttribute("style",
-        "box-shadow: 0px 0px 2px 4px rgba(0,170,239,1);"+
-        "-webkit-box-shadow: 0px 0px 2px 4px rgba(0,170,239,1);"+
-        "-moz-box-shadow: 0px 0px 2px 4px rgba(0,170,239,1);"+
-        "margin: 6px !important;"
-    );
-
-    if(t.className.search("seleccion_store") == -1){
-        t.className += "seleccion_store";
-        store_code.value = provider;
-    }
+    elem.classList.add("cp-selected");
+    provider = elem.getAttribute('data-provider');
+    document.getElementById('store_code_selected').value = provider;
 }
 
 
-window.onload = function(){	
-	$$("#co-payment-form input[type=radio]").each(function(input){
+window.onload = function(){
+    $$("#co-payment-form input[type=radio]").each(function(input){
         input.observe("click", function(t){
             if(t.getAttribute("id") == "cp-provider"){
                 seleccionar(t);
             }
-		});
-	});
-}; 
+        });
+    });
+};
+
+
+document.addEventListener("click", someListener);
+var flagC = false;
+
+function setBack(types) {
+    var dropShops = document.getElementById("store_code_selected"),
+    back = '';
+    switch (types) {
+        case 'oxxo':
+            back = 'https://compropago.com/assets/print/receipt-oxxo-btn-mini.png';
+            break;
+        case 'seven_eleven':
+            back = 'https://compropago.com/assets/print/receipt-seven-btn-mini.png';
+            break;
+        case 'coppel':
+            back = 'https://compropago.com/assets/print/receipt-coppel-btn-mini.png';
+            break;
+        case 'chedraui':
+            back = 'https://compropago.com/assets/print/receipt-chedraui-btn-mini.png';
+            break;
+        case 'extra':
+            back = 'https://compropago.com/assets/print/receipt-extra-btn-mini.png';
+            break;
+        case 'farmacia_esquivar':
+            back = 'https://compropago.com/assets/print/receipt-esquivar-btn-mini.png';
+            break;
+        case 'farmacia_benavides':
+            back = 'https://compropago.com/assets/print/receipt-benavides-btn-mini.png';
+            break;
+        case 'elektra':
+            back = 'https://compropago.com/assets/print/receipt-elektra-btn-mini.png';
+            break;
+        case 'casa_ley':
+            back = 'https://compropago.com/assets/print/receipt-ley-btn-mini.png';
+            break;
+        case 'pitico':
+            back = 'https://compropago.com/assets/print/receipt-pitico-btn-mini.png';
+            break;
+        case 'telecomm':
+            back = 'https://compropago.com/assets/print/receipt-telecomm-btn-mini.png';
+            break;
+        case 'farmacia_abc':
+            back = 'https://compropago.com/assets/print/receipt-abc-btn-mini.png';
+            break;
+    }
+    dropShops.style.backgroundImage = 'url(\'' + back + '\')';
+}
+
+function someListener(event) {
+    var element = event.target,
+        dropShops = document.getElementById("store_code_selected"),
+        back = '';
+    if (dropShops) {
+        setBack(dropShops.value.toLowerCase());
+    }
+    if (element.classList.contains("provider-select")) {
+        if (flagC === false) {
+            flagC = true;
+            dropShops.addEventListener("change", function() {
+                setBack(dropShops.value.toLowerCase());
+            });
+        }
+    }
+}
