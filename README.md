@@ -50,7 +50,7 @@ Una vez que el cliente generó su órden de pago, dentro del panel de control de
    ***Nota:*** La opción de **Habilitar Logos** es para mostrar las imágenes de los establecimientos con
    los que procesamos pagos
 
-2. Agregar la **llave privada** y **llave pública** que se encuentran en el apartado de configuración dentro del
+2. Agrega la **llave privada** y **llave pública** que se encuentran en el apartado de configuración dentro del
    [panel de control de ComproPago][Compropago-Panel].
 
    Asegúrate de que las llaves coincidan con el modo activo o modo pruebas según sea el caso.
