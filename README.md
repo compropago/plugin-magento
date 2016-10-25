@@ -67,7 +67,7 @@ Una vez completados estos pasos el proceso de instalación ha finalizado.
 
 ## Documentación
 
-### Documentación de ComproPago
+### ComproPago Plugin Magento
 **[API de ComproPago](https://compropago.com/documentacion/api)**
 
 ComproPago te ofrece un API tipo REST para integrar pagos en efectivo en tu comercio electrónico o tus aplicaciones.
