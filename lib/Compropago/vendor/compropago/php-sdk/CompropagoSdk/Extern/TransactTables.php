@@ -14,14 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Compropago $Library
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
-
 namespace CompropagoSdk\Extern;
-
 class TransactTables
 {
     /**
@@ -37,9 +34,6 @@ class TransactTables
             'DROP TABLE IF EXISTS `' . $prefix . 'compropago_webhook_transactions`'
         );
     }
-
-
-
     /**
      * SQL query for Creating ComproPago Tables
      * @return string[]
@@ -61,8 +55,6 @@ class TransactTables
 			`ioOut` mediumtext,
 			PRIMARY KEY (`id`), UNIQUE KEY (`compropagoId`)
 			)ENGINE=MyISAM DEFAULT CHARSET=utf8  DEFAULT COLLATE utf8_general_ci  AUTO_INCREMENT=1 ;',
-
-
             'CREATE TABLE `' . $prefix . 'compropago_transactions` (
 			`id` int(11) NOT NULL AUTO_INCREMENT,
 			`orderId` int(11) NOT NULL,
@@ -74,7 +66,6 @@ class TransactTables
 			`ioOut` mediumtext,
 			PRIMARY KEY (`id`)
 			)ENGINE=MyISAM DEFAULT CHARSET=utf8  DEFAULT COLLATE utf8_general_ci  AUTO_INCREMENT=1 ;',
-
             'CREATE TABLE `' . $prefix . 'compropago_webhook_transactions` (
             `id` integer not null auto_increment,
             `webhookId` varchar(50) not null,
