@@ -21,7 +21,7 @@
 require_once(Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php');
 
 use CompropagoSdk\Client;
-use CompropagoSdk\Models\PlaceOrderInfo;
+use CompropagoSdk\Factory\Factory;
 use CompropagoSdk\Tools\Validations;
 
 class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abstract
@@ -33,8 +33,6 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
     protected $_canUseForMultiShipping = false;
     protected $_canUseInternal         = false;
     protected $_isInitializeNeeded     = true;
-
-
 
     /**
      * Asignacion inicial de informacion
@@ -133,22 +131,23 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
         $infoIntance = $this->getInfoInstance();
         $info = unserialize($infoIntance->getAdditionalData());
 
-
-        $order = new PlaceOrderInfo(
-            $orderNumber,
-            $name,
-            $grandTotal,
-            $info['customer_name'],
-            $info['customer_email'],
-            $info['payment_type'],
-            null,
-            'magento',
-            Mage::getVersion()
-        );
-
-
         try
         {
+            $order_info = [
+                'order_id' => $orderNumber,
+                'order_name' => $name,
+                'order_price' => $grandTotal,
+                'customer_name' => $info['customer_name'],
+                'customer_email' => $info['customer_email'],
+                'payment_type' => $info['payment_type'],
+                'currency' => Mage::app()->getStore()->getCurrentCurrencyCode(),
+                'image_url' => null,
+                'app_client_name' => 'magento',
+                'app_client_version' => Mage::getVersion()
+            ];
+
+            $order = Factory::getInstanceOf('PlaceOrderInfo', $order_info);
+
             $client = new Client(
                 $this->getConfigData('compropago_publickey'),
                 $this->getConfigData('compropago_privatekey'),
@@ -157,11 +156,11 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
 
             $response = $client->api->placeOrder($order);
 
-            if (empty($response->getId())) {
+            if (empty($response->id)) {
                 Mage::throwException("El servicio de ComproPago no se encuentra disponible.");
             }
 
-            Mage::getSingleton('core/session')->setCompropagoId($response->getId());
+            Mage::getSingleton('core/session')->setCompropagoId($response->id);
 
 
 
@@ -214,8 +213,8 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
             $DB->insert($prefix."compropago_orders", array(
                 'date'             => $date,
                 'modified'         => $date,
-                'compropagoId'     => $response->getId(),
-                'compropagoStatus' => $response->getStatus(),
+                'compropagoId'     => $response->id,
+                'compropagoStatus' => $response->status,
                 'storeCartId'      => $orderNumber,
                 'storeOrderId'     => $orderNumber,
                 'storeExtra'       => 'COMPROPAGO_PENDING',
@@ -230,15 +229,15 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
             $DB->insert($prefix."compropago_transactions", array(
                 'orderId'              => $orderNumber,
                 'date'                 => $date,
-                'compropagoId'         => $response->getId(),
-                'compropagoStatus'     => $response->getStatus(),
-                'compropagoStatusLast' => $response->getStatus(),
+                'compropagoId'         => $response->id,
+                'compropagoStatus'     => $response->status,
+                'compropagoStatusLast' => $response->status,
                 'ioIn'                 => $ioin,
                 'ioOut'                => $ioout
             ));
 
 
-        }catch (Exception $error){
+        } catch (Exception $error) {
             Mage::throwException($error->getMessage());
         }
 
@@ -259,14 +258,11 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
             (int)trim($this->getConfigData('compropago_mode')) == 1 ? true : false
         );
 
-        $sessionCheckout = Mage::getSingleton('checkout/session');
-        $quoteId         = $sessionCheckout->getQuoteId();
-        $quote           = Mage::getSingleton('checkout/session')->getQuote($quoteId);
-        $orderId         = $quote->getReservedOrderId();
-        $order           = Mage::getModel('sales/order')->loadByIncrementId($orderId);
-        $grandTotal      = (float)$order->getBaseGrandTotal();
+        $quote      = Mage::getModel('checkout/session')->getQuote();
+        $quoteData  = $quote->getData();
+        $grandTotal = $quoteData['grand_total'];
 
-        $providers = $client->api->listProviders(false, $grandTotal);
+        $providers = $client->api->listProviders(true, $grandTotal, Mage::app()->getStore()->getCurrentCurrencyCode());
         $filter    = explode(',', $this->getConfigData('compropago_provider_available'));
 
         $record = array();

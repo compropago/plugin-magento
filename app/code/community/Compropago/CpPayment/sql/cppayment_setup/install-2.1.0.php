@@ -15,29 +15,22 @@
  * limitations under the License.
  */
 /**
- * Compropago ${LIBRARI}
+ * Compropago $Library
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
+require_once(Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php');
 
+use CompropagoSdk\Extern\TransactTables;
 
-namespace CompropagoSdk\Factory\V10;
+$installer = $this;
+$installer->startSetup();
 
-
-class PaymentDetails
-{
-    public $object;
-    public $store;
-    public $country;
-    public $product_id;
-    public $product_price;
-    public $product_name;
-    public $image_url;
-    public $success_url;
-    public $customer_name;
-    public $customer_email;
-    public $customer_phone;
-
-    public function __construct()
-    {
-    }
+foreach (TransactTables::sqlDropTables(Mage::getConfig()->getTablePrefix()) as $table){
+    $installer->run($table);
 }
+
+foreach (TransactTables::sqlCreateTables(Mage::getConfig()->getTablePrefix()) as $table){
+    $installer->run($table);
+}
+
+$installer->endSetup();

@@ -34,13 +34,10 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
      */
     protected $_model = null;
 
-
-
     public function _construct()
     {
         $this->_model = Mage::getModel('cppayment/Standard');
     }
-
 
     public function indexAction()
     {
@@ -49,14 +46,12 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
          */
         $request = @file_get_contents('php://input'); 
 
-
         /**
          * Se valida el request y se transforma con la cadena a un objeto de tipo CpOrderInfo con el Factory
          */
-        if(!$resp_webhook = Factory::cpOrderInfo($request)){
+        if (!$resp_webhook = Factory::getInstanceOf('CpOrderInfo', $request)) {
             die('Tipo de Request no Valido');
         }
-
 
         /**
          * Gurdamos la informacion necesaria para el Cliente
@@ -66,7 +61,6 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
         $privatekey    = $this->_model->getConfigData('compropago_privatekey');
         $live          = (int)trim($this->_model->getConfigData('compropago_mode')) == 1 ? true : false;
 
-
         /**
          * Se valida que las llaves no esten vacias (No es obligatorio pero si recomendado)
          */
@@ -74,48 +68,38 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
             die("Se requieren las llaves de compropago");
         }
 
-
-        try{
-            $client = new Client(
-                $publickey,
-                $privatekey,
-                $live
-            );
+        try {
+            $client = new Client($publickey, $privatekey, $live);
 
             Validations::validateGateway($client);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             die($e->getMessage());
         }
-
 
         /**
          * Verificamos si recivimos una peticion de prueba
          */
-        if($resp_webhook->getId()=="ch_00000-000-0000-000000"){
-            die("Probando el WebHook?, <b>Ruta correcta.</b>");
+        if ($resp_webhook->id == "ch_00000-000-0000-000000") {
+            die("Probando el WebHook?, Ruta correcta.");
         }
 
 
-        try{
+        try {
             /**
              * Verificamos la informacion del Webhook recivido
              */
-            $response = $client->api->verifyOrder($resp_webhook->getId());
-
+            $response = $client->api->verifyOrder($resp_webhook->id);
 
             /**
              * Comprovamos que la verificacion fue exitosa
              */
-            if($response->getType() == 'error'){
+            if ($response->type == 'error') {
                 die('Error procesando el número de orden');
             }
-
-
 
             /* ************************************************************************
                                     RUTINAS DE BASE DE DATOS
             ************************************************************************ */
-
 
             $DBread  = Mage::getSingleton('core/resource')->getConnection('core_read');
             $DBwrite = Mage::getSingleton('core/resource')->getConnection('core_write');
@@ -126,27 +110,23 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
             $date  = time();
 
 
-            $sql = "SELECT * FROM " . $prefix . "compropago_orders where compropagoId = '{$response->getId()}'";
+            $sql = "SELECT * FROM " . $prefix . "compropago_orders where compropagoId = '{$response->id}'";
             $res = $DBread->fetchAll($sql);
 
             $storedId = $res[0]['storeOrderId'];
 
-            if(empty($storedId)){
+            if (empty($storedId)) {
                throw new Exception('El pago no corresponde a esta tienda.');
             }
 
-
-
             /* Rutinas de aprovación
              ------------------------------------------------------------------------*/
-
-            $_order = Mage::getModel('sales/order')->loadByIncrementId($response->getOrderInfo()->getOrderId());
-
+            $_order = Mage::getModel('sales/order')->loadByIncrementId($response->order_info->order_id);
 
             /**
              * Generamos las rutinas correspondientes para cada uno de los casos posible del webhook
              */
-            switch ($response->getType()){
+            switch ($response->type) {
                 case 'charge.pending':
                     $status = $this->_model->getConfigData('compropago_order_status_new');
                     $message = 'The user has not completed the payment process yet.';
@@ -209,7 +189,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
 
             $DBwrite->update($prefix."compropago_orders",array(
                 'modified'         => $date,
-                'compropagoStatus' => $response->getType(),
+                'compropagoStatus' => $response->type,
                 'storeExtra'       => $nomestatus,
             ), 'id='.$res[0]['id']);
 
@@ -220,15 +200,15 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
             $DBwrite->insert($prefix."compropago_transactions", array(
                 'orderId'              => $storedId,
                 'date'                 => $date,
-                'compropagoId'         => $response->getId(),
-                'compropagoStatus'     => $response->getType(),
+                'compropagoId'         => $response->id,
+                'compropagoStatus'     => $response->type,
                 'compropagoStatusLast' => $res[0]['compropagoStatus'],
                 'ioIn'                 => $ioin,
                 'ioOut'                => $ioout
             ));
 
 
-        }catch (Exception $e){
+        } catch (Exception $e) {
             //something went wrong at sdk lvl
             die($e->getMessage());
         }
