@@ -173,12 +173,14 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
             $customer = Mage::getModel('customer/customer');
             $customer->setWebsiteId(1);
             $customer->loadByEmail($info['customer_email']);
-
+            $message = 'The user has not completed the payment process yet.';
             $orderbyid = Mage::getModel('sales/order')->loadByIncrementId($orderNumber);
             $orderbyid->setCustomerId($customer->getId());
             $orderbyid->setCustomerFirstname($customer->getFirstname());
             $orderbyid->setCustomerLastname($customer->getLastname());
             $orderbyid->setCustomerEmail($customer->getEmail());
+            $history = $orderbyid->addStatusHistoryComment($message);
+            $history->setIsCustomerNotified(true);
             $orderbyid->save();
 
             // Start New Sales Order Quote
