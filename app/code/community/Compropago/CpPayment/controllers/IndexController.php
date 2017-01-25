@@ -44,7 +44,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
         /**
          * Se captura la informacion enviada desde compropago
          */
-        $request = @file_get_contents('php://input'); 
+        $request = @file_get_contents('php://input');
 
         /**
          * Se valida el request y se transforma con la cadena a un objeto de tipo CpOrderInfo con el Factory
@@ -132,8 +132,8 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                     $message = 'The user has not completed the payment process yet.';
                     $_order->setData('state',$status);
                     $_order->setStatus($status);
-                    $history = $_order->addStatusHistoryComment($message);
-                    $history->setIsCustomerNotified(false);
+                    //$history = $_order->addStatusHistoryComment($message);
+                    //$history->setIsCustomerNotified(true);
                     $_order->save();
                     $nomestatus = 'COMPROPAGO_PENDING';
                     break;
