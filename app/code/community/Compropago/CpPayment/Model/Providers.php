@@ -31,7 +31,7 @@ class Compropago_CpPayment_Model_Providers
         $options = array();
         $client = new Client('', '', false);
 
-        foreach ($client->api->listProviders() as $provider){
+        foreach ($client->api->listDefaultProviders() as $provider){
             $options[] = array(
                 'value' => $provider->internal_name,
                 'label' => $provider->name
