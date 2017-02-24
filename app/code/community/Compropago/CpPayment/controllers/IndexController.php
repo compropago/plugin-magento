@@ -136,6 +136,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                     //$history->setIsCustomerNotified(true);
                     $_order->save();
                     $nomestatus = 'COMPROPAGO_PENDING';
+                    var_dump($nomestatus);
                     break;
                 case 'charge.success':
                     $status = $this->_model->getConfigData('compropago_order_status_approved');
@@ -146,6 +147,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                     $history->setIsCustomerNotified(true);
                     $_order->save();
                     $nomestatus = 'COMPROPAGO_SUCCESS';
+                    var_dump($nomestatus);
                     break;
                 case 'charge.declined':
                     $status = $this->_model->getConfigData('compropago_order_status_in_process');
@@ -156,6 +158,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                     $history->setIsCustomerNotified(false);
                     $_order->save();
                     $nomestatus = 'COMPROPAGO_DECLINED';
+                    var_dump($nomestatus);
                     break;
                 case 'charge.deleted':
                     $status = $this->_model->getConfigData('compropago_order_status_cancelled');
@@ -166,6 +169,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                     $history->setIsCustomerNotified(false);
                     $_order->save();
                     $nomestatus = 'COMPROPAGO_DELETED';
+                    var_dump($nomestatus);
                     break;
                 case 'charge.expired':
                     $status = $this->_model->getConfigData('compropago_order_status_cancelled');
@@ -176,6 +180,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                     $history->setIsCustomerNotified(false);
                     $_order->save();
                     $nomestatus = 'COMPROPAGO_EXPIRED';
+                    var_dump($nomestatus);
                     break;
                 default:
                     $_order->save();
