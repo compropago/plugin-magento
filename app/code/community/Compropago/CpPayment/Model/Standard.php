@@ -264,7 +264,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
         $quoteData  = $quote->getData();
         $grandTotal = $quoteData['grand_total'];
 
-        $providers = $client->api->listProviders(true, $grandTotal, Mage::app()->getStore()->getCurrentCurrencyCode());
+        $providers = $client->api->listProviders($grandTotal, Mage::app()->getStore()->getCurrentCurrencyCode());
         $filter    = explode(',', $this->getConfigData('compropago_provider_available'));
 
         $record = array();

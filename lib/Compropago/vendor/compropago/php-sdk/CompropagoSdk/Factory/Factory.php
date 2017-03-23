@@ -2,27 +2,12 @@
 
 namespace CompropagoSdk\Factory;
 
-use CompropagoSdk\Factory\Models\CpOrderInfo;
-use CompropagoSdk\Factory\Models\Customer;
-use CompropagoSdk\Factory\Models\EvalAuthInfo;
-use CompropagoSdk\Factory\Models\FeeDetails;
-use CompropagoSdk\Factory\Models\InstructionDetails;
-use CompropagoSdk\Factory\Models\Instructions;
-use CompropagoSdk\Factory\Models\NewOrderInfo;
-use CompropagoSdk\Factory\Models\OrderInfo;
-use CompropagoSdk\Factory\Models\PlaceOrderInfo;
-use CompropagoSdk\Factory\Models\Provider;
-use CompropagoSdk\Factory\Models\SmsData;
-use CompropagoSdk\Factory\Models\SmsInfo;
-use CompropagoSdk\Factory\Models\SmsObject;
-use CompropagoSdk\Factory\Models\Webhook;
-
 class Factory
 {
     /**
      * @param $class
      * @param array $data
-     * @return array|CpOrderInfo|Customer|EvalAuthInfo|FeeDetails|InstructionDetails|Instructions|NewOrderInfo|OrderInfo|PlaceOrderInfo|Provider|SmsData|SmsInfo|SmsObject|Webhook
+     * @return mixed
      * @throws \Exception
      */
     public static function getInstanceOf($class, $data=array())
