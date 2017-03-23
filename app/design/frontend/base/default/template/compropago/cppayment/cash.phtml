@@ -7,41 +7,49 @@ $_getProviders  = $_model->getProviders();
 <script> setBack(document.getElementById("store_code_selected").value.toLowerCase()); </script>
 
 <div>
+    
     <ul id="payment_form_<?php  echo $_code; ?>" style="display: none">
-        <h2>Selecciona el establecimeinto para realizar tu pago:</h2>
+        <?php if (!empty($_getProviders)){ ?>
 
-        <?php  if (!$_model->showLogoProviders()) { ?>
+            <h2>Selecciona el establecimeinto para realizar tu pago:</h2>
 
-            <li>
-                <div id="<?php echo $_code; ?>_store">
-                    <select class="provider-select" id="store_code_selected" name="payment[store_code]">
-                        <?php foreach ($_getProviders as $_provider){ ?>
-                            <option value="<?php echo $_provider->internal_name; ?>"><?php echo $_provider->name; ?></option>
-                        <?php } ?>
-                    </select>
-                    <input type="hidden" id="customer_phone" name="payment[customer_phone]" value="">
-                </div>
-            </li>
+            <?php  if (!$_model->showLogoProviders()) { ?>
+
+                <li>
+                    <div id="<?php echo $_code; ?>_store">
+                        <select class="provider-select" id="store_code_selected" name="payment[store_code]">
+                            <?php foreach ($_getProviders as $_provider){ ?>
+                                <option value="<?php echo $_provider->internal_name; ?>"><?php echo $_provider->name; ?></option>
+                            <?php } ?>
+                        </select>
+                        <input type="hidden" id="customer_phone" name="payment[customer_phone]" value="">
+                    </div>
+                </li>
+
+            <?php } else { ?>
+                <li>
+                    <div class="row stores-compact" id="<?php echo $_code; ?>_store">
+                            <?php foreach ($_getProviders as $_provider){ ?>
+
+                                    <label class="cp-provider"
+                                    onclick="seleccionar(this);"
+                                    data-provider="<?php echo $_provider->internal_name; ?>"
+                                    >
+                                        <img src="<?php echo $_provider->image_medium; ?>"
+                                            alt="<?php echo $_provider->name; ?>"
+                                            >
+                                    </label>
+
+                            <?php } ?>
+                        <input id="store_code_selected" type="hidden" name="payment[store_code]" value="">
+                        <input type="hidden" id="customer_phone" name="payment[customer_phone]" value="">
+                    </div>
+                </li>
+            <?php } ?>
 
         <?php } else { ?>
-            <li>
-                <div class="row stores-compact" id="<?php echo $_code; ?>_store">
-                        <?php foreach ($_getProviders as $_provider){ ?>
-
-                                <label class="cp-provider"
-                                  onclick="seleccionar(this);"
-                                  data-provider="<?php echo $_provider->internal_name; ?>"
-                                >
-                                    <img src="<?php echo $_provider->image_medium; ?>"
-                                         alt="<?php echo $_provider->name; ?>"
-                                         >
-                                </label>
-
-                        <?php } ?>
-                    <input id="store_code_selected" type="hidden" name="payment[store_code]" value="">
-                    <input type="hidden" id="customer_phone" name="payment[customer_phone]" value="">
-                </div>
-            </li>
+            <div style="text-align:center;"><h3>Servicio temporalmente inactivo.</h3></div>
         <?php } ?>
     </ul>
+    
 </div>

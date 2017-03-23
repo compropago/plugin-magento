@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd4cd0f315e5eff0f7da018057a772bc8
+class ComposerStaticInitafea82d3c9dea57010619a6a5628092f
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -27,6 +27,7 @@ class ComposerStaticInitd4cd0f315e5eff0f7da018057a772bc8
         'CompropagoSdk\\Factory\\Models\\CpOrderInfo' => __DIR__ . '/..' . '/compropago/php-sdk/CompropagoSdk/Factory/Models/CpOrderInfo.php',
         'CompropagoSdk\\Factory\\Models\\Customer' => __DIR__ . '/..' . '/compropago/php-sdk/CompropagoSdk/Factory/Models/Customer.php',
         'CompropagoSdk\\Factory\\Models\\EvalAuthInfo' => __DIR__ . '/..' . '/compropago/php-sdk/CompropagoSdk/Factory/Models/EvalAuthInfo.php',
+        'CompropagoSdk\\Factory\\Models\\Exchange' => __DIR__ . '/..' . '/compropago/php-sdk/CompropagoSdk/Factory/Models/Exchange.php',
         'CompropagoSdk\\Factory\\Models\\FeeDetails' => __DIR__ . '/..' . '/compropago/php-sdk/CompropagoSdk/Factory/Models/FeeDetails.php',
         'CompropagoSdk\\Factory\\Models\\InstructionDetails' => __DIR__ . '/..' . '/compropago/php-sdk/CompropagoSdk/Factory/Models/InstructionDetails.php',
         'CompropagoSdk\\Factory\\Models\\Instructions' => __DIR__ . '/..' . '/compropago/php-sdk/CompropagoSdk/Factory/Models/Instructions.php',
@@ -49,9 +50,9 @@ class ComposerStaticInitd4cd0f315e5eff0f7da018057a772bc8
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd4cd0f315e5eff0f7da018057a772bc8::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd4cd0f315e5eff0f7da018057a772bc8::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd4cd0f315e5eff0f7da018057a772bc8::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitafea82d3c9dea57010619a6a5628092f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitafea82d3c9dea57010619a6a5628092f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitafea82d3c9dea57010619a6a5628092f::$classMap;
 
         }, null, ClassLoader::class);
     }
