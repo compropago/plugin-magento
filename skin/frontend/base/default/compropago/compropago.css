@@ -6,22 +6,6 @@
     background-size: 100% auto;
     max-width: 100%
 }
-#cppayment_store .provider-select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    outline: 0;
-    border: 0;
-    background: none;
-    height: 100%;
-    width: 100%;
-    padding-left: 62px;
-    box-sizing: border-box;
-    text-transform: uppercase;
-    font-size: 14px;
-    background-size: auto 70%;
-    background-position: 2px 6px;
-    background-repeat: no-repeat
-}
 #payment_form_cppayment h2 {
     font-size: 16px;
     margin: .5em 0
