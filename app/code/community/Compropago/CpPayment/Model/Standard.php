@@ -81,7 +81,6 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
         return $this;
     }
 
-
     /**
      * Generacion de la orden
      *
@@ -110,6 +109,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
 
         $quote           = Mage::getSingleton('checkout/session')->getQuote($quoteId);
         $orderId         = $quote->getReservedOrderId();
+        $shipping        = $quote->getShippingAddress();
 
         $order           = Mage::getModel('sales/order')->loadByIncrementId($orderId);
         $grandTotal      = (float)$order->getBaseGrandTotal();
@@ -131,8 +131,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
         $infoIntance = $this->getInfoInstance();
         $info = unserialize($infoIntance->getAdditionalData());
 
-        try
-        {
+        try {
             $order_info = [
                 'order_id' => $orderNumber,
                 'order_name' => $name,
@@ -143,8 +142,17 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                 'currency' => Mage::app()->getStore()->getCurrentCurrencyCode(),
                 'image_url' => null,
                 'app_client_name' => 'magento',
-                'app_client_version' => Mage::getVersion()
+                'app_client_version' => Mage::getVersion(),
+                'cp' => $shipping->getData('postcode')
             ];
+
+            if (isset($info['latitude'])) {
+                $order_info['latitude'] = $info['latitude'];
+            }
+
+            if (isset($info['longitude'])) {
+                $order_info['longitude'] = $info['longitude'];
+            }
 
             $order = Factory::getInstanceOf('PlaceOrderInfo', $order_info);
 
@@ -246,7 +254,6 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
         return $this;
     }
 
-
     /**
      * Envio de proveedores filtrados a la vista
      *
@@ -295,7 +302,6 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
         }
     }
 
-
     /**
      * verificacion de muestra de logos
      *
@@ -306,6 +312,14 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
         return (int)trim($this->getConfigData("compropago_showlogo")) == 1 ? true : false;
     }
 
+    /**
+     * Validate if have persion for obtain Glocation
+     *
+     * @return void
+     */
+    public function getGlocation() {
+        return (int)trim($this->getConfigData("compropago_gloaction")) == 1 ? true : false;
+    }
 
     /**
      * Despliegue de retroalimentacion en el panel de administración

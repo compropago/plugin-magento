@@ -96,6 +96,8 @@
                 <compropago_order_status_approved>processing</compropago_order_status_approved>
                 <compropago_order_status_in_process>pending</compropago_order_status_in_process>
                 <compropago_order_status_cancelled>canceled</compropago_order_status_cancelled>
+                <compropago_gloaction>1</compropago_gloaction>
+                <sort_order>200</sort_order>
             </cppayment>
         </payment>
     </default>
