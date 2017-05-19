@@ -19,14 +19,14 @@
  * Compropago $Library
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
+$libcp = Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php';
 
-require_once(Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php');
+require_once $libcp;
 
 use CompropagoSdk\Client;
 
 class Compropago_CpPayment_Model_Observer
 {
-
     public function checkWebhook($observer)
     {
         $webhook = Mage::getBaseUrl() . "cpwebhook";
@@ -40,17 +40,19 @@ class Compropago_CpPayment_Model_Observer
             );
 
             $response = $client->api->createWebhook($webhook);
-            $time = time();
+            $time = Mage::getModel('core/date')->timestamp(); // time standart function
 
             $DB = Mage::getSingleton('core/resource')->getConnection('core_write');
             $prefix = Mage::getConfig()->getTablePrefix();
 
-            $DB->insert($prefix."compropago_webhook_transactions", array(
+            $dataInsert = array(
                 'webhookId' => $response->id,
                 'updated'   => $time,
                 'status'    => $response->status,
                 'url'       => $webhook
-            ));
+            );
+
+            // DB insert( prefix."compropago_webhook_transactions",  dataInsert)
 
 
             /* Retroalimentación en el panel de administración
@@ -63,13 +65,11 @@ class Compropago_CpPayment_Model_Observer
                 (int)trim($model->getConfigData('compropago_mode')) == 1 ? true : false
             );
 
-            if($retro[0]){
+            if ($retro[0]) {
                 Mage::getSingleton('adminhtml/session')->addWarning($retro[1]);
             }
-
-        }catch (Exception $e){
+        } catch (Exception $e) {
             Mage::throwException($e->getMessage());
         }
     }
-
 }

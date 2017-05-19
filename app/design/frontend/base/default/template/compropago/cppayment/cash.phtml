@@ -27,7 +27,7 @@ $_getProviders  = $_model->getProviders();
                                     alt="<?php echo $_provider->name; ?>">
                             </label>
                         <?php } ?>
-                        <input id="store_code_selected" type="hidden" name="payment[store_code]" value="">
+                        <input id="store_code_selected" type="hidden" name="payment[store_code]" value="SEVEN_ELEVEN">
                     </div>
                 <?php } ?>
 
@@ -38,18 +38,18 @@ $_getProviders  = $_model->getProviders();
                 <?php if ($_model->getGlocation()) { ?>
                     <script>
                         if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(function(pos){
-                                var latitud = pos.coords.latitude;
-                                var longitud = pos.coords.longitude;
-                                document.getElementById("cp_latitude").value = latitud;
-                                document.getElementById("cp_longitude").value = longitud;
-                            }, function(errorCode){
-                                console.log("Error code localization: ");
-                                console.log(errorCode);
-                            });
+                            navigator.geolocation.getCurrentPosition(
+                                function(pos){
+                                    document.getElementById("cp_latitude").value = pos.coords.latitude;
+                                    document.getElementById("cp_longitude").value = pos.coords.longitude;
+                                }, 
+                                function(errorCode){
+                                    console.log(errorCode);
+                                }
+                            );
                         }
                     </script>
-                <?php } else { echo "No localization"; } ?>
+                <?php } ?>
             </li>
         <?php } else { ?>
             <div style="text-align:center;"><h3>Servicio temporalmente inactivo.</h3></div>
