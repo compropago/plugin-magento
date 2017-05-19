@@ -18,7 +18,9 @@
  * Compropago $Library
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
-require_once(Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php');
+$libcp = Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php';
+
+require_once $libcp;
 
 use CompropagoSdk\Extern\TransactTables;
 

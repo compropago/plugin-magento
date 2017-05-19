@@ -16,14 +16,14 @@
 
 
     <checkout_onepage_success>
-        <reference name="head">
+        <!--<reference name="head">
             <action method="addCss">
                 <stylesheet>compropago/compropago.css</stylesheet>
             </action>
             <action method="addJs">
                 <script>compropago/compropago.js</script>
             </action>
-        </reference>
+        </reference>-->
 
         <reference name="root">
             <action method="setTemplate"><template>compropago/cppayment/success.phtml</template></action>

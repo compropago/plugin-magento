@@ -47,7 +47,7 @@ class Compropago_CpPayment_Block_Form extends Mage_Payment_Block_Form
 
         $final = "";
         
-        if($logo){
+        if ($logo) {
             $mark = Mage::getConfig()->getBlockClassName('core/template');
             $mark = new $mark;
             $mark->setTemplate('compropago/cppayment/mark.phtml');

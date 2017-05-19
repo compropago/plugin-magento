@@ -18,7 +18,9 @@
  * Compropago plugin-magento
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
-require_once(Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php');
+$libcp =  Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php';
+
+require_once $libcp;
 
 
 use CompropagoSdk\Factory\Factory;
@@ -49,8 +51,8 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
         /**
          * Se valida el request y se transforma con la cadena a un objeto de tipo CpOrderInfo con el Factory
          */
-        if (!$resp_webhook = Factory::getInstanceOf('CpOrderInfo', $request)) {
-            die('Tipo de Request no Valido');
+        if (!$respWebhook = Factory::getInstanceOf('CpOrderInfo', $request)) {
+            echo 'Tipo de Request no Valido';
         }
 
         /**
@@ -64,37 +66,32 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
         /**
          * Se valida que las llaves no esten vacias (No es obligatorio pero si recomendado)
          */
-        if (empty($publickey) || empty($privatekey)){
-            die("Se requieren las llaves de compropago");
+        if (empty($publickey) || empty($privatekey)) {
+            echo "Se requieren las llaves de compropago";
         }
 
         try {
             $client = new Client($publickey, $privatekey, $live);
 
             Validations::validateGateway($client);
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
 
-        /**
-         * Verificamos si recivimos una peticion de prueba
-         */
-        if ($resp_webhook->id == "ch_00000-000-0000-000000") {
-            die("Probando el WebHook?, Ruta correcta.");
-        }
+            /**
+             * Verificamos si recivimos una peticion de prueba
+             */
+            if ($respWebhook->id == "ch_00000-000-0000-000000") {
+                echo "Probando el WebHook?, Ruta correcta.";
+            }
 
-
-        try {
             /**
              * Verificamos la informacion del Webhook recivido
              */
-            $response = $client->api->verifyOrder($resp_webhook->id);
+            $response = $client->api->verifyOrder($respWebhook->id);
 
             /**
              * Comprovamos que la verificacion fue exitosa
              */
             if ($response->type == 'error') {
-                die('Error procesando el número de orden');
+                echo 'Error procesando el número de orden';
             }
 
             /* ************************************************************************
@@ -105,9 +102,9 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
             $DBwrite = Mage::getSingleton('core/resource')->getConnection('core_write');
             $prefix  = Mage::getConfig()->getTablePrefix();
 
-            $ioin  = base64_encode(serialize($resp_webhook));
+            $ioin  = base64_encode(serialize($respWebhook));
             $ioout = base64_encode(serialize($response));
-            $date  = time();
+            $date  = Mage::getModel('core/date')->timestamp(); // time standart function
 
 
             $sql = "SELECT * FROM " . $prefix . "compropago_orders where compropagoId = '{$response->id}'";
@@ -128,81 +125,76 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
              */
             switch ($response->type) {
                 case 'charge.pending':
-                    $status = $this->_model->getConfigData('compropago_order_status_new');
+                    $state = Mage_Sales_Model_Order::STATE_NEW;
+                    $status = "pending";
+
                     $message = 'The user has not completed the payment process yet.';
-                    $_order->setData('state',$status);
+                    $_order->setData('state', $state);
+
                     $_order->setStatus($status);
-                    //$history = $_order->addStatusHistoryComment($message);
-                    //$history->setIsCustomerNotified(true);
+
                     $_order->save();
+
                     $nomestatus = 'COMPROPAGO_PENDING';
-                    var_dump($nomestatus);
+                    echo $nomestatus;
                     break;
                 case 'charge.success':
-                    $status = $this->_model->getConfigData('compropago_order_status_approved');
+                    $state = Mage_Sales_Model_Order::STATE_PROCESSING;
+                    $status = "processing";
+
+                    $_order->setData('state', $state);
+
+                    $_order->setStatus($status);
+
                     $message = 'ComproPago automatically confirmed payment for this order.';
-                    $_order->setData('state',$status);
-                    $_order->setStatus($status);
                     $history = $_order->addStatusHistoryComment($message);
+
                     $history->setIsCustomerNotified(true);
+
                     $_order->save();
+
                     $nomestatus = 'COMPROPAGO_SUCCESS';
-                    var_dump($nomestatus);
-                    break;
-                case 'charge.declined':
-                    $status = $this->_model->getConfigData('compropago_order_status_in_process');
-                    $message = 'The user has not completed the payment process yet.';
-                    $_order->setData('state',$status);
-                    $_order->setStatus($status);
-                    $history = $_order->addStatusHistoryComment($message);
-                    $history->setIsCustomerNotified(false);
-                    $_order->save();
-                    $nomestatus = 'COMPROPAGO_DECLINED';
-                    var_dump($nomestatus);
-                    break;
-                case 'charge.deleted':
-                    $status = $this->_model->getConfigData('compropago_order_status_cancelled');
-                    $message = 'The user has not completed the payment and the order was cancelled.';
-                    $_order->setData('state',$status);
-                    $_order->setStatus($status);
-                    $history = $_order->addStatusHistoryComment($message);
-                    $history->setIsCustomerNotified(false);
-                    $_order->save();
-                    $nomestatus = 'COMPROPAGO_DELETED';
-                    var_dump($nomestatus);
+                    echo $nomestatus;
                     break;
                 case 'charge.expired':
-                    $status = $this->_model->getConfigData('compropago_order_status_cancelled');
-                    $message = 'The user has not completed the payment and the order was cancelled.';
-                    $_order->setData('state',$status);
+                    $state = Mage_Sales_Model_Order::STATE_CANCELED;
+                    $status = "canceled";
+
+                    $_order->setData('state', $state);
+                    
                     $_order->setStatus($status);
+                    
+                    $message = 'The user has not completed the payment and the order was cancelled.';
                     $history = $_order->addStatusHistoryComment($message);
+                    
                     $history->setIsCustomerNotified(false);
+                    
                     $_order->save();
+
                     $nomestatus = 'COMPROPAGO_EXPIRED';
-                    var_dump($nomestatus);
+                    echo $nomestatus;
                     break;
                 default:
                     $_order->save();
-                    die('Invalid Response type');
+                    echo 'Invalid Response type';
             }
 
 
             /* TABLE compropago_orders
              ------------------------------------------------------------------------*/
 
-
-            $DBwrite->update($prefix."compropago_orders",array(
+            $updateData = array(
                 'modified'         => $date,
                 'compropagoStatus' => $response->type,
                 'storeExtra'       => $nomestatus,
-            ), 'id='.$res[0]['id']);
+            );
+
+            // DBwrite update( prefix."compropago_orders",  updateData, 'id='. res[0]['id'])
 
 
             /* TABLE compropago_transactions
              ------------------------------------------------------------------------*/
-
-            $DBwrite->insert($prefix."compropago_transactions", array(
+            $dataInsert = array(
                 'orderId'              => $storedId,
                 'date'                 => $date,
                 'compropagoId'         => $response->id,
@@ -210,12 +202,11 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                 'compropagoStatusLast' => $res[0]['compropagoStatus'],
                 'ioIn'                 => $ioin,
                 'ioOut'                => $ioout
-            ));
+            );
 
-
+            //  DBwrite insert( prefix."compropago_transactions", dataInsert)
         } catch (Exception $e) {
-            //something went wrong at sdk lvl
-            die($e->getMessage());
+            echo $e->getMessage();
         }
     }
 }

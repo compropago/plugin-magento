@@ -30,20 +30,27 @@ class Compropago_CpPayment_Model_Providers
             $options = array();
             $client = new Client('', '', false);
             $flag = false;
+
             foreach ($client->api->listDefaultProviders() as $provider){
                 $options[] = array(
                     'value' => $provider->internal_name,
                     'label' => $provider->name
                 );
-                if ($provider->internal_name == "OXXO") { $flag = true; }
+
+                if ($provider->internal_name == "OXXO") { 
+                    $flag = true; 
+                }
             }
+
             if (!$flag) {
-                $OXXO[] = [
+                $OXXO[] = array(
                     'value' => "OXXO",
                     'label' => "Oxxo"
-                ];
+                );
+
                 $options = array_merge($OXXO,$options);
             }
+
             return $options;
         }
 }

@@ -18,18 +18,20 @@
  * Compropago $Library
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
-require_once(Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php');
+$libcp = Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php';
+
+require_once $libcp;
 
 use CompropagoSdk\Extern\TransactTables;
 
 $installer = $this;
 $installer->startSetup();
 
-foreach (TransactTables::sqlDropTables(Mage::getConfig()->getTablePrefix()) as $table){
+foreach (TransactTables::sqlDropTables(Mage::getConfig()->getTablePrefix()) as $table) {
     $installer->run($table);
 }
 
-foreach (TransactTables::sqlCreateTables(Mage::getConfig()->getTablePrefix()) as $table){
+foreach (TransactTables::sqlCreateTables(Mage::getConfig()->getTablePrefix()) as $table) {
     $installer->run($table);
 }
 
