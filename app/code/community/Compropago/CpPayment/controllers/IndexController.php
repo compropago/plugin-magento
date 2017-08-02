@@ -189,7 +189,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                 'storeExtra'       => $nomestatus,
             );
 
-            // DBwrite update( prefix."compropago_orders",  updateData, 'id='. res[0]['id'])
+            $DBwrite->update($prefix."compropago_orders",  $updateData, 'id='. $res[0]['id']);
 
 
             /* TABLE compropago_transactions
@@ -204,7 +204,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                 'ioOut'                => $ioout
             );
 
-            //  DBwrite insert( prefix."compropago_transactions", dataInsert)
+            $DBwrite->insert($prefix."compropago_transactions", $dataInsert);
         } catch (Exception $e) {
             echo $e->getMessage();
         }
