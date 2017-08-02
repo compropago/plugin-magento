@@ -214,7 +214,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                 'ioOut'            => $ioout
             );
 
-            // DB insert ( prefix."compropago_orders",  dataInsert)
+            $DB->insert($prefix."compropago_orders", $dataInsert);
 
             /* TABLE compropago_transactions
              ------------------------------------------------------------------------*/
@@ -229,7 +229,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                 'ioOut'                => $ioout
             );
 
-            // DB insert ( prefix."compropago_transactions",  dataInsert)
+            $DB->insert($prefix."compropago_transactions", $dataInsert);
         } catch (Exception $error) {
             Mage::throwException($error->getMessage());
         }

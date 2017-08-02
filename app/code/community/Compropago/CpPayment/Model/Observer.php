@@ -52,7 +52,7 @@ class Compropago_CpPayment_Model_Observer
                 'url'       => $webhook
             );
 
-            // DB insert( prefix."compropago_webhook_transactions",  dataInsert)
+            $DB->insert($prefix."compropago_webhook_transactions",  $dataInsert);
 
 
             /* Retroalimentación en el panel de administración
