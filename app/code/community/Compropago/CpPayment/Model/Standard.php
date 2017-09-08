@@ -95,7 +95,6 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
 
         $quote           = Mage::getSingleton('checkout/session')->getQuote($quoteId);
         $orderId         = $quote->getReservedOrderId();
-        $shipping        = $quote->getShippingAddress();
 
         $order           = Mage::getModel('sales/order')->loadByIncrementId($orderId);
         $grandTotal      = (float)$order->getBaseGrandTotal();
@@ -125,6 +124,8 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                 'customer_name' => $info['customer_name'],
                 'customer_email' => $info['customer_email'],
                 'payment_type' => $info['payment_type'],
+                'app_client_name' => 'magento',
+                'app_client_version' => Mage::getVersion(),
                 'currency' => Mage::app()->getStore()->getCurrentCurrencyCode()
             );
 
@@ -272,6 +273,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
     {
         return (int)trim($this->getConfigData("compropago_showlogo")) == 1 ? true : false;
     }
+
 
     /**
      * Return warning messages after save configuration

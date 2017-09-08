@@ -6,7 +6,7 @@ $_getProviders  = $_model->getProviders();
 
 <div>
     <ul id="payment_form_<?php  echo $_code; ?>" style="display: none">
-        <?php if (!empty($_getProviders)) { ?>
+        <?php if (!empty($_getProviders)){ ?>
             <li>
                 <h2>Selecciona el establecimiento para realizar tu pago:</h2>
                 <?php  if (!$_model->showLogoProviders()) { ?>
