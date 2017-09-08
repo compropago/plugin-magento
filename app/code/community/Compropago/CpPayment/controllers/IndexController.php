@@ -54,7 +54,6 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
         $privatekey    = $this->_model->getConfigData('compropago_privatekey');
         $live          = (int)trim($this->_model->getConfigData('compropago_mode')) == 1 ? true : false;
 
-
         if (empty($publickey) || empty($privatekey)) {
             die(json_encode([
                 'status' => 'error',
@@ -126,9 +125,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                     $status = "pending";
 
                     $_order->setData('state', $state);
-
                     $_order->setStatus($status);
-
                     $_order->save();
 
                     $nomestatus = 'COMPROPAGO_PENDING';
@@ -190,7 +187,6 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
             );
 
             $DBwrite->update($prefix."compropago_orders",  $updateData, 'id='. $res[0]['id']);
-
 
             /* TABLE compropago_transactions
              ------------------------------------------------------------------------*/

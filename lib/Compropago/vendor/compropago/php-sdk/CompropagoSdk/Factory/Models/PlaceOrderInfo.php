@@ -47,7 +47,7 @@ class PlaceOrderInfo
         $order_price, 
         $customer_name, 
         $customer_email, 
-        $payment_type="OXXO",
+        $payment_type="SEVEN_ELEVEN",
         $currency="MXN",
         $expiration_time=null,
         $image_url=null, 

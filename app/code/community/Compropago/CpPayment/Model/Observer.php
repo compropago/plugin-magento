@@ -41,7 +41,6 @@ class Compropago_CpPayment_Model_Observer
             );
 
             $response = $client->api->createWebhook($webhook);
-
             $time = Mage::getModel('core/date')->timestamp(); // time standart function
 
             $DB = Mage::getSingleton('core/resource')->getConnection('core_write');

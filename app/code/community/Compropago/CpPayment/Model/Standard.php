@@ -273,7 +273,6 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
         return (int)trim($this->getConfigData("compropago_showlogo")) == 1 ? true : false;
     }
 
-
     /**
      * Return warning messages after save configuration
      *
