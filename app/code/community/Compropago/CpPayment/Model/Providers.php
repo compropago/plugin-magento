@@ -19,7 +19,7 @@
  * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
  */
 
-require_once(Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php');
+require_once Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php';
 
 use CompropagoSdk\Client;
 

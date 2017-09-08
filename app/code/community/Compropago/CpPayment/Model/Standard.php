@@ -1,26 +1,6 @@
 <?php
-/**
- * Copyright 2015 Compropago.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Compropago $Library
- * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
- */
-$libcp = Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php';
 
-require_once $libcp;
+require_once Mage::getBaseDir('lib') . DS . 'Compropago' . DS . 'vendor' . DS . 'autoload.php';
 
 use CompropagoSdk\Client;
 use CompropagoSdk\Factory\Factory;
@@ -37,10 +17,12 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
     protected $_isInitializeNeeded     = true;
 
     /**
-     * Asignacion inicial de informacion
+     * Assing init data
      *
      * @param $data
      * @return $this
+     *
+     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
      */
     public function assignData($data)
     {
@@ -84,11 +66,13 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
     }
 
     /**
-     * Generacion de la orden
+     * Generate order
      *
      * @param $paymentAction
      * @param $stateObject
      * @return $this
+     *
+     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
      */
     public function initialize($paymentAction, $stateObject)
     {
@@ -111,7 +95,6 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
 
         $quote           = Mage::getSingleton('checkout/session')->getQuote($quoteId);
         $orderId         = $quote->getReservedOrderId();
-        $shipping        = $quote->getShippingAddress();
 
         $order           = Mage::getModel('sales/order')->loadByIncrementId($orderId);
         $grandTotal      = (float)$order->getBaseGrandTotal();
@@ -141,20 +124,10 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                 'customer_name' => $info['customer_name'],
                 'customer_email' => $info['customer_email'],
                 'payment_type' => $info['payment_type'],
-                'currency' => Mage::app()->getStore()->getCurrentCurrencyCode(),
-                'image_url' => null,
                 'app_client_name' => 'magento',
                 'app_client_version' => Mage::getVersion(),
-                'cp' => $shipping->getData('postcode')
+                'currency' => Mage::app()->getStore()->getCurrentCurrencyCode()
             );
-
-            if (isset($info['latitude'])) {
-                $order_info['latitude'] = $info['latitude'];
-            }
-
-            if (isset($info['longitude'])) {
-                $order_info['longitude'] = $info['longitude'];
-            }
 
             $order = Factory::getInstanceOf('PlaceOrderInfo', $order_info);
 
@@ -206,7 +179,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                 'date'             => $date,
                 'modified'         => $date,
                 'compropagoId'     => $response->id,
-                'compropagoStatus' => $response->status,
+                'compropagoStatus' => $response->type,
                 'storeCartId'      => $orderNumber,
                 'storeOrderId'     => $orderNumber,
                 'storeExtra'       => 'COMPROPAGO_PENDING',
@@ -223,8 +196,8 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                 'orderId'              => $orderNumber,
                 'date'                 => $date,
                 'compropagoId'         => $response->id,
-                'compropagoStatus'     => $response->status,
-                'compropagoStatusLast' => $response->status,
+                'compropagoStatus'     => $response->type,
+                'compropagoStatusLast' => $response->type,
                 'ioIn'                 => $ioin,
                 'ioOut'                => $ioout
             );
@@ -238,9 +211,11 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
     }
 
     /**
-     * Envio de proveedores filtrados a la vista
+     * Obtain available providers
      *
      * @return array
+     *
+     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
      */
     public function getProviders()
     {
@@ -270,10 +245,12 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
     }
 
     /**
-     * Esconde texto de titulo si se indico uso de logo
+     * Get payment method title or image banner
      *
-     * @param $isInfo
-     * @return mixed|string
+     * @param bool $isInfo
+     * @return string
+     *
+     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
      */
     public function getTitle($isInfo = false)
     {
@@ -286,42 +263,31 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
     }
 
     /**
-     * verificacion de muestra de logos
+     * Verify if the plugin is allow to show image buttons for providers
      *
      * @return bool
+     *
+     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
      */
     public function showLogoProviders()
     {
         return (int)trim($this->getConfigData("compropago_showlogo")) == 1 ? true : false;
     }
 
-    /**
-     * Validate if have persion for obtain Glocation
-     *
-     * @return void
-     */
-    public function getGlocation() 
-    {
-        return (int)trim($this->getConfigData("compropago_gloaction")) == 1 ? true : false;
-    }
 
     /**
-     * Despliegue de retroalimentacion en el panel de administración
+     * Return warning messages after save configuration
      *
-     * @param bool   $enabled
-     * @param string $publickey
-     * @param string $privatekey
-     * @param bool   $live
+     * @param $enabled
+     * @param $publickey
+     * @param $privatekey
+     * @param $live
      * @return array
+     *
+     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
      */
     public function hookRetro($enabled, $publickey, $privatekey, $live)
     {
-        $error = array(
-            false,
-            '',
-            'yes'
-        );
-
         if (!$enabled) {
             return array(
                 true,

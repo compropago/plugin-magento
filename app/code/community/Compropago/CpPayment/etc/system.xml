@@ -91,63 +91,6 @@
                             <show_in_store>1</show_in_store>
                         </compropago_provider_available>
 
-
-                        <!-- ORDER STATUS -->
-
-                        <!--<compropago_order_status_new translate="label">
-                            <label>Estatus nuevas ordenes</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_order_status</source_model>
-                            <sort_order>19</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </compropago_order_status_new>
-
-                        <compropago_order_status_approved translate="label">
-                            <label>Estatus ordenes aprobadas</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_order_status</source_model>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </compropago_order_status_approved>
-
-                        <compropago_order_status_in_process translate="label">
-                            <label>Estatus ordenes pendientes</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_order_status</source_model>
-                            <sort_order>22</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </compropago_order_status_in_process>
-
-                        <compropago_order_status_cancelled translate="label">
-                            <label>Estatus ordenes canceladas</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_order_status</source_model>
-                            <sort_order>23</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </compropago_order_status_cancelled>-->
-
-                        <compropago_gloaction translate="label">
-                            <label>Geolocalizacion</label>
-                            <frontend_type>select</frontend_type>
-                            <comment>
-                                Obtiene la ubicación del cliente para mostrar los establecimientos cercanos a el, agiliza las notificaciones 
-                                de pago y reduce el tiempo de confirmación.
-                            </comment>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>24</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </compropago_gloaction>
-
                         <sort_order translate="label">
                             <label>Sort Order</label>
                             <frontend_type>text</frontend_type>
