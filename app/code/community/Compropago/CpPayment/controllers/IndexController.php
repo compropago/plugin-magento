@@ -30,10 +30,6 @@ use CompropagoSdk\Tools\Validations;
 
 class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Action
 {
-    /**
-     * Variable que alojara el modelo
-     * @var null
-     */
     protected $_model = null;
 
     public function _construct()
@@ -43,31 +39,29 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
 
     public function indexAction()
     {
-        /**
-         * Se captura la informacion enviada desde compropago
-         */
         $request = @file_get_contents('php://input');
 
-        /**
-         * Se valida el request y se transforma con la cadena a un objeto de tipo CpOrderInfo con el Factory
-         */
         if (!$respWebhook = Factory::getInstanceOf('CpOrderInfo', $request)) {
-            echo 'Tipo de Request no Valido';
+            die(json_encode([
+                'status' => 'error',
+                'message' => 'invalid request',
+                'short_id' => null,
+                'reference' => null
+            ]));
         }
 
-        /**
-         * Gurdamos la informacion necesaria para el Cliente
-         * las llaves de compropago y el modo de ejecucion de la tienda
-         */
         $publickey     = $this->_model->getConfigData('compropago_publickey');
         $privatekey    = $this->_model->getConfigData('compropago_privatekey');
         $live          = (int)trim($this->_model->getConfigData('compropago_mode')) == 1 ? true : false;
 
-        /**
-         * Se valida que las llaves no esten vacias (No es obligatorio pero si recomendado)
-         */
+
         if (empty($publickey) || empty($privatekey)) {
-            echo "Se requieren las llaves de compropago";
+            die(json_encode([
+                'status' => 'error',
+                'message' => 'invalid plugin keys',
+                'short_id' => null,
+                'reference' => null
+            ]));
         }
 
         try {
@@ -75,27 +69,28 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
 
             Validations::validateGateway($client);
 
-            /**
-             * Verificamos si recivimos una peticion de prueba
-             */
-            if ($respWebhook->id == "ch_00000-000-0000-000000") {
-                echo "Probando el WebHook?, Ruta correcta.";
+            if ($respWebhook->short_id == "000000") {
+                die(json_encode([
+                    'status' => 'success',
+                    'message' => 'test OK',
+                    'short_id' => $respWebhook->short_id,
+                    'reference' => null
+                ]));
             }
 
-            /**
-             * Verificamos la informacion del Webhook recivido
-             */
             $response = $client->api->verifyOrder($respWebhook->id);
 
-            /**
-             * Comprovamos que la verificacion fue exitosa
-             */
             if ($response->type == 'error') {
-                echo 'Error procesando el número de orden';
+                die(json_encode([
+                    'status' => 'error',
+                    'message' => 'error verifying order',
+                    'short_id' => null,
+                    'reference' => null
+                ]));
             }
 
             /* ************************************************************************
-                                    RUTINAS DE BASE DE DATOS
+            *                        RUTINAS DE BASE DE DATOS                         *
             ************************************************************************ */
 
             $DBread  = Mage::getSingleton('core/resource')->getConnection('core_read');
@@ -113,22 +108,23 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
             $storedId = $res[0]['storeOrderId'];
 
             if (empty($storedId)) {
-               throw new Exception('El pago no corresponde a esta tienda.');
+                die(json_encode([
+                    'status' => 'error',
+                    'message' => 'charge not found in store',
+                    'short_id' => null,
+                    'reference' => null
+                ]));
             }
 
             /* Rutinas de aprovación
              ------------------------------------------------------------------------*/
             $_order = Mage::getModel('sales/order')->loadByIncrementId($response->order_info->order_id);
 
-            /**
-             * Generamos las rutinas correspondientes para cada uno de los casos posible del webhook
-             */
             switch ($response->type) {
                 case 'charge.pending':
                     $state = Mage_Sales_Model_Order::STATE_NEW;
                     $status = "pending";
 
-                    $message = 'The user has not completed the payment process yet.';
                     $_order->setData('state', $state);
 
                     $_order->setStatus($status);
@@ -136,8 +132,8 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                     $_order->save();
 
                     $nomestatus = 'COMPROPAGO_PENDING';
-                    echo $nomestatus;
                     break;
+
                 case 'charge.success':
                     $state = Mage_Sales_Model_Order::STATE_PROCESSING;
                     $status = "processing";
@@ -154,8 +150,8 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                     $_order->save();
 
                     $nomestatus = 'COMPROPAGO_SUCCESS';
-                    echo $nomestatus;
                     break;
+
                 case 'charge.expired':
                     $state = Mage_Sales_Model_Order::STATE_CANCELED;
                     $status = "canceled";
@@ -172,13 +168,17 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                     $_order->save();
 
                     $nomestatus = 'COMPROPAGO_EXPIRED';
-                    echo $nomestatus;
                     break;
+
                 default:
                     $_order->save();
-                    echo 'Invalid Response type';
+                    die(json_encode([
+                        'status' => 'error',
+                        'message' => 'invalid status',
+                        'short_id' => null,
+                        'reference' => null
+                    ]));
             }
-
 
             /* TABLE compropago_orders
              ------------------------------------------------------------------------*/
@@ -189,7 +189,7 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                 'storeExtra'       => $nomestatus,
             );
 
-            // DBwrite update( prefix."compropago_orders",  updateData, 'id='. res[0]['id'])
+            $DBwrite->update($prefix."compropago_orders",  $updateData, 'id='. $res[0]['id']);
 
 
             /* TABLE compropago_transactions
@@ -204,9 +204,21 @@ class Compropago_CpPayment_IndexController extends Mage_Core_Controller_Front_Ac
                 'ioOut'                => $ioout
             );
 
-            //  DBwrite insert( prefix."compropago_transactions", dataInsert)
+            $DBwrite->insert($prefix."compropago_transactions", $dataInsert);
+
+            die(json_encode([
+                'status' => 'succeess',
+                'message' => 'OK - ' . $response->type,
+                'short_id' => $response->short_id,
+                'reference' => $response->order_info->order_id
+            ]));
         } catch (Exception $e) {
-            echo $e->getMessage();
+            die(json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'short_id' => null,
+                'reference' => null
+            ]));
         }
     }
 }

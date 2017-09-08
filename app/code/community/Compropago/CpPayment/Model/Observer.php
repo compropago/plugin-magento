@@ -31,15 +31,17 @@ class Compropago_CpPayment_Model_Observer
     {
         $webhook = Mage::getBaseUrl() . "cpwebhook";
         $model = Mage::getModel('cppayment/Standard');
+        $mode = (int)trim($model->getConfigData('compropago_mode')) == 1 ? true : false;
 
         try{
             $client = new Client(
                 $model->getConfigData('compropago_publickey'),
                 $model->getConfigData('compropago_privatekey'),
-                (int)trim($model->getConfigData('compropago_mode')) == 1 ? true : false
+                $mode
             );
 
             $response = $client->api->createWebhook($webhook);
+
             $time = Mage::getModel('core/date')->timestamp(); // time standart function
 
             $DB = Mage::getSingleton('core/resource')->getConnection('core_write');
@@ -52,11 +54,10 @@ class Compropago_CpPayment_Model_Observer
                 'url'       => $webhook
             );
 
-            // DB insert( prefix."compropago_webhook_transactions",  dataInsert)
-
+            $DB->insert($prefix."compropago_webhook_transactions",  $dataInsert);
 
             /* Retroalimentación en el panel de administración
-             ------------------------------------------------------------------------*/
+             ------------------------------------------------------------------------ */
             
             $retro = $model->hookRetro(
                 (int)trim($model->getConfigData('active')) == 1 ? true : false,
@@ -69,7 +70,11 @@ class Compropago_CpPayment_Model_Observer
                 Mage::getSingleton('adminhtml/session')->addWarning($retro[1]);
             }
         } catch (Exception $e) {
-            Mage::throwException($e->getMessage());
+            if ($e->getMessage() == 'Error: conflict.urls.create') {
+                return;
+            } else {
+                Mage::throwException($e->getMessage());
+            }
         }
     }
 }
