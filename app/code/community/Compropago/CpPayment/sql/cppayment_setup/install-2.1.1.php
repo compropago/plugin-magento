@@ -14,10 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Compropago $Library
- * @author Eduardo Aguilar <eduardo.aguilar@compropago.com>
- */
 
 /**
  * Get Drop tables querys
@@ -31,7 +27,7 @@ function sqlDropTables($prefix = null) {
     return array(
         'DROP TABLE IF EXISTS `' . $prefix . 'compropago_orders`;',
         'DROP TABLE IF EXISTS `' . $prefix . 'compropago_transactions`;',
-        'DROP TABLE IF EXISTS `' . $prefix . 'compropago_webhook_transactions`'
+        'DROP TABLE IF EXISTS `' . $prefix . 'compropago_webhook_transactions`;'
     );
 }
 
@@ -57,7 +53,7 @@ function sqlCreateTables($prefix = null) {
           `ioIn` mediumtext,
           `ioOut` mediumtext,
           PRIMARY KEY (`id`), UNIQUE KEY (`compropagoId`)
-          )ENGINE=MyISAM DEFAULT CHARSET=utf8  DEFAULT COLLATE utf8_general_ci  AUTO_INCREMENT=1 ;',
+          );',
         'CREATE TABLE `' . $prefix . 'compropago_transactions` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `orderId` int(11) NOT NULL,
@@ -68,7 +64,7 @@ function sqlCreateTables($prefix = null) {
           `ioIn` mediumtext,
           `ioOut` mediumtext,
           PRIMARY KEY (`id`)
-          )ENGINE=MyISAM DEFAULT CHARSET=utf8  DEFAULT COLLATE utf8_general_ci  AUTO_INCREMENT=1 ;',
+          );',
         'CREATE TABLE `' . $prefix . 'compropago_webhook_transactions` (
           `id` integer not null auto_increment,
           `webhookId` varchar(50) not null,
@@ -76,18 +72,20 @@ function sqlCreateTables($prefix = null) {
           `status` varchar(50) not null,
           `url` text not null,
           primary key(id)
-          )ENGINE=MyISAM DEFAULT CHARSET=utf8  DEFAULT COLLATE utf8_general_ci  AUTO_INCREMENT=1 ;'
+          );'
     );
 }
 
 $installer = $this;
 $installer->startSetup();
 
-foreach (sqlDropTables(Mage::getConfig()->getTablePrefix()) as $table) {
+$prefix = Mage::getConfig()->getTablePrefix();
+
+foreach (sqlDropTables($prefix) as $table) {
     $installer->run($table);
 }
 
-foreach (sqlCreateTables(Mage::getConfig()->getTablePrefix()) as $table) {
+foreach (sqlCreateTables($prefix) as $table) {
     $installer->run($table);
 }
 

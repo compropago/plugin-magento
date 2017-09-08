@@ -28,6 +28,9 @@ Este módulo provee el servicio de ComproPago para poder generar órdenes de pag
 3. Pega el link obtenido de la sección **Install New Extension** y selecciona el botón **Install**.
 4. Verifica que la instalación fué correcta y procede a seleccionar el botón **Refresh** para actualizar la pantalla.
 
+Documentación:
+
+http://demo.compropago.com/list/plugins/magento.php
 
 ## ¿Cómo trabaja el módulo?
 Una vez que el cliente sabe que comprar y continúa con el proceso, seleccionará la opción de elegir el método de pago.

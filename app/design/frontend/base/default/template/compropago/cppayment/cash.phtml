@@ -27,29 +27,13 @@ $_getProviders  = $_model->getProviders();
                                     alt="<?php echo $_provider->name; ?>">
                             </label>
                         <?php } ?>
-                        <input id="store_code_selected" type="hidden" name="payment[store_code]" value="">
+                        <input id="store_code_selected" type="hidden" name="payment[store_code]" value="SEVEN_ELEVEN">
                     </div>
                 <?php } ?>
 
                 <input type="hidden" id="customer_phone" name="payment[customer_phone]" value="">
                 <input type="hidden" id="cp_latitude" name="payment[cp_latitude]" value="">
                 <input type="hidden" id="cp_longitude" name="payment[cp_longitude]" value="">
-                
-                <?php if ($_model->getGlocation()) { ?>
-                    <script>
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(function(pos){
-                                var latitud = pos.coords.latitude;
-                                var longitud = pos.coords.longitude;
-                                document.getElementById("cp_latitude").value = latitud;
-                                document.getElementById("cp_longitude").value = longitud;
-                            }, function(errorCode){
-                                console.log("Error code localization: ");
-                                console.log(errorCode);
-                            });
-                        }
-                    </script>
-                <?php } else { echo "No localization"; } ?>
             </li>
         <?php } else { ?>
             <div style="text-align:center;"><h3>Servicio temporalmente inactivo.</h3></div>

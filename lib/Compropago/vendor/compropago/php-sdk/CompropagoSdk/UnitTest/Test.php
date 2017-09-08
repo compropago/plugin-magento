@@ -88,6 +88,20 @@ class Test extends \PHPUnit_Framework_TestCase
         $this->assertTrue($res);
     }
 
+    public function testDefaultProviders()
+    {
+        $res = false;
+        try {
+            $client = new Client($this->publickey, $this->privatekey, $this->mode);
+            $response = $client->api->listDefaultProviders();
+
+            $res = is_array($response);
+        } catch (\Exception $e) {
+            echo "====>>".$e->getMessage()."\n";
+        }
+        $this->assertTrue($res);
+    }
+
     public function testProvidersLimit()
     {
         $flag = true;
@@ -115,7 +129,7 @@ class Test extends \PHPUnit_Framework_TestCase
             $client = new Client($this->publickey, $this->privatekey, $this->mode);
             $provs = $client->api->listProviders(700, 'USD');
 
-            foreach ($provs as $prov) {
+            foreach ($provs as $key => $prov) {
                 if ($prov->transaction_limit < $this->limit) {
                     $flag = false;
                     break;
@@ -157,7 +171,7 @@ class Test extends \PHPUnit_Framework_TestCase
             $order = Factory::getInstanceOf('PlaceOrderInfo', $this->order_info);
             $response = $client->api->placeOrder($order);
 
-            $res = $epoch == $response->exp_date;
+            $res = $epoch == $response->expires_at;
         } catch (\Exception $e) {
             echo "====>> ".$e->getMessage();
         }
@@ -174,7 +188,7 @@ class Test extends \PHPUnit_Framework_TestCase
             $order_aux = $client->api->placeOrder($order);
             $response = $client->api->verifyOrder($order_aux->id);
 
-            $res = $response instanceof CpOrderInfo;
+            $res = $response instanceof CpOrderInfo && !empty($response->id);
         } catch (\Exception $e) {
             echo "====>>".$e->getMessage()."\n";
         }
@@ -239,6 +253,23 @@ class Test extends \PHPUnit_Framework_TestCase
             $res = $response instanceof Webhook;
         } catch(\Exception $e) {
             echo "====>>".$e->getMessage()."\n";
+        }
+
+        $this->assertTrue($res);
+    }
+
+    public function testDeactiveWebhook()
+    {
+        $res = false;
+        try {
+            $client = new Client($this->publickey, $this->privatekey, $this->mode);
+
+            $webhookId = "8b1f9725-54c5-4733-994b-b1e0f9c50baa";
+            $webhook = $client->api->deactiveWebhook($webhookId);
+
+            $res = $webhook->status == 'deactivated';
+        } catch (\Exception $e) {
+            echo "\n".$e->getMessage()."\n";
         }
 
         $this->assertTrue($res);
