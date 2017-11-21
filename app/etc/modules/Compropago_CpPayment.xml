@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Compropago_CpPayment>
+            <active>true</active>
+            <codePool>community</codePool>
+
+            <depends>
+                <Mage_Payment />
+            </depends>
+        </Compropago_CpPayment>
+    </modules>
+</config>

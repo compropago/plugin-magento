@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Compropago_CpPayment>
+            <version>2.1.2</version>
+        </Compropago_CpPayment>
+    </modules>
+
+    <!-- BLOQUES GENRALES DE CODIGO -->
+    <global>
+        <fieldsets>
+            <sales_convert_quote_payment>
+                <custom_field_one>
+                    <to_order_payment>*</to_order_payment>
+                </custom_field_one>
+                <custom_field_two>
+                    <to_order_payment>*</to_order_payment>
+                </custom_field_two>
+            </sales_convert_quote_payment>
+        </fieldsets>
+
+        <blocks>
+            <cppayment>
+                <class>Compropago_CpPayment_Block</class>
+            </cppayment>
+        </blocks>
+        <helpers>
+            <cppayment>
+                <class>Compropago_CpPayment_Helper</class>
+            </cppayment>
+        </helpers>
+        <models>
+            <cppayment>
+                <class>Compropago_CpPayment_Model</class>
+            </cppayment>
+        </models>
+
+
+        <!-- INSTALACION DE TABLAS -->
+        <resources>
+            <cppayment_setup>
+                <setup>
+                    <module>Compropago_CpPayment</module>
+                </setup>
+            </cppayment_setup>
+        </resources>
+
+
+        <!-- EVENTOS ESCUCHADOS DEL PLUGIN -->
+        <events>
+            <admin_system_config_changed_section_payment>
+                <observers>
+                    <cppayment_check_webhook>
+                        <class>cppayment/observer</class>
+                        <method>checkWebhook</method>
+                    </cppayment_check_webhook>
+                </observers>
+            </admin_system_config_changed_section_payment>
+        </events>
+    </global>
+
+
+
+    <!-- RUTEO DEL WEBHOOK -->
+    <frontend>
+        <routers>
+            <cpwebhook>
+                <use>standard</use>
+                <args>
+                    <module>Compropago_CpPayment</module>
+                    <frontName>cpwebhook</frontName>
+                </args>
+            </cpwebhook>
+        </routers>
+        <layout>
+            <updates>
+                <compropago_cppayment>
+                    <file>cppayment.xml</file>
+                </compropago_cppayment>
+            </updates>
+        </layout>
+    </frontend>
+
+
+    <!-- ACTIVACION COMO METODO DE PAGO -->
+    <default>
+        <payment>
+            <cppayment>
+                <active>1</active>
+                <model>cppayment/standard</model>
+                <title>Pago en efectivo - ComproPago</title>
+                <allowspecific>0</allowspecific>
+                <payment_action>sale</payment_action>
+                <compropago_show_title_logo>1</compropago_show_title_logo>
+                <compropago_order_status_new>pending</compropago_order_status_new>
+                <compropago_order_status_approved>processing</compropago_order_status_approved>
+                <compropago_order_status_in_process>pending</compropago_order_status_in_process>
+                <compropago_order_status_cancelled>canceled</compropago_order_status_cancelled>
+                <compropago_gloaction>1</compropago_gloaction>
+                <sort_order>200</sort_order>
+            </cppayment>
+        </payment>
+    </default>
+</config>
