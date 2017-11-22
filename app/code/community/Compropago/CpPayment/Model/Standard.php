@@ -148,14 +148,6 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                 'cp' => $shipping->getData('postcode')
             );
 
-            if (isset($info['latitude'])) {
-                $order_info['latitude'] = $info['latitude'];
-            }
-
-            if (isset($info['longitude'])) {
-                $order_info['longitude'] = $info['longitude'];
-            }
-
             $order = Factory::getInstanceOf('PlaceOrderInfo', $order_info);
 
             $client = new Client(
@@ -214,7 +206,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                 'ioOut'            => $ioout
             );
 
-            // DB insert ( prefix."compropago_orders",  dataInsert)
+            $DB->insert($prefix."compropago_orders", $dataInsert);
 
             /* TABLE compropago_transactions
              ------------------------------------------------------------------------*/
@@ -229,7 +221,7 @@ class Compropago_CpPayment_Model_Standard extends Mage_Payment_Model_Method_Abst
                 'ioOut'                => $ioout
             );
 
-            // DB insert ( prefix."compropago_transactions",  dataInsert)
+            $DB->insert($prefix."compropago_transactions", $dataInsert);
         } catch (Exception $error) {
             Mage::throwException($error->getMessage());
         }

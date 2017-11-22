@@ -32,24 +32,6 @@ $_getProviders  = $_model->getProviders();
                 <?php } ?>
 
                 <input type="hidden" id="customer_phone" name="payment[customer_phone]" value="">
-                <input type="hidden" id="cp_latitude" name="payment[cp_latitude]" value="">
-                <input type="hidden" id="cp_longitude" name="payment[cp_longitude]" value="">
-                
-                <?php if ($_model->getGlocation()) { ?>
-                    <script>
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(
-                                function(pos){
-                                    document.getElementById("cp_latitude").value = pos.coords.latitude;
-                                    document.getElementById("cp_longitude").value = pos.coords.longitude;
-                                }, 
-                                function(errorCode){
-                                    console.log(errorCode);
-                                }
-                            );
-                        }
-                    </script>
-                <?php } ?>
             </li>
         <?php } else { ?>
             <div style="text-align:center;"><h3>Servicio temporalmente inactivo.</h3></div>

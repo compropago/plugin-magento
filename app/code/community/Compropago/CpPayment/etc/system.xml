@@ -134,7 +134,7 @@
                             <show_in_store>0</show_in_store>
                         </compropago_order_status_cancelled>-->
 
-                        <compropago_gloaction translate="label">
+                        <!-- <compropago_gloaction translate="label">
                             <label>Geolocalizacion</label>
                             <frontend_type>select</frontend_type>
                             <comment>
@@ -146,7 +146,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                        </compropago_gloaction>
+                        </compropago_gloaction> -->
 
                         <sort_order translate="label">
                             <label>Sort Order</label>
