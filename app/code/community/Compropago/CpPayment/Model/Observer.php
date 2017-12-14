@@ -69,7 +69,11 @@ class Compropago_CpPayment_Model_Observer
                 Mage::getSingleton('adminhtml/session')->addWarning($retro[1]);
             }
         } catch (Exception $e) {
-            Mage::throwException($e->getMessage());
+            if ($e->getMessage() == 'Error: conflict.urls.create') {
+                return;
+            } else {
+                Mage::throwException($e->getMessage());
+            }
         }
     }
 }
