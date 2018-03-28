@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <ComproPago_Webhook>
+            <version>1.0.0.0</version>
+        </ComproPago_Webhook>
+    </modules>
+
+    <global>
+        <models>
+            <webhook>
+                <class>ComproPago_Webhook_Model</class>
+            </webhook>
+        </models>
+
+        <!-- Registro del webhook -->
+        <events>
+            <admin_system_config_changed_section_payment>
+                <observers>
+                    <webhook_create>
+                        <class>webhook/observer</class>
+                        <method>create</method>
+                    </webhook_create>
+                </observers>
+            </admin_system_config_changed_section_payment>
+        </events>
+    </global>
+
+    <!-- Ruta del webhook -->
+    <frontend>
+        <routers>
+            <compropago_webhook>
+                <use>standard</use>
+                <args>
+                    <module>ComproPago_Webhook</module>
+                    <frontName>compropago</frontName>
+                </args>
+            </compropago_webhook>
+        </routers>
+    </frontend>
+</config>

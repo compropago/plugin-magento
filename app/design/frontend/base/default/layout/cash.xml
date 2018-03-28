@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <checkout_onepage_index>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>compropago/compropago.css</stylesheet>
+            </action>
+        </reference>
+    </checkout_onepage_index>
+
+
+    <checkout_onepage_success>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>compropago/cash/success.phtml</template>
+            </action>
+        </reference>
+    </checkout_onepage_success>
+</layout>
