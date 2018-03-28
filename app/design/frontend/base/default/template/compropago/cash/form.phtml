@@ -1,0 +1,33 @@
+<?php
+$_code          = $this->getMethodCode();
+$_model         = $this->getMethod();
+$_getProviders  = $_model->getProviders();
+?>
+
+<div>
+    <ul id="payment_form_<?php  echo $_code; ?>" style="display: none">
+        <?php if (!empty($_getProviders)){ ?>
+            <li>
+                <label for="paymentType" class="required"><em>*</em>¿Donde quieres pagar?</label>
+                
+                <div id="<?php echo $_code; ?>_store">
+                    <select id="paymentType" name="payment[store_code]">
+                        <?php foreach ($_getProviders as $_provider){ ?>
+                            <option value="<?php echo $_provider->internal_name; ?>"><?php echo $_provider->name; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+
+                <p class="active">
+                    <a href="https://compropago.com/legal/corresponsales_cnbv.pdf" target="_blank">
+                        <small>
+                            * Comisionistas <b>autorizados por la CNBV</b> como corresponsales bancarios
+                        </small>
+                    </a>
+                </p>
+            </li>
+        <?php } else { ?>
+            <div style="text-align:center;"><h3>Servicio temporalmente inactivo.</h3></div>
+        <?php } ?>
+    </ul>
+</div>
