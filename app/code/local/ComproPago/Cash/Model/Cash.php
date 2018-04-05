@@ -4,21 +4,22 @@ require_once Mage::getBaseDir('lib') . DS . 'ComproPago' . DS . 'vendor' . DS . 
 
 use CompropagoSdk\Client;
 use CompropagoSdk\Factory\Factory;
-use CompropagoSdk\Tools\Validations;
 
 class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
 {
-    protected $_code                   = 'cash';
-    protected $_formBlockType          = 'cash/form';
-    protected $_infoBlockType          = 'cash/info';
-    protected $_canUseForMultiShipping = false;
-    protected $_canUseInternal         = false;
-    protected $_isInitializeNeeded     = true;
+    protected $_code = 'cash';
+    protected $_formBlockType = 'cash/form';
+    protected $_infoBlockType = 'cash/info';
+    protected $_isInitializeNeeded = true;
+    protected $_canUseInternal = true; //This can use in admin
+    protected $_canUseCheckout = true; //This can use in onepage checkout
+    protected $_canUseForMultishipping = true; //This can use in multishipping
 
     /**
      * Assing data to the order process
      * @param mixed $data
      * @return $this|Mage_Payment_Model_Info
+     * @throws Varien_Exception
      */
     public function assignData($data)
     {
@@ -43,6 +44,7 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
             );
         } else {
             $sessionCheckout = Mage::getSingleton('checkout/session');
+
             $quote = $sessionCheckout->getQuote();
             $billingAddress = $quote->getBillingAddress();
             $billing = $billingAddress->getData();
@@ -54,6 +56,7 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
                 "customer_phone" => $data->getCustomerPhone()
             );
         }
+
         $infoInstance = $this->getInfoInstance();
         $infoInstance->setAdditionalData(serialize($info));
         return $this;
@@ -63,21 +66,27 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
      * Return the providers array in checkout
      * @return array
      * @throws Mage_Core_Model_Store_Exception
+     * @throws Varien_Exception
      */
     public function getProviders()
     {
-        $client = new Client(
-            $this->getConfigData('compropago_publickey'),
-            $this->getConfigData('compropago_privatekey'),
-            (int)trim($this->getConfigData('compropago_mode')) == 1 ? true : false
+        $publicKey = Mage::getStoreConfig('payment/base/publickey');
+        $privateKey = Mage::getStoreConfig('payment/base/privatekey');
+        $mode = intval(Mage::getStoreConfig('payment/base/mode')) == 1;
+
+        $client = new Client($publicKey, $privateKey, $mode);
+
+        $quote = Mage::getModel('checkout/session')->getQuote();
+
+        $quoteData = $quote->getData();
+        $grandTotal = $quoteData['grand_total'];
+
+        $providers = $client->api->listProviders(
+            $grandTotal,
+            Mage::app()->getStore()->getCurrentCurrencyCode()
         );
 
-        $quote      = Mage::getModel('checkout/session')->getQuote();
-        $quoteData  = $quote->getData();
-        $grandTotal = $quoteData['grand_total'];
-        $providers  = $client->api->listProviders($grandTotal, Mage::app()->getStore()->getCurrentCurrencyCode());
-        $filter     = explode(',', $this->getConfigData('compropago_provider_available'));
-
+        $filter = explode(',', $this->getConfigData('providers_available'));
         $record = [];
 
         foreach ($providers as $provider) {
@@ -106,6 +115,7 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
      * @param object $stateObject
      * @return $this|Mage_Payment_Model_Abstract
      * @throws Mage_Core_Exception
+     * @throws Varien_Exception
      */
     public function initialize($paymentAction, $stateObject)
     {
@@ -115,25 +125,34 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
             return $this;
         }
 
+        $publicKey = Mage::getStoreConfig('payment/base/publickey');
+        $privateKey = Mage::getStoreConfig('payment/base/privatekey');
+        $mode = intval(Mage::getStoreConfig('payment/base/mode')) == 1;
+
         // Set the default state of the new order.
-        $state = Mage_Sales_Model_Order::STATE_NEW; // state now = 'pending_payment'
+        $state = Mage_Sales_Model_Order::STATE_NEW;
         $defaultStatus = 'pending';
+
         $stateObject->setState($state);
         $stateObject->setStatus($defaultStatus);
-        $stateObject->setIsNotified(false);
+        $stateObject->setIsNotified(true);
 
-        $sessionCheckout = Mage::getSingleton('checkout/session');
-        $quoteId         = $sessionCheckout->getQuoteId();
-        $quote           = Mage::getSingleton('checkout/session')->getQuote($quoteId);
-        $orderId         = $quote->getReservedOrderId();
-        $order           = Mage::getModel('sales/order')->loadByIncrementId($orderId);
-        $grandTotal      = (float)$order->getBaseGrandTotal();
-        $convertQuote    = Mage::getSingleton('sales/convert_quote');
-        $order           = $convertQuote->toOrder($quote);
-        $orderNumber     = $order->getIncrementId();
-        $orderOne        = Mage::getModel('sales/order')->loadByIncrementId($orderNumber);
+        $session = Mage::getSingleton('checkout/session');
+        $coreSession = Mage::getSingleton('core/session');
+        $orderModel = Mage::getModel('sales/order');
+        $convertQuote = Mage::getSingleton('sales/convert_quote');
+        $customer = Mage::getModel('customer/customer');
 
+        $quoteId = $session->getQuoteId();
+        $quote = $session->getQuote($quoteId);
+        $orderId = $quote->getReservedOrderId();
+        $order = $orderModel->loadByIncrementId($orderId);
+        $grandTotal = (float)$order->getBaseGrandTotal();
+        $order = $convertQuote->toOrder($quote);
+        $orderNumber = $order->getIncrementId();
+        $orderOne = $orderModel->loadByIncrementId($orderNumber);
         $orderOne->setVisibleOnFront(1);
+
         $name = "";
 
         foreach ($orderOne->getAllItems() as $item) {
@@ -144,7 +163,7 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
         $info = unserialize($infoIntance->getAdditionalData());
 
         try {
-            $order_info = array(
+            $details = array(
                 'order_id' => $orderNumber,
                 'order_name' => $name,
                 'order_price' => $grandTotal,
@@ -156,30 +175,29 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
                 'currency' => Mage::app()->getStore()->getCurrentCurrencyCode()
             );
 
-            $order = Factory::getInstanceOf('PlaceOrderInfo', $order_info);
+            $orderInfo = Factory::getInstanceOf('PlaceOrderInfo', $details);
 
-            $client = new Client(
-                $this->getConfigData('compropago_publickey'),
-                $this->getConfigData('compropago_privatekey'),
-                (int)trim($this->getConfigData('compropago_mode')) == 1 ? true : false
-            );
+            $client = new Client($publicKey, $privateKey, $mode);
 
-            $response = $client->api->placeOrder($order);
+            $response = $client->api->placeOrder($orderInfo);
 
             if (empty($response->id)) {
                 Mage::throwException("El servicio de ComproPago no se encuentra disponible.");
             }
 
-            Mage::getSingleton('core/session')->setCompropagoId($response->id);
+            $coreSession->setComproPagoId($response->id);
+            $coreSession->setComproPagoShortId($response->short_id);
+            $coreSession->setComproPagoStore($info['payment_type']);
 
             /* ************************************************************************
                                     ASIGNAR COMPRA AL USUARIO
             ************************************************************************ */
-            $customer = Mage::getModel('customer/customer');
+
+            $message = 'The user has not completed the payment process yet.';
+
             $customer->setWebsiteId(1);
             $customer->loadByEmail($info['customer_email']);
-            $message = 'The user has not completed the payment process yet.';
-            $orderbyid = Mage::getModel('sales/order')->loadByIncrementId($orderNumber);
+            $orderbyid = $orderModel->loadByIncrementId($orderNumber);
             $orderbyid->setCustomerId($customer->getId());
             $orderbyid->setCustomerFirstname($customer->getFirstname());
             $orderbyid->setCustomerLastname($customer->getLastname());
@@ -188,127 +206,21 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
             $history->setIsCustomerNotified(true);
             $orderbyid->save();
 
-            /* ************************************************************************
-                                    RUTINAS DE BASE DE DATOS
-            ************************************************************************ */
-            $DB = Mage::getSingleton('core/resource')->getConnection('core_write');
-            $prefix = Mage::getConfig()->getTablePrefix();
-            $date  = Mage::getModel('core/date')->timestamp(); // time standart function
-            $ioin  = base64_encode(serialize($order));
-            $ioout = base64_encode(serialize($response));
+            /**
+             * Add Additional Information
+             ------------------------------------------------------------------------- */
 
-            /* TABLE compropago_orders
-             ------------------------------------------------------------------------*/
-            $dataInsert = array(
-                'date'             => $date,
-                'modified'         => $date,
-                'compropagoId'     => $response->id,
-                'compropagoStatus' => $response->type,
-                'storeCartId'      => $orderNumber,
-                'storeOrderId'     => $orderNumber,
-                'storeExtra'       => 'COMPROPAGO_PENDING',
-                'ioIn'             => $ioin,
-                'ioOut'            => $ioout
-            );
-            $DB->insert($prefix."compropago_orders", $dataInsert);
+            $additional = [
+                'id' => $response->id,
+                'short_id' => $response->short_id,
+                'store' => $info['payment_type'],
+                'order_id' => $order->getId()
+            ];
 
-            /* TABLE compropago_transactions
-             ------------------------------------------------------------------------*/
-            $dataInsert = array(
-                'orderId'              => $orderNumber,
-                'date'                 => $date,
-                'compropagoId'         => $response->id,
-                'compropagoStatus'     => $response->type,
-                'compropagoStatusLast' => $response->type,
-                'ioIn'                 => $ioin,
-                'ioOut'                => $ioout
-            );
-
-            $DB->insert($prefix."compropago_transactions", $dataInsert);
+            $coreSession->setComproPagoExtraData(serialize($additional));
         } catch (Exception $error) {
             Mage::throwException($error->getMessage());
         }
         return $this;
-    }
-
-    /**
-     * Validate configuration options and return warnings
-     * @param bool   $enabled
-     * @param string $publickey
-     * @param string $privatekey
-     * @param bool   $live
-     * @return array
-     */
-    public function hookRetro($enabled, $publickey, $privatekey, $live)
-    {
-        if (!$enabled) {
-            return array(
-                true,
-                'ComproPago is not Enabled',
-                'no'
-            );
-        }
-        if (empty($publickey) || empty($privatekey)) {
-            return array(
-                true,
-                'The Public Key and Private Key must be set before using ComproPago',
-                'no'
-            );
-        }
-        try {
-            $client = new Client(
-                $publickey,
-                $privatekey,
-                $live
-            );
-            $compropagoResponse = Validations::evalAuth($client);
-            //eval keys
-            if (!Validations::validateGateway($client)) {
-                return array(
-                    true,
-                    'Invalid Keys, The Public Key and Private Key must be valid before using this module.',
-                    'no'
-                );
-            }
-            if ($compropagoResponse->mode_key != $compropagoResponse->livemode) {
-                return array(
-                    true,
-                    'Your Keys and Your ComproPago account are set to different Modes.',
-                    'no'
-                );
-            }
-            if ($live != $compropagoResponse->livemode) {
-                return array(
-                    true,
-                    'Your Store and Your ComproPago account are set to different Modes.',
-                    'no'
-                );
-            }
-            if ($live != $compropagoResponse->mode_key) {
-                return array(
-                    true,
-                    'Your ComproPago Keys are for a different Mode.',
-                    'no'
-                );
-            }
-            if (!$compropagoResponse->mode_key && !$compropagoResponse->livemode) {
-                return array(
-                    true,
-                    'ComproPago account is Running in TEST Mode, NO REAL OPERATIONS',
-                    'no'
-                );
-            }
-        } catch (Exception $e) {
-            return array(
-                true,
-                $e->getMessage(),
-                'no'
-            );
-        }
-        return array(
-            false,
-            '',
-            'yes'
-        );
     }
 }

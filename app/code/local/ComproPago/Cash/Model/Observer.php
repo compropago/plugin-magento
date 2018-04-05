@@ -1,24 +1,20 @@
 <?php
 
-class ComproPago_Cash_Model_Oberver
+class ComproPago_Cash_Model_Observer
 {
     /**
-     * Set ComproPago retro to config panel
      * @param $observer
+     * @throws Varien_Exception
      */
-    public function retro($observer)
+    public function setAdditionalInformation($observer)
     {
-        $model = Mage::getModel('ComproPago_Cash_Model_Cash');
+        $session = Mage::getSingleton('core/session');
+        $info = unserialize($session->getComproPagoExtraData());
+        $session->setComproPagoExtraData('');
 
-        $retro = $model->hookRetro(
-            (int)trim($model->getConfigData('active')) == 1 ? true : false,
-            $model->getConfigData('compropago_publickey'),
-            $model->getConfigData('compropago_privatekey'),
-            (int)trim($model->getConfigData('compropago_mode')) == 1 ? true : false
-        );
+        $order = $observer->payment->getOrder();
+        $payment = $order->getPayment();
 
-        if ($retro[0]) {
-            Mage::getSingleton('adminhtml/session')->addWarning($retro[1]);
-        }
+
     }
 }

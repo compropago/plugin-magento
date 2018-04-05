@@ -23,34 +23,28 @@
                 <class>ComproPago_Cash_Block</class>
             </cash>
         </blocks>
+
         <helpers>
             <cash>
                 <class>ComproPago_Cash_Helper</class>
             </cash>
         </helpers>
+
         <models>
             <cash>
                 <class>ComproPago_Cash_Model</class>
             </cash>
         </models>
 
-        <resources>
-            <cash_setup>
-                <setup>
-                    <module>ComproPago_Cash</module>
-                </setup>
-            </cash_setup>
-        </resources>
-
         <events>
-            <admin_system_config_changed_section_payment>
+            <sales_order_payment_place_end>
                 <observers>
-                    <cash_retro>
+                    <cash>
                         <class>cash/observer</class>
-                        <method>retro</method>
-                    </cash_retro>
+                        <method>setAdditionalInformation</method>
+                    </cash>
                 </observers>
-            </admin_system_config_changed_section_payment>
+            </sales_order_payment_place_end>
         </events>
     </global>
 

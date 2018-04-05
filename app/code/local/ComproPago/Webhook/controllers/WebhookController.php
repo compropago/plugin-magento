@@ -8,14 +8,18 @@ use CompropagoSdk\Tools\Validations;
 
 class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Action
 {
-    protected $_model = null;
+    private $publicKey;
+    private $privateKey;
+    private $mode;
 
     /**
-     * ComproPago_Cash_IndexController Constructor
+     * Load ComproPago base configuration
      */
-    public function _construct()
+    private function initConfig()
     {
-        $this->_model = Mage::getModel('ComproPago_Cash_Model_Cash');
+        $this->publicKey = Mage::getStoreConfig('payment/base/publickey');
+        $this->privateKey = Mage::getStoreConfig('payment/base/privatekey');
+        $this->mode = Mage::getStoreConfig('payment/base/mode');
     }
 
     /**
@@ -25,7 +29,6 @@ class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Ac
     public function indexAction()
     {
         header('Content-Type: application/json');
-
         $request = @file_get_contents('php://input');
 
         if (empty($request) || !$respWebhook = Factory::getInstanceOf('CpOrderInfo', $request)) {
@@ -37,33 +40,31 @@ class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Ac
             ]));
         }
 
-        $publickey     = $this->_model->getConfigData('compropago_publickey');
-        $privatekey    = $this->_model->getConfigData('compropago_privatekey');
-        $live          = (int)trim($this->_model->getConfigData('compropago_mode')) == 1 ? true : false;
+        $this->initConfig();
 
-        if (empty($publickey) || empty($privatekey)) {
+        if (empty($this->publicKey) || empty($this->privateKey)) {
             die(json_encode([
                 'status' => 'error',
-                'message' => 'invalid plugin keys',
+                'message' => 'Invalid plugin keys',
                 'short_id' => null,
                 'reference' => null
             ]));
         }
-
         try {
-            $client = new Client($publickey, $privatekey, $live);
+            $client = new Client($this->publicKey, $this->privateKey, $this->mode);
             Validations::validateGateway($client);
 
             if ($respWebhook->short_id == "000000") {
                 die(json_encode([
                     'status' => 'success',
-                    'message' => 'test OK',
+                    'message' => 'OK - TEST',
                     'short_id' => $respWebhook->short_id,
                     'reference' => null
                 ]));
             }
 
             $response = $client->api->verifyOrder($respWebhook->id);
+
             if ($response->type == 'error') {
                 die(json_encode([
                     'status' => 'error',
@@ -77,70 +78,24 @@ class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Ac
             *                        RUTINAS DE BASE DE DATOS                         *
             ************************************************************************ */
 
-            $DBread  = Mage::getSingleton('core/resource')->getConnection('core_read');
-            $DBwrite = Mage::getSingleton('core/resource')->getConnection('core_write');
-            $prefix  = Mage::getConfig()->getTablePrefix();
-
-            $ioin  = base64_encode(serialize($respWebhook));
-            $ioout = base64_encode(serialize($response));
-            $date  = Mage::getModel('core/date')->timestamp();
-
-            $sql = "SELECT * FROM " . $prefix . "compropago_orders where compropagoId = '{$response->id}'";
-            $res = $DBread->fetchAll($sql);
-
-            $storedId = $res[0]['storeOrderId'];
-
-            if (empty($storedId)) {
-                die(json_encode([
-                    'status' => 'error',
-                    'message' => 'charge not found in store',
-                    'short_id' => null,
-                    'reference' => null
-                ]));
-            }
+            // TODO: Verify charge in transactions
 
             /* Rutinas de aprovación
              ------------------------------------------------------------------------*/
 
-            $_order = Mage::getModel('sales/order')->loadByIncrementId($response->order_info->order_id);
+            // TODO: Load order
 
             switch ($response->type) {
                 case 'charge.pending':
-                    $state = Mage_Sales_Model_Order::STATE_NEW;
-                    $status = "pending";
-                    $_order->setData('state', $state);
-                    $_order->setStatus($status);
-                    $_order->save();
-                    $nomestatus = 'COMPROPAGO_PENDING';
+                    // TODO: pending process
                     break;
                 case 'charge.success':
-                    $state = Mage_Sales_Model_Order::STATE_PROCESSING;
-                    $status = "processing";
-                    $_order->setData('state', $state);
-                    $_order->setStatus($status);
-                    $message = 'ComproPago automatically confirmed payment for this order.';
-                    $history = $_order->addStatusHistoryComment($message);
-                    $history->setIsCustomerNotified(true);
-                    $_order->save();
-                    $nomestatus = 'COMPROPAGO_SUCCESS';
+                    // TODO: success process
                     break;
                 case 'charge.expired':
-                    $state = Mage_Sales_Model_Order::STATE_CANCELED;
-                    $status = "canceled";
-                    $_order->setData('state', $state);
-
-                    $_order->setStatus($status);
-
-                    $message = 'The user has not completed the payment and the order was cancelled.';
-                    $history = $_order->addStatusHistoryComment($message);
-
-                    $history->setIsCustomerNotified(false);
-
-                    $_order->save();
-                    $nomestatus = 'COMPROPAGO_EXPIRED';
+                    // TODO: expired process
                     break;
                 default:
-                    $_order->save();
                     die(json_encode([
                         'status' => 'error',
                         'message' => 'invalid status',
@@ -149,31 +104,7 @@ class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Ac
                     ]));
             }
 
-            /* TABLE compropago_orders
-             ------------------------------------------------------------------------*/
-
-            $updateData = array(
-                'modified'         => $date,
-                'compropagoStatus' => $response->type,
-                'storeExtra'       => $nomestatus,
-            );
-
-            $DBwrite->update($prefix."compropago_orders",  $updateData, 'id='. $res[0]['id']);
-
-            /* TABLE compropago_transactions
-             ------------------------------------------------------------------------*/
-
-            $dataInsert = array(
-                'orderId'              => $storedId,
-                'date'                 => $date,
-                'compropagoId'         => $response->id,
-                'compropagoStatus'     => $response->type,
-                'compropagoStatusLast' => $res[0]['compropagoStatus'],
-                'ioIn'                 => $ioin,
-                'ioOut'                => $ioout
-            );
-
-            $DBwrite->insert($prefix."compropago_transactions", $dataInsert);
+            // TODO: process transacrions
 
             die(json_encode([
                 'status' => 'succeess',

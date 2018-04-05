@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <ComproPago_Base>
+            <active>true</active>
+            <codePool>local</codePool>
+        </ComproPago_Base>
+
+        <depends>
+            <Mage_Payment/>
+        </depends>
+    </modules>
+</config>
