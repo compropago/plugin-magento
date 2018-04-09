@@ -13,6 +13,7 @@ class ComproPago_Cash_Model_Providers
     public function toOptionArray()
     {
         $options = array();
+
         $client = new Client('', '', false);
 
         foreach ($client->api->listDefaultProviders() as $provider){

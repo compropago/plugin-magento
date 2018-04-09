@@ -1,9 +1,9 @@
 <?php
 
-class ComproPago_Cash_Model_Observer
+class ComproPago_Spei_Model_Observer
 {
     /**
-     * Add extra information of the payment when a cash order was placed
+     * Add extra information when a spei order was placed
      * @param $observer
      * @throws Varien_Exception
      */
@@ -12,7 +12,7 @@ class ComproPago_Cash_Model_Observer
         $order = $observer->payment->getOrder();
         $method = $order->getPayment()->getMethodInstance();
 
-        if ($method->getCode() == 'cash') {
+        if ($method->getCode() == 'spei') {
             $session = Mage::getSingleton('core/session');
             $resource = Mage::getSingleton('core/resource');
 

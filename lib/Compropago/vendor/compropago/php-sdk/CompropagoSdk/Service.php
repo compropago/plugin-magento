@@ -1,26 +1,20 @@
 <?php
+/**
+ * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+ */
 
 namespace CompropagoSdk;
 
 use CompropagoSdk\Factory\Factory;
 use CompropagoSdk\Tools\Request;
 
-/**
- * Class Service
- * @package CompropagoSdk
- *
- * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
- */
 class Service
 {
     private $client;
 
     /**
      * Service constructor.
-     *
      * @param Client $client
-     *
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
      */
     public function __construct(Client $client)
     {
@@ -29,10 +23,7 @@ class Service
 
     /**
      * Get auth info
-     *
      * @return array
-     * 
-     * @author Eduardo Aguilar <dante.aguilar@gmail.com>
      */
     private function getAuth()
     {
@@ -44,10 +35,8 @@ class Service
 
     /**
      * Get default Providers
-     *
-     * @return array
-     * 
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+     * @return mixed
+     * @throws \Exception
      */
     public function listDefaultProviders()
     {
@@ -59,12 +48,10 @@ class Service
 
     /**
      * Get list providers by account
-     *
      * @param float $limit
      * @param string $currency
-     * @return array
-     * 
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+     * @return mixed
+     * @throws \Exception
      */
     public function listProviders($limit = 0.0, $currency='MXN')
     {
@@ -85,11 +72,9 @@ class Service
 
     /**
      * Get info of an order
-     *
-     * @param string $orderId
-     * @return \CompropagoSdk\Factory\Models\CpOrderInfo
-     * 
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+     * @param $orderId
+     * @return mixed
+     * @throws \Exception
      */
     public function verifyOrder($orderId)
     {
@@ -99,11 +84,9 @@ class Service
 
     /**
      * Create new order
-     *
-     * @param \CompropagoSdk\Factory\Models\PlaceOrderInfo $neworder
-     * @return \CompropagoSdk\Factory\Models\NewOrderInfo
-     * 
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+     * @param $neworder
+     * @return mixed
+     * @throws \Exception
      */
     public function placeOrder($neworder)
     {
@@ -121,18 +104,23 @@ class Service
             'app_client_version' => $neworder->app_client_version,        
         ];
 
-        $response = Request::post($this->client->deployUri.'charges/', $params, $this->getAuth());
+        $hash = json_encode(implode(':', $this->getAuth()));
+        $hash = $hash . '--' . md5($hash);
+
+        $headers = ['Upgrade-Pay' => $hash];
+
+        $url = $this->client->deployUri.'charges/';
+
+        $response = Request::post($url, $params, $this->getAuth(), $headers);
         return Factory::getInstanceOf('NewOrderInfo', $response);
     }
 
     /**
      * Send SMS instructions for an order
-     *
-     * @param string $number
-     * @param string $orderId
-     * @return \CompropagoSdk\Factory\Models\SmsInfo
-     * 
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+     * @param $number
+     * @param $orderId
+     * @return mixed
+     * @throws \Exception
      */
     public function sendSmsInstructions($number,$orderId)
     {
@@ -144,11 +132,9 @@ class Service
 
     /**
      * Create new webhook Url
-     *
-     * @param string $url
-     * @return \CompropagoSdk\Factory\Models\Webhook
-     * 
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+     * @param $url
+     * @return mixed
+     * @throws \Exception
      */
     public function createWebhook($url)
     {
@@ -160,10 +146,8 @@ class Service
 
     /**
      * Get list of webhooks
-     *
-     * @return array
-     * 
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+     * @return mixed
+     * @throws \Exception
      */
     public function listWebhooks()
     {
@@ -173,13 +157,11 @@ class Service
 
     /**
      * Update a webhook url
-     *
-     * @param string $webhookId
-     * @param string $url
-     * @param string $type (secondary | primary)
-     * @return \CompropagoSdk\Factory\Models\Webhook
-     * 
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+     * @param $webhookId
+     * @param null|string $url
+     * @param null|string $type
+     * @return mixed
+     * @throws \Exception
      */
     public function updateWebhook($webhookId, $url=null, $type=null)
     {
@@ -194,11 +176,9 @@ class Service
 
     /**
      * Deactive a webhook URL
-     *
-     * @param string $webhookId
-     * @return \CompropagoSdk\Factory\Models\Webhook
-     * 
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+     * @param $webhookId
+     * @return mixed
+     * @throws \Exception
      */
     public function deactiveWebhook($webhookId)
     {
@@ -210,11 +190,9 @@ class Service
 
     /**
      * Delete a webhook URL
-     *
-     * @param string $webhookId
-     * @return \CompropagoSdk\Factory\Models\Webhook
-     * 
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+     * @param $webhookId
+     * @return mixed
+     * @throws \Exception
      */
     public function deleteWebhook($webhookId)
     {

@@ -29,13 +29,13 @@
     <!-- Ruta del webhook -->
     <frontend>
         <routers>
-            <compropago_webhook>
+            <compropago>
                 <use>standard</use>
                 <args>
                     <module>ComproPago_Webhook</module>
                     <frontName>compropago</frontName>
                 </args>
-            </compropago_webhook>
+            </compropago>
         </routers>
     </frontend>
 </config>

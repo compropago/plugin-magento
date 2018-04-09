@@ -1,8 +1,8 @@
 <?php
 
-class ComproPago_Cash_Block_Info extends Mage_Payment_Block_Info
+class ComproPago_Spei_Block_Info extends Mage_Payment_Block_Info
 {
-    private $template = 'compropago/cash/info.phtml';
+    private $template = 'compropago/spei/info.phtml';
 
     /**
      * ComproPago_Cash_Block_Info constructor.
@@ -19,9 +19,13 @@ class ComproPago_Cash_Block_Info extends Mage_Payment_Block_Info
      */
     public function getTitle()
     {
-        return Mage::getStoreConfig('payment/cash/title');
+        return Mage::getStoreConfig('payment/spei/title');
     }
 
+    /**
+     * Return extra data from the current order
+     * @return array|mixed|null
+     */
     public function getExtraData()
     {
         $info = parent::getInfo();

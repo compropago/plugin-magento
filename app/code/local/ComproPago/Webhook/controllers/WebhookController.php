@@ -1,6 +1,6 @@
 <?php
 
-require_once Mage::getBaseDir('lib') . DS . 'ComproPago' . DS . 'vendor' . DS . 'autoload.php';
+require_once Mage::getBaseDir('lib') . '/ComproPago/vendor/autoload.php';
 
 use CompropagoSdk\Factory\Factory;
 use CompropagoSdk\Client;
@@ -8,14 +8,18 @@ use CompropagoSdk\Tools\Validations;
 
 class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Action
 {
-    protected $_model = null;
+    private $publicKey;
+    private $privateKey;
+    private $mode;
 
     /**
-     * ComproPago_Cash_IndexController Constructor
+     * Load ComproPago base configuration
      */
-    public function _construct()
+    private function initConfig()
     {
-        $this->_model = Mage::getModel('ComproPago_Cash_Model_Cash');
+        $this->publicKey = Mage::getStoreConfig('payment/base/publickey');
+        $this->privateKey = Mage::getStoreConfig('payment/base/privatekey');
+        $this->mode = intval(Mage::getStoreConfig('payment/base/mode')) == 1;
     }
 
     /**
@@ -25,163 +29,72 @@ class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Ac
     public function indexAction()
     {
         header('Content-Type: application/json');
-
         $request = @file_get_contents('php://input');
 
         if (empty($request) || !$respWebhook = Factory::getInstanceOf('CpOrderInfo', $request)) {
-            die(json_encode([
-                'status' => 'error',
-                'message' => 'Invalid request',
-                'short_id' => null,
-                'reference' => null
-            ]));
+            $message = 'Invalid request';
+            throw new \Exception($message);
         }
 
-        $publickey     = $this->_model->getConfigData('compropago_publickey');
-        $privatekey    = $this->_model->getConfigData('compropago_privatekey');
-        $live          = (int)trim($this->_model->getConfigData('compropago_mode')) == 1 ? true : false;
+        $this->initConfig();
 
-        if (empty($publickey) || empty($privatekey)) {
-            die(json_encode([
-                'status' => 'error',
-                'message' => 'invalid plugin keys',
-                'short_id' => null,
-                'reference' => null
-            ]));
+        if (empty($this->publicKey) || empty($this->privateKey)) {
+            $message = 'Invalid plugin keys';
+            throw new \Exception($message);
         }
-
         try {
-            $client = new Client($publickey, $privatekey, $live);
+            $client = new Client($this->publicKey, $this->privateKey, $this->mode);
             Validations::validateGateway($client);
 
             if ($respWebhook->short_id == "000000") {
                 die(json_encode([
                     'status' => 'success',
-                    'message' => 'test OK',
+                    'message' => 'OK - TEST',
                     'short_id' => $respWebhook->short_id,
                     'reference' => null
                 ]));
             }
 
-            $response = $client->api->verifyOrder($respWebhook->id);
-            if ($response->type == 'error') {
-                die(json_encode([
-                    'status' => 'error',
-                    'message' => 'error verifying order',
-                    'short_id' => null,
-                    'reference' => null
-                ]));
+            /**
+             * Get te extra information to validate the payment
+            ------------------------------------------------------------------------*/
+
+            $order = new Mage_Sales_Model_Order();
+            $order->loadByIncrementId($respWebhook->order_info->order_id);
+
+            if (empty($order->getId())) {
+                $message = 'Not found order: ' . $respWebhook->order_info->order_id;
+                throw new \Exception($message);
             }
 
-            /* ************************************************************************
-            *                        RUTINAS DE BASE DE DATOS                         *
-            ************************************************************************ */
+            $payment = $order->getPayment();
+            $extraInfo = $payment->getAdditionalInformation();
 
-            $DBread  = Mage::getSingleton('core/resource')->getConnection('core_read');
-            $DBwrite = Mage::getSingleton('core/resource')->getConnection('core_write');
-            $prefix  = Mage::getConfig()->getTablePrefix();
 
-            $ioin  = base64_encode(serialize($respWebhook));
-            $ioout = base64_encode(serialize($response));
-            $date  = Mage::getModel('core/date')->timestamp();
 
-            $sql = "SELECT * FROM " . $prefix . "compropago_orders where compropagoId = '{$response->id}'";
-            $res = $DBread->fetchAll($sql);
-
-            $storedId = $res[0]['storeOrderId'];
-
-            if (empty($storedId)) {
-                die(json_encode([
-                    'status' => 'error',
-                    'message' => 'charge not found in store',
-                    'short_id' => null,
-                    'reference' => null
-                ]));
+            if (empty($extraInfo)) {
+                $message = 'Error verifying order: ' . $order->getId();
+                throw new \Exception($message);
             }
 
-            /* Rutinas de aprovación
-             ------------------------------------------------------------------------*/
+            if ($extraInfo['id'] != $respWebhook->id) {
+                $message = 'The order is not from this store' .
+                    $extraInfo['id'] . ':' . $respWebhook->id;
+                throw new \Exception($message);
+            }
 
-            $_order = Mage::getModel('sales/order')->loadByIncrementId($response->order_info->order_id);
-
-            switch ($response->type) {
-                case 'charge.pending':
-                    $state = Mage_Sales_Model_Order::STATE_NEW;
-                    $status = "pending";
-                    $_order->setData('state', $state);
-                    $_order->setStatus($status);
-                    $_order->save();
-                    $nomestatus = 'COMPROPAGO_PENDING';
+            switch ($payment->getMethod()) {
+                case 'spei':
+                    $this->processSpei($order, $payment, $extraInfo, $respWebhook);
                     break;
-                case 'charge.success':
-                    $state = Mage_Sales_Model_Order::STATE_PROCESSING;
-                    $status = "processing";
-                    $_order->setData('state', $state);
-                    $_order->setStatus($status);
-                    $message = 'ComproPago automatically confirmed payment for this order.';
-                    $history = $_order->addStatusHistoryComment($message);
-                    $history->setIsCustomerNotified(true);
-                    $_order->save();
-                    $nomestatus = 'COMPROPAGO_SUCCESS';
-                    break;
-                case 'charge.expired':
-                    $state = Mage_Sales_Model_Order::STATE_CANCELED;
-                    $status = "canceled";
-                    $_order->setData('state', $state);
-
-                    $_order->setStatus($status);
-
-                    $message = 'The user has not completed the payment and the order was cancelled.';
-                    $history = $_order->addStatusHistoryComment($message);
-
-                    $history->setIsCustomerNotified(false);
-
-                    $_order->save();
-                    $nomestatus = 'COMPROPAGO_EXPIRED';
+                case 'cash':
+                    $this->processCash($order, $payment, $extraInfo, $respWebhook);
                     break;
                 default:
-                    $_order->save();
-                    die(json_encode([
-                        'status' => 'error',
-                        'message' => 'invalid status',
-                        'short_id' => null,
-                        'reference' => null
-                    ]));
+                    $message = 'Payment method ' . $payment->getMethod() . ' not allowed';
+                    throw new \Exception($message);
             }
-
-            /* TABLE compropago_orders
-             ------------------------------------------------------------------------*/
-
-            $updateData = array(
-                'modified'         => $date,
-                'compropagoStatus' => $response->type,
-                'storeExtra'       => $nomestatus,
-            );
-
-            $DBwrite->update($prefix."compropago_orders",  $updateData, 'id='. $res[0]['id']);
-
-            /* TABLE compropago_transactions
-             ------------------------------------------------------------------------*/
-
-            $dataInsert = array(
-                'orderId'              => $storedId,
-                'date'                 => $date,
-                'compropagoId'         => $response->id,
-                'compropagoStatus'     => $response->type,
-                'compropagoStatusLast' => $res[0]['compropagoStatus'],
-                'ioIn'                 => $ioin,
-                'ioOut'                => $ioout
-            );
-
-            $DBwrite->insert($prefix."compropago_transactions", $dataInsert);
-
-            die(json_encode([
-                'status' => 'succeess',
-                'message' => 'OK - ' . $response->type,
-                'short_id' => $response->short_id,
-                'reference' => $response->order_info->order_id
-            ]));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             die(json_encode([
                 'status' => 'error',
                 'message' => $e->getMessage(),
@@ -189,5 +102,124 @@ class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Ac
                 'reference' => null
             ]));
         }
+    }
+
+    /**
+     * Process Cash payments flow
+     * @param Mage_Sales_Model_Order $order
+     * @param Mage_Sales_Model_Order_Payment $payment
+     * @param array $extraInfo
+     * @param Object $request
+     * @throws Exception
+     */
+    private function processCash(&$order, &$payment, $extraInfo, $request)
+    {
+        $client = new Client($this->publicKey, $this->privateKey, $this->mode);
+
+        $verify = $client->api->verifyOrder($request->id);
+        $status = $verify->type;
+
+        $this->updateStatus($order, $status);
+        $this->save($order, $payment, $extraInfo);
+
+        die(json_encode([
+            'status' => 'success',
+            'message' => 'OK - ' . $status . ' - CASH',
+            'short_id' => $extraInfo['short_id'],
+            'reference' => $order->getIncrementId()
+        ]));
+    }
+
+    /**
+     * Process Spei payments flow
+     * @param Mage_Sales_Model_Order $order
+     * @param Mage_Sales_Model_Order_Payment $payment
+     * @param array $extraInfo
+     * @param Object $request
+     * @throws Exception
+     */
+    private function processSpei(&$order, &$payment, $extraInfo, $request)
+    {
+        $verify = $request;
+        $status = $verify->type;
+
+        $this->updateStatus($order, $status);
+        $this->save($order, $payment, $extraInfo);
+
+        die(json_encode([
+            'status' => 'success',
+            'message' => 'OK - ' . $status . ' - SPEI',
+            'short_id' => $extraInfo['short_id'],
+            'reference' => $order->getIncrementId()
+        ]));
+    }
+
+    /**
+     * Change Order Status
+     * @param Mage_Sales_Model_Order $order
+     * @param Object $status
+     * @throws Exception
+     */
+    private function updateStatus(&$order, $status)
+    {
+        switch ($status) {
+            case 'charge.pending':
+                $state = Mage_Sales_Model_Order::STATE_NEW;
+                $status = "pending";
+                $order->setData('state', $state);
+                $order->setStatus($status);
+                break;
+            case 'charge.success':
+                $state = Mage_Sales_Model_Order::STATE_PROCESSING;
+                $status = "processing";
+                $order->setData('state', $state);
+                $order->setStatus($status);
+
+                $message = 'ComproPago automatically confirmed payment for this order.';
+
+                $history = $order->addStatusHistoryComment($message);
+                $history->setIsCustomerNotified(true);
+                $history->save();
+                break;
+            case 'charge.expired':
+                $state = Mage_Sales_Model_Order::STATE_CANCELED;
+                $status = "canceled";
+                $order->setData('state', $state);
+                $order->setStatus($status);
+
+                $message = 'The user has not completed the payment and the order was cancelled.';
+
+                $history = $order->addStatusHistoryComment($message);
+                $history->setIsCustomerNotified(false);
+                $history->save();
+                break;
+            default:
+                $message = 'Status ' . $status . 'not allowed';
+                throw new \Exception($message);
+        }
+    }
+
+    /**
+     * Save Information
+     * @param Mage_Sales_Model_Order $order
+     * @param Mage_Sales_Model_Order_Payment $payment
+     * @param array $extraInfo
+     * @throws Exception
+     */
+    private function save(&$order, $payment, $extraInfo)
+    {
+        $orderId = $order->getId();
+
+        $payment->save();
+        $order->save();
+
+        $resource = Mage::getSingleton('core/resource');
+        $dbWrite = $resource->getConnection('core_write');
+
+        $table = $resource->getTableName('sales_flat_order_payment');
+        $info = serialize($extraInfo);
+
+        $query = "UPDATE $table SET additional_information = '$info' WHERE parent_id = $orderId";
+        $dbWrite->query($query);
     }
 }

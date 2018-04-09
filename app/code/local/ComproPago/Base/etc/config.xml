@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <ComproPago_Webhook>
+            <version>0.0.0.1</version>
+        </ComproPago_Webhook>
+    </modules>
+
+    <global>
+        <helpers>
+            <base>
+                <class>ComproPago_Base_Helper</class>
+            </base>
+        </helpers>
+
+        <models>
+            <base>
+                <class>ComproPago_Base_Model</class>
+            </base>
+        </models>
+
+        <events>
+            <admin_system_config_changed_section_payment>
+                <observers>
+                    <cash_retro>
+                        <class>base/observer</class>
+                        <method>retro</method>
+                    </cash_retro>
+                </observers>
+            </admin_system_config_changed_section_payment>
+        </events>
+    </global>
+</config>

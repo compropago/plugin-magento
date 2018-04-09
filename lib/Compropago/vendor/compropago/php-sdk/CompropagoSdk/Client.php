@@ -1,13 +1,11 @@
 <?php
+/**
+ * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+ */
 
 namespace CompropagoSdk;
 
-/**
- * Class Client
- * @package CompropagoSdk
- *
- * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
- */
+
 class Client
 {
     const VERSION="4.0.0.0";
@@ -22,12 +20,9 @@ class Client
 
     /**
      * Client constructor.
-     *
-     * @param string $publickey
-     * @param string $privatekey
-     * @param boolean $live
-     *
-     * @author Eduardo Aguilar <dante.aguilar41@gmail.com>
+     * @param $publickey
+     * @param $privatekey
+     * @param $live
      */
     public function __construct($publickey, $privatekey, $live)
     {
@@ -40,11 +35,19 @@ class Client
         $this->api = new Service($this);
     }
 
+    /**
+     * Return the User for API
+     * @return mixed
+     */
     public function getUser()
     {
         return $this->privatekey;
     }
 
+    /**
+     * Return the Password for API
+     * @return mixed
+     */
     public function getPass()
     {
         return $this->publickey;
