@@ -11,9 +11,9 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
     protected $_formBlockType = 'cash/form';
     protected $_infoBlockType = 'cash/info';
     protected $_isInitializeNeeded = true;
-    protected $_canUseInternal = true; //This can use in admin
-    protected $_canUseCheckout = true; //This can use in onepage checkout
-    protected $_canUseForMultishipping = true; //This can use in multishipping
+    protected $_canUseInternal = true;
+    protected $_canUseCheckout = true;
+    protected $_canUseForMultishipping = true;
 
     /**
      * Assing data to the order process
@@ -101,15 +101,6 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
     }
 
     /**
-     * Return the title method according with the context
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->getConfigData('title');
-    }
-
-    /**
      * Main process to create order
      * @param string $paymentAction
      * @param object $stateObject
@@ -186,8 +177,6 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
             }
 
             $coreSession->setComproPagoId($response->id);
-            $coreSession->setComproPagoShortId($response->short_id);
-            $coreSession->setComproPagoStore($info['payment_type']);
 
             /* ************************************************************************
                                     ASIGNAR COMPRA AL USUARIO
@@ -213,8 +202,7 @@ class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
             $additional = [
                 'id' => $response->id,
                 'short_id' => $response->short_id,
-                'store' => $info['payment_type'],
-                'order_id' => $order->getId()
+                'store' => $info['payment_type']
             ];
 
             $coreSession->setComproPagoExtraData(serialize($additional));

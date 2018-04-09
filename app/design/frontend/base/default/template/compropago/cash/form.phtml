@@ -9,7 +9,7 @@ $_getProviders  = $_model->getProviders();
         <?php if (!empty($_getProviders)){ ?>
             <li>
                 <label for="paymentType" class="required"><em>*</em>¿Donde quieres pagar?</label>
-                
+
                 <div id="<?php echo $_code; ?>_store">
                     <select id="paymentType" name="payment[store_code]">
                         <?php foreach ($_getProviders as $_provider){ ?>

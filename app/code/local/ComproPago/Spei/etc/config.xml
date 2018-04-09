@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <config>
     <modules>
-        <ComproPago_Cash>
-            <version>2.3.0.0</version>
-        </ComproPago_Cash>
+        <ComproPago_Spei>
+            <version>1.0.0.0</version>
+        </ComproPago_Spei>
     </modules>
 
     <global>
@@ -19,30 +19,30 @@
         </fieldsets>
 
         <blocks>
-            <cash>
-                <class>ComproPago_Cash_Block</class>
-            </cash>
+            <spei>
+                <class>ComproPago_Spei_Block</class>
+            </spei>
         </blocks>
 
         <helpers>
-            <cash>
-                <class>ComproPago_Cash_Helper</class>
-            </cash>
+            <spei>
+                <class>ComproPago_Spei_Helper</class>
+            </spei>
         </helpers>
 
         <models>
-            <cash>
-                <class>ComproPago_Cash_Model</class>
-            </cash>
+            <spei>
+                <class>ComproPago_Spei_Model</class>
+            </spei>
         </models>
 
         <events>
             <sales_order_payment_save_after>
                 <observers>
-                    <cash>
-                        <class>cash/observer</class>
+                    <spei>
+                        <class>spei/observer</class>
                         <method>setAdditionalInformation</method>
-                    </cash>
+                    </spei>
                 </observers>
             </sales_order_payment_save_after>
         </events>
@@ -51,23 +51,23 @@
     <frontend>
         <layout>
             <updates>
-                <compropago_cash>
-                    <file>cash.xml</file>
-                </compropago_cash>
+                <compropago_spei>
+                    <file>spei.xml</file>
+                </compropago_spei>
             </updates>
         </layout>
     </frontend>
 
     <default>
         <payment>
-            <cash>
+            <spei>
                 <active>1</active>
-                <model>cash/cash</model>
-                <title>Pago en efectivo</title>
+                <model>spei/spei</model>
+                <title>Transferencia Bancaria</title>
                 <allowspecific>0</allowspecific>
                 <payment_action>sale</payment_action>
-                <sort_order>1</sort_order>
-            </cash>
+                <sort_order>2</sort_order>
+            </spei>
         </payment>
     </default>
 </config>

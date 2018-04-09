@@ -1,8 +1,8 @@
 <?php
 
-class ComproPago_Cash_Block_Form extends Mage_Payment_Block_Form
+class ComproPago_Spei_Block_Form extends Mage_Payment_Block_Form
 {
-    private $template = 'compropago/cash/form.phtml';
+    private $template = 'compropago/spei/form.phtml';
 
     /**
      * ComproPago_Cash_Block_Form Constructor
@@ -30,7 +30,7 @@ class ComproPago_Cash_Block_Form extends Mage_Payment_Block_Form
     {
         $mark = Mage::getConfig()->getBlockClassName('core/template');
         $mark = new $mark;
-        $mark->setTemplate('compropago/cash/mark.phtml');
+        $mark->setTemplate('compropago/spei/mark.phtml');
         return $mark->toHtml();
     }
 }
