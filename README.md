@@ -1,4 +1,6 @@
-# Plugin para Magento 1.7.x, 1.8.x, 1.9.x - ComproPago
+# Plugin para Magento 1.7.x, 1.8.x, 1.9.x
+
+[![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
 
 ## Descripción
 
