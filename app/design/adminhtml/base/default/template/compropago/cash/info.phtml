@@ -1,0 +1,33 @@
+<?php $extra = $this->getExtraData(); ?>
+
+<h3>
+    <img src="https://compropago.com/plugins/logo.png" alt="ComproPago" style="max-height: 1.5em;vertical-align: middle;">
+    <?php echo $this->getTitle(); ?>
+</h3>
+
+<div class="grid">
+    <table class="data order-tables">
+        <thead>
+            <tr class="headings">
+                <th>Field</th>
+                <th class="last">Value</th>
+            </tr>
+        </thead>
+
+        <tbody class="even">
+            <tr class="border">
+                <td><b>ID</b></td>
+                <td class="last"><?php echo $extra['id']; ?></td>
+            </tr>
+            <tr class="border">
+                <td><b>Reference</b></td>
+                <td class="last"><?php echo $extra['short_id']; ?></td>
+            </tr>
+            <tr class="border">
+                <td><b>Type</b></td>
+                <td class="last"><?php echo $extra['store']; ?></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+

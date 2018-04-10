@@ -4,7 +4,9 @@ require_once Mage::getBaseDir('lib') . '/ComproPago/vendor/autoload.php';
 
 use CompropagoSdk\Factory\Factory;
 use CompropagoSdk\Client;
+use CompropagoSdk\Tools\Request;
 use CompropagoSdk\Tools\Validations;
+
 
 class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Action
 {
@@ -69,8 +71,6 @@ class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Ac
 
             $payment = $order->getPayment();
             $extraInfo = $payment->getAdditionalInformation();
-
-
 
             if (empty($extraInfo)) {
                 $message = 'Error verifying order: ' . $order->getId();
@@ -140,8 +140,34 @@ class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Ac
      */
     private function processSpei(&$order, &$payment, $extraInfo, $request)
     {
-        $verify = $request;
-        $status = $verify->type;
+        $url = 'https://ms-api.compropago.io/v2/orders/' . $request->id;
+        $auth = [
+            "user" => $this->privateKey,
+            "pass" => $this->publicKey
+        ];
+
+        $response = Request::get($url, $auth);
+        $response = json_decode($response);
+
+        if ($response->code != 200) {
+            $message = "Can't verify order";
+            throw new \Exception($message);
+        }
+
+        $verify = $response->data;
+        $status = '';
+
+        switch ($verify->status) {
+            case 'PENDING':
+                $status = 'charge.pending';
+                break;
+            case 'ACCEPTED':
+                $status = 'charge.success';
+                break;
+            case 'EXPIRED':
+                $status = 'charge.expired';
+                break;
+        }
 
         $this->updateStatus($order, $status);
         $this->save($order, $payment, $extraInfo);
@@ -157,7 +183,7 @@ class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Ac
     /**
      * Change Order Status
      * @param Mage_Sales_Model_Order $order
-     * @param Object $status
+     * @param string $status
      * @throws Exception
      */
     private function updateStatus(&$order, $status)
