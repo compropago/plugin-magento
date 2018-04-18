@@ -140,21 +140,22 @@ class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Ac
      */
     private function processSpei(&$order, &$payment, $extraInfo, $request)
     {
-        $url = 'https://ms-api.compropago.io/v2/orders/' . $request->id;
+        $url = 'https://api.compropago.com/v2/orders/' . $request->id;
         $auth = [
             "user" => $this->privateKey,
             "pass" => $this->publicKey
         ];
 
-        $response = Request::get($url, $auth);
-        $response = json_decode($response);
+        $response = Request::get($url, [], $auth);
 
-        if ($response->code != 200) {
-            $message = "Can't verify order";
+        if ($response->statusCode != 200) {
+            $message = "Can't verify order: {$response->body}";
             throw new \Exception($message);
         }
 
-        $verify = $response->data;
+        $body = json_decode($response->body);
+
+        $verify = $body->data;
         $status = '';
 
         switch ($verify->status) {

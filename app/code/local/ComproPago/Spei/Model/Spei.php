@@ -105,9 +105,9 @@ class ComproPago_Spei_Model_Spei extends Mage_Payment_Model_Method_Abstract
             $orderInfo = [
                 "product" => [
                     "id" => "$orderNumber",
-                    "price" => floatval($grandTotal),
-                    "name" => $name,
                     "url" => "",
+                    "name" => $name,
+                    "price" => floatval($grandTotal),
                     "currency" => $currency
                 ],
                 "customer" => [
@@ -124,9 +124,10 @@ class ComproPago_Spei_Model_Spei extends Mage_Payment_Model_Method_Abstract
 
             $coreSession->setComproPagoId($response->id);
 
-            /* ************************************************************************
-                                        ASIGNAR COMPRA AL USUARIO
-             ************************************************************************ */
+
+            /**
+             * Asignar compra al usuario
+            ------------------------------------------------------------------------- */
 
             $message = 'The user has not completed the payment process yet.';
 
@@ -167,7 +168,7 @@ class ComproPago_Spei_Model_Spei extends Mage_Payment_Model_Method_Abstract
      */
     private function speiRequest($data)
     {
-        $url = 'https://ms-api.compropago.io/v2/orders';
+        $url = 'https:/api.compropago.com/v2/orders';
 
         $publicKey = Mage::getStoreConfig('payment/base/publickey');
         $privateKey = Mage::getStoreConfig('payment/base/privatekey');
@@ -177,15 +178,18 @@ class ComproPago_Spei_Model_Spei extends Mage_Payment_Model_Method_Abstract
             "pass" => $publicKey
         ];
 
-        $response = Request::post($url, $data, $auth);
-        $response = json_decode($response);
+        try {
+            $response = Request::post($url, $data, array(), $auth);
 
-        $message = json_encode($response);
-
-        if ($response->status != 'success') {
-            Mage::throwException("SPEI Error #: $message");
+            if ($response->statusCode != 200) {
+                Mage::throwException("SPEI Error #: {$response->body}");
+            }
+        } catch (Exception $e) {
+            Mage::throwException($e->getMessage());
         }
 
-        return $response->data;
+        $body = json_decode($response->body);
+
+        return $body->data;
     }
 }

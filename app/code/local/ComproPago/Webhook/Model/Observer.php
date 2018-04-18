@@ -26,7 +26,7 @@ class ComproPago_Webhook_Model_Observer
             $client->api->createWebhook($webhook);
             $session->addSuccess('ComproPago Webhook was registered correctly');
         } catch (Exception $e) {
-            if ($e->getMessage() == 'Error: conflict.urls.create') {
+            if ($e->getMessage() == 'Request error: 409') {
                 $session->addSuccess('ComproPago Webhook was registered correctly');
                 return;
             } else {
