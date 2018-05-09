@@ -59,7 +59,7 @@ class ComproPago_Webhook_WebhookController extends Mage_Core_Controller_Front_Ac
 
             /**
              * Get te extra information to validate the payment
-            ------------------------------------------------------------------------*/
+             */
 
             $order = new Mage_Sales_Model_Order();
             $order->loadByIncrementId($respWebhook->order_info->order_id);
