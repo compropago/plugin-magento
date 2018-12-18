@@ -2,213 +2,202 @@
 
 require_once Mage::getBaseDir('lib') . DS . 'ComproPago' . DS . 'vendor' . DS . 'autoload.php';
 
-use CompropagoSdk\Client;
-use CompropagoSdk\Factory\Factory;
+use CompropagoSdk\Resources\Payments\Cash as sdkCash;
+
 
 class ComproPago_Cash_Model_Cash extends Mage_Payment_Model_Method_Abstract
 {
-    protected $_code = 'cash';
-    protected $_formBlockType = 'cash/form';
-    protected $_infoBlockType = 'cash/info';
-    protected $_isInitializeNeeded = true;
-    protected $_canUseInternal = true;
-    protected $_canUseCheckout = true;
-    protected $_canUseForMultishipping = true;
+	protected $_code					= 'cash';
+	protected $_formBlockType			= 'cash/form';
+	protected $_infoBlockType			= 'cash/info';
+	protected $_isInitializeNeeded		= true;
+	protected $_canUseInternal			= true;
+	protected $_canUseCheckout			= true;
+	protected $_canUseForMultishipping	= true;
 
-    /**
-     * Assing data to the order process
-     * @param mixed $data
-     * @return $this|Mage_Payment_Model_Info
-     * @throws Varien_Exception
-     */
-    public function assignData($data)
-    {
-        $customer = Mage::getSingleton('customer/session')->getCustomer();
+	/**
+	 * Assing data to the order process
+	 * @param mixed $data
+	 * @return $this|Mage_Payment_Model_Info
+	 * @throws Varien_Exception
+	 */
+	public function assignData($data)
+	{
+		$customer = Mage::getSingleton('customer/session')->getCustomer();
 
-        if (!($data instanceof Varien_Object)) {
-            $data = new Varien_Object($data);
-        }
+		if (!($data instanceof Varien_Object)) $data = new Varien_Object($data);
 
-        if ($data->getStoreCode() != '') {
-            $storeCode = $data->getStoreCode();
-        } else {
-            $storeCode = null;
-        }
+		$storeCode = ($data->getStoreCode() != '')
+			? $data->getStoreCode()
+			: null;
 
-        if ($customer->getFirstname()) {
-            $info = array(
-                "payment_type" => $storeCode,
-                "customer_name" => htmlentities($customer->getFirstname()),
-                "customer_email" => htmlentities($customer->getEmail()),
-                "customer_phone" => $data->getCustomerPhone()
-            );
-        } else {
-            $sessionCheckout = Mage::getSingleton('checkout/session');
+		if ($customer->getFirstname())
+		{
+			$info = [
+				"payment_type"		=> $storeCode,
+				"customer_name"		=> htmlentities($customer->getFirstname()),
+				"customer_email"	=> htmlentities($customer->getEmail()),
+				"customer_phone"	=> $data->getCustomerPhone()
+			];
+		}
+		else
+		{
+			$sessionCheckout	= Mage::getSingleton('checkout/session');
+			$quote				= $sessionCheckout->getQuote();
+			$billingAddress		= $quote->getBillingAddress();
+			$billing			= $billingAddress->getData();
+			$info = [
+				"payment_type"		=> $storeCode,
+				"customer_name"		=> htmlentities($billing['firstname']),
+				"customer_email"	=> htmlentities($billing['email']),
+				"customer_phone"	=> $data->getCustomerPhone()
+			];
+		}
 
-            $quote = $sessionCheckout->getQuote();
-            $billingAddress = $quote->getBillingAddress();
-            $billing = $billingAddress->getData();
+		$infoInstance = $this->getInfoInstance();
+		$infoInstance->setAdditionalData(serialize($info));
 
-            $info = array(
-                "payment_type" => $storeCode,
-                "customer_name" => htmlentities($billing['firstname']),
-                "customer_email" => htmlentities($billing['email']),
-                "customer_phone" => $data->getCustomerPhone()
-            );
-        }
+		return $this;
+	}
 
-        $infoInstance = $this->getInfoInstance();
-        $infoInstance->setAdditionalData(serialize($info));
-        return $this;
-    }
+	/**
+	 * Return the providers array in checkout
+	 * @return array
+	 * @throws Mage_Core_Model_Store_Exception
+	 * @throws Varien_Exception
+	 */
+	public function getProviders()
+	{
+		$publicKey	= Mage::getStoreConfig('payment/base/publickey');
+		$privateKey	= Mage::getStoreConfig('payment/base/privatekey');
+		$mode		= intval(Mage::getStoreConfig('payment/base/mode')) == 1;
+		$quote		= Mage::getModel('checkout/session')->getQuote();
+		$quoteData	= $quote->getData();
 
-    /**
-     * Return the providers array in checkout
-     * @return array
-     * @throws Mage_Core_Model_Store_Exception
-     * @throws Varien_Exception
-     */
-    public function getProviders()
-    {
-        $publicKey = Mage::getStoreConfig('payment/base/publickey');
-        $privateKey = Mage::getStoreConfig('payment/base/privatekey');
-        $mode = intval(Mage::getStoreConfig('payment/base/mode')) == 1;
+		$client		= (new sdkCash)->withKeys($publicKey, $privateKey);
+		$providers	= $client->getProviders(
+			$quoteData['grand_total'],
+			Mage::app()->getStore()->getCurrentCurrencyCode()
+		);
 
-        $client = new Client($publicKey, $privateKey, $mode);
+		$filter = explode(',', $this->getConfigData('providers_available'));
+		$record = [];
+		foreach ($providers as $provider)
+		{
+			foreach ($filter as $value)
+			{
+				if ($provider['internal_name'] == $value)
+				{
+					$record[] = $provider;
+				}
+			}
+		}
 
-        $quote = Mage::getModel('checkout/session')->getQuote();
+		return $record;
+	}
 
-        $quoteData = $quote->getData();
-        $grandTotal = $quoteData['grand_total'];
+	/**
+	 * Main process to create order
+	 * @param string $paymentAction
+	 * @param object $stateObject
+	 * @return $this|Mage_Payment_Model_Abstract
+	 * @throws Mage_Core_Exception
+	 * @throws Varien_Exception
+	 */
+	public function initialize($paymentAction, $stateObject)
+	{
+		parent::initialize($paymentAction, $stateObject);
 
-        $providers = $client->api->listProviders(
-            $grandTotal,
-            Mage::app()->getStore()->getCurrentCurrencyCode()
-        );
+		if ($paymentAction != 'sale') return $this;
 
-        $filter = explode(',', $this->getConfigData('providers_available'));
-        $record = [];
+		$publicKey		= Mage::getStoreConfig('payment/base/publickey');
+		$privateKey		= Mage::getStoreConfig('payment/base/privatekey');
+		$mode			= intval(Mage::getStoreConfig('payment/base/mode')) == 1;
+		$session		= Mage::getSingleton('checkout/session');
+		$coreSession	= Mage::getSingleton('core/session');
+		$orderModel		= Mage::getModel('sales/order');
+		$convertQuote	= Mage::getSingleton('sales/convert_quote');
+		$customer		= Mage::getModel('customer/customer');
+		$state			= Mage_Sales_Model_Order::STATE_NEW;
+		$defaultStatus	= 'pending';
 
-        foreach ($providers as $provider) {
-            foreach ($filter as $value) {
-                if ($provider->internal_name == $value) {
-                    $record[] = $provider;
-                }
-            }
-        }
+		$stateObject->setState($state);
+		$stateObject->setStatus($defaultStatus);
+		$stateObject->setIsNotified(true);
+		
+		$quoteId		= $session->getQuoteId();
+		$quote			= $session->getQuote($quoteId);
+		$orderId		= $quote->getReservedOrderId();
+		$order			= $orderModel->loadByIncrementId($orderId);
+		$grandTotal		= (float) $order->getBaseGrandTotal();
+		$order			= $convertQuote->toOrder($quote);
+		$orderNumber	= $order->getIncrementId();
+		$orderOne		= $orderModel->loadByIncrementId($orderNumber);
 
-        return $record;
-    }
+		$orderOne->setVisibleOnFront(1);
 
-    /**
-     * Main process to create order
-     * @param string $paymentAction
-     * @param object $stateObject
-     * @return $this|Mage_Payment_Model_Abstract
-     * @throws Mage_Core_Exception
-     * @throws Varien_Exception
-     */
-    public function initialize($paymentAction, $stateObject)
-    {
-        parent::initialize($paymentAction, $stateObject);
+		$name = "";
+		foreach ($orderOne->getAllItems() as $item)
+		{
+			$name .= $item->getName();
+		}
 
-        if ($paymentAction != 'sale') {
-            return $this;
-        }
+		$infoIntance	= $this->getInfoInstance();
+		$info			= unserialize($infoIntance->getAdditionalData());
+		$currency		= Mage::app()->getStore()->getCurrentCurrencyCode();
 
-        $publicKey = Mage::getStoreConfig('payment/base/publickey');
-        $privateKey = Mage::getStoreConfig('payment/base/privatekey');
-        $mode = intval(Mage::getStoreConfig('payment/base/mode')) == 1;
+		$orderInfo = [
+			'order_id'				=> $orderNumber,
+			'order_name'			=> $name,
+			'order_price'			=> $grandTotal,
+			'customer_name'			=> $info['customer_name'],
+			'customer_email'		=> $info['customer_email'],
+			'payment_type'			=> $info['payment_type'],
+			'app_client_name'		=> 'magento',
+			'app_client_version'	=> Mage::getVersion(),
+			'currency'				=> $currency
+		];
 
-        // Set the default state of the new order.
-        $state = Mage_Sales_Model_Order::STATE_NEW;
-        $defaultStatus = 'pending';
+		try
+		{
+			$client		= (new sdkCash)->withKeys( $publicKey, $privateKey );
+			$response	= $client->createOrder( $orderInfo );
+			$coreSession->setComproPagoId( $response['id'] );
 
-        $stateObject->setState($state);
-        $stateObject->setStatus($defaultStatus);
-        $stateObject->setIsNotified(true);
+			/**
+			 * Asignar compra al usuario
+			 * ------------------------------------------------------------------------- */
 
-        $session = Mage::getSingleton('checkout/session');
-        $coreSession = Mage::getSingleton('core/session');
-        $orderModel = Mage::getModel('sales/order');
-        $convertQuote = Mage::getSingleton('sales/convert_quote');
-        $customer = Mage::getModel('customer/customer');
+			$message = 'The user has not completed the payment process yet.';
 
-        $quoteId = $session->getQuoteId();
-        $quote = $session->getQuote($quoteId);
-        $orderId = $quote->getReservedOrderId();
-        $order = $orderModel->loadByIncrementId($orderId);
-        $grandTotal = (float)$order->getBaseGrandTotal();
-        $order = $convertQuote->toOrder($quote);
-        $orderNumber = $order->getIncrementId();
-        $orderOne = $orderModel->loadByIncrementId($orderNumber);
-        $orderOne->setVisibleOnFront(1);
+			$customer->setWebsiteId(1);
+			$customer->loadByEmail($info['customer_email']);
+			$orderbyid = $orderModel->loadByIncrementId($orderNumber);
+			$orderbyid->setCustomerId($customer->getId());
+			$orderbyid->setCustomerFirstname($customer->getFirstname());
+			$orderbyid->setCustomerLastname($customer->getLastname());
+			$orderbyid->setCustomerEmail($customer->getEmail());
+			$history = $orderbyid->addStatusHistoryComment($message);
+			$history->setIsCustomerNotified(true);
+			$orderbyid->save();
 
-        $name = "";
+			/**
+			 * Add Additional Information
+			 * ------------------------------------------------------------------------- */
 
-        foreach ($orderOne->getAllItems() as $item) {
-            $name .= $item->getName();
-        }
+			$additional = [
+				'id'		=> $response['id'],
+				'short_id'	=> $response['short_id'],
+				'store'		=> $info['payment_type']
+			];
 
-        $infoIntance = $this->getInfoInstance();
-        $info = unserialize($infoIntance->getAdditionalData());
+			$coreSession->setComproPagoExtraData(serialize($additional));
+		}
+		catch (Exception $error)
+		{
+			Mage::throwException($error->getMessage());
+		}
 
-        try {
-            $details = array(
-                'order_id' => $orderNumber,
-                'order_name' => $name,
-                'order_price' => $grandTotal,
-                'customer_name' => $info['customer_name'],
-                'customer_email' => $info['customer_email'],
-                'payment_type' => $info['payment_type'],
-                'app_client_name' => 'magento',
-                'app_client_version' => Mage::getVersion(),
-                'currency' => Mage::app()->getStore()->getCurrentCurrencyCode()
-            );
-
-            $orderInfo = Factory::getInstanceOf('PlaceOrderInfo', $details);
-
-            $client = new Client($publicKey, $privateKey, $mode);
-
-            $response = $client->api->placeOrder($orderInfo);
-
-            if (empty($response->id)) {
-                Mage::throwException("El servicio de ComproPago no se encuentra disponible.");
-            }
-
-            $coreSession->setComproPagoId($response->id);
-
-            /* ************************************************************************
-                                    ASIGNAR COMPRA AL USUARIO
-            ************************************************************************ */
-
-            $message = 'The user has not completed the payment process yet.';
-
-            $customer->setWebsiteId(1);
-            $customer->loadByEmail($info['customer_email']);
-            $orderbyid = $orderModel->loadByIncrementId($orderNumber);
-            $orderbyid->setCustomerId($customer->getId());
-            $orderbyid->setCustomerFirstname($customer->getFirstname());
-            $orderbyid->setCustomerLastname($customer->getLastname());
-            $orderbyid->setCustomerEmail($customer->getEmail());
-            $history = $orderbyid->addStatusHistoryComment($message);
-            $history->setIsCustomerNotified(true);
-            $orderbyid->save();
-
-            /**
-             * Add Additional Information
-             ------------------------------------------------------------------------- */
-
-            $additional = [
-                'id' => $response->id,
-                'short_id' => $response->short_id,
-                'store' => $info['payment_type']
-            ];
-
-            $coreSession->setComproPagoExtraData(serialize($additional));
-        } catch (Exception $error) {
-            Mage::throwException($error->getMessage());
-        }
-        return $this;
-    }
+		return $this;
+	}
 }
