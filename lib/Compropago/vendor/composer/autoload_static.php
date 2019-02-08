@@ -16,7 +16,17 @@ class ComposerStaticInit121669dca73ef4c5d41f9c1c870bf0f6
     public static $prefixDirsPsr4 = array (
         'CompropagoSdk\\' => 
         array (
-            0 => __DIR__ . '/..' . '/compropago/php-sdk/CompropagoSdk',
+            0 => __DIR__ . '/..' . '/compropago/php-sdk/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'R' => 
+        array (
+            'Requests' => 
+            array (
+                0 => __DIR__ . '/..' . '/rmccue/requests/library',
+            ),
         ),
     );
 
@@ -25,6 +35,7 @@ class ComposerStaticInit121669dca73ef4c5d41f9c1c870bf0f6
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit121669dca73ef4c5d41f9c1c870bf0f6::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit121669dca73ef4c5d41f9c1c870bf0f6::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit121669dca73ef4c5d41f9c1c870bf0f6::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

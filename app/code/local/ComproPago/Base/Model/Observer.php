@@ -1,6 +1,6 @@
 <?php
 
-class ComproPago_Cash_Model_Oberver
+class ComproPago_Base_Model_Oberver
 {
     /**
      * Set ComproPago retro to config panel
@@ -12,15 +12,18 @@ class ComproPago_Cash_Model_Oberver
         $session = Mage::getSingleton('adminhtml/session');
 
         $config = [
-            "mode" => Mage::getStoreConfig('payment/base/mode'),
-            "public_key" => Mage::getStoreConfig('payment/base/publickey'),
-            "private_key" => Mage::getStoreConfig('payment/base/privatekey'),
-            "cash_enable" => Mage::getStoreConfig('payment/cash/active')
+            "mode"			=> Mage::getStoreConfig('payment/base/mode'),
+            "public_key"	=> Mage::getStoreConfig('payment/base/publickey'),
+            "private_key"	=> Mage::getStoreConfig('payment/base/privatekey'),
+            "cash_enable"	=> Mage::getStoreConfig('payment/cash/active')
         ];
 
-        try {
+        try
+        {
             $this->validate($config);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e)
+        {
            $session->addWarning($e->getMessage());
         }
     }

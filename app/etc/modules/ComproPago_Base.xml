@@ -4,10 +4,10 @@
         <ComproPago_Base>
             <active>true</active>
             <codePool>local</codePool>
-        </ComproPago_Base>
 
-        <depends>
-            <Mage_Payment/>
-        </depends>
+            <depends>
+                <Mage_Payment/>
+            </depends>
+        </ComproPago_Base>
     </modules>
 </config>

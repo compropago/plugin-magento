@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
 <config>
+
     <modules>
         <ComproPago_Webhook>
-            <version>0.0.0.1</version>
+            <version>3.0.0.0</version>
         </ComproPago_Webhook>
     </modules>
 
     <global>
+
         <helpers>
             <base>
                 <class>ComproPago_Base_Helper</class>
@@ -29,5 +31,19 @@
                 </observers>
             </admin_system_config_changed_section_payment>
         </events>
+
     </global>
+
+    <adminhtml>
+        <translate>
+            <modules>
+                <ComproPago_Base>
+                    <files>
+                        <default>base.csv</default>
+                    </files>
+                </ComproPago_Base>
+            </modules>
+        </translate>
+    </adminhtml>
+
 </config>

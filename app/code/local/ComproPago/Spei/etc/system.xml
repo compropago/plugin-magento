@@ -6,7 +6,7 @@
                 <spei translate="label" module="spei">
                     <label>ComproPago SPEI</label>
                     <frontend_type>text</frontend_type>
-                    <sort_order>101</sort_order>
+                    <sort_order>102</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>

@@ -5,7 +5,7 @@
 <head>
     <?php echo $this->getChildHtml('head') ?>
 </head>
-<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+<body <?php echo $this->getBodyClass()?'class="'.$this->getBodyClass().'"':''?>>
 <?php echo $this->getChildHtml('after_body_start') ?>
 <div class="wrapper">
     <?php echo $this->getChildHtml('global_notices') ?>
@@ -15,10 +15,8 @@
             <div class="main">
                 <?php echo $this->getChildHtml('breadcrumbs') ?>
                 <div class="col-main">
-
-
                     <?php echo $this->getMessagesBlock()->getGroupedHtml(); ?>
-                    <?php if(!empty($compropagoId)){ ?>
+                    <?php if(!empty($compropagoId)) { ?>
 
                         <div id="receipt" class="receipt">
                             <div class="page-title">
@@ -26,7 +24,7 @@
                             </div>
 
                             <div id="compropagodContainer" style="width: 100%;">
-                                <iframe style="width: 100%; height: 865px;>" id="compropagodFrame"  src="https://www.compropago.com/comprobante/?confirmation_id=<?php echo $compropagoId; ?>"  frameborder="0" scrolling="yes"> </iframe>
+                                <iframe style="width: 100%; height: 865px;>" id="compropagodFrame" src="https://www.compropago.com/comprobante/?confirmation_id=<?php echo $compropagoId; ?>" frameborder="0" scrolling="yes"> </iframe>
                             </div>
                             <?php Mage::getSingleton('core/session')->setComproPagoId(''); ?>
 
@@ -57,7 +55,7 @@
                         </script>
 
                         <?php
-                    }else {
+                    } else {
                         echo $this->getChildHtml('content');
                     }
                     ?>
