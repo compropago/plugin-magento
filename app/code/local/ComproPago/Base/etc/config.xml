@@ -3,7 +3,7 @@
 
     <modules>
         <ComproPago_Webhook>
-            <version>2.5.0.1</version>
+            <version>3.0.0.0</version>
         </ComproPago_Webhook>
     </modules>
 
