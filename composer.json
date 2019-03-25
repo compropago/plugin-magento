@@ -1,0 +1,44 @@
+{
+    "name": "compropago/magento1",
+    "description": "A Magento module for ComproPago, cash and SPEI payments",
+    "license": "OSL V3.0",
+    "type": "magento-module",
+    "version": "3.0.1",
+    "homepage": "https://www.compropago.com",
+    "readme": "README.md",
+    "authors": [
+        {
+            "name": "José Beltrán Solís",
+            "email": "josebsx@live.com.mx"
+        }
+    ],
+    "keywords": [
+        "pagos internet",
+        "payment gateway",
+        "magento",
+        "compropago",
+        "cash",
+        "spei"
+    ],
+    "config": {
+        "optimize-autoloader": true,
+        "vendor-dir": "lib/compropago/vendor/"
+    },
+    "require": {
+        "compropago/php-sdk": "^5.0"
+    },
+    "scripts": {
+        "build": [
+            "composer install"
+        ]
+    },
+    "scripts-descriptions": {
+        "build": ""
+    },
+    "support": {
+        "docs": "http://demo.compropago.com/plugins/magento1",
+        "email": "soporte@compropago.com",
+        "issues": "https://github.com/compropago/plugin-magento/issues",
+        "source": "https://github.com/compropago/plugin-magento.git"
+    }
+}
