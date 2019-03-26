@@ -1,18 +1,276 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <package>
-    <name>Compropago_Payment_Extension</name>
-    <version>3.0.0.0</version>
-    <stability>stable</stability>
-    <license>OSL V3.0</license>
-    <channel>community</channel>
-    <extends/>
-    <summary>ComproPago gateway</summary>
-    <description>ComproPago payment gateways and services</description>
-    <notes>Refactor dependencies and modules configuration </notes>
-    <authors><author><name>Eduardo Aguilar</name><user>danteay</user><email>dante.aguilar41@gmail.com</email></author></authors>
-    <date>2018-04-18</date>
-    <time>18:11:50</time>
-    <contents><target name="magelocal"><dir name="ComproPago"><dir name="Base"><dir name="Helper"><file name="Data.php" hash="e16017e31b9b09dac9105ee0e9f368d2"/></dir><dir name="Model"><file name="Observer.php" hash="62063810cf72e7bb4757555143f2867f"/></dir><dir name="etc"><file name="config.xml" hash="6b0ba589d47c6fb09c78c8f85dedaa4d"/><file name="system.xml" hash="85f14460ea5a1709757582081c2f9a3b"/></dir></dir><dir name="Cash"><dir name="Block"><file name="Form.php" hash="2ca6febb9fdfff623b12fe798e3a37f2"/><file name="Info.php" hash="2693e8f110060086f0140a86c359d2e7"/></dir><dir name="Helper"><file name="Data.php" hash="333a2561947d88246a839066397e8b1b"/></dir><dir name="Model"><file name="Cash.php" hash="3de18f0ae8148ab5f453a810584638c4"/><file name="Observer.php" hash="e019be0653c9976dbf37183e84fd0b66"/><file name="Providers.php" hash="c1746db95ccffa802b89b5b0e30d3695"/></dir><dir name="etc"><file name="config.xml" hash="88830e304d7320172ba318654d2c178d"/><file name="system.xml" hash="51aa1b6cb8993b063ee3a51c327e8028"/></dir></dir><dir name="Spei"><dir name="Block"><file name="Form.php" hash="a4450141a5c406283bea19842d6c9325"/><file name="Info.php" hash="d10057b10515645d83d548b89bc42e5d"/></dir><dir name="Helper"><file name="Data.php" hash="229a0381f99c7b2f45bbf19214ff3d9f"/></dir><dir name="Model"><file name="Observer.php" hash="3722b28a147ef42236243ec4957d4124"/><file name="Spei.php" hash="4b7d3ec88878c868ac9b64a95dd36b0a"/></dir><dir name="etc"><file name="config.xml" hash="ad8c5e4827657ef836482c5248dc1456"/><file name="system.xml" hash="f746d4f7dc74f179d372026a9e3ff63c"/></dir></dir><dir name="Webhook"><dir name="Model"><file name="Observer.php" hash="dd0165dbed59e39f7cf13b739f345e6f"/></dir><dir name="controllers"><file name="WebhookController.php" hash="e8853045d804e9f88e040c7b282d5ea1"/></dir><dir name="etc"><file name="config.xml" hash="80dd9d06d58702bf73dfae43511b2286"/></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="ComproPago_Cash.xml" hash="21882f4189e6bd5b47c1f6d81d7cc1b4"/><file name="ComproPago_Webhook.xml" hash="6e8fdf5d3081a5407050d7803d7b0da6"/><file name="ComproPago_Base.xml" hash="f66d01e4d6faa49df8d35d5b1e5eb32b"/><file name="ComproPago_Spei.xml" hash="a11d2545e6933810d00ba96306b0586a"/></dir></target><target name="magedesign"><dir name="adminhtml"><dir name="base"><dir name="default"><dir name="template"><dir name="compropago"><dir name="cash"><file name="info.phtml" hash="80d147e87fe4aaa11beeaca3749b419d"/></dir><dir name="spei"><file name="info.phtml" hash="80d147e87fe4aaa11beeaca3749b419d"/></dir></dir></dir></dir></dir></dir><dir name="frontend"><dir name="base"><dir name="default"><dir name="layout"><file name="cash.xml" hash="b1a5958449b28ede02706b5d76edbe71"/><file name="spei.xml" hash="b1a5958449b28ede02706b5d76edbe71"/></dir><dir name="template"><dir name="compropago"><dir name="base"><file name="mark.phtml" hash="a863057cf606cb61b7c5c3e17a2d8b4b"/><file name="success.phtml" hash="3816291bfcd461a3074647f9f1e1a263"/></dir><dir name="cash"><file name="form.phtml" hash="ec2a4c0ef4abff846f209be4a9aeb097"/><file name="info.phtml" hash="af9d2ed10b85f184573d83d562597a56"/><file name="mark.phtml" hash="b598a2836b3ca3b5ca845089e21e1d43"/></dir><dir name="spei"><file name="form.phtml" hash="ffb7c29e49faff8f1f6e290819cc9781"/><file name="info.phtml" hash="af9d2ed10b85f184573d83d562597a56"/><file name="mark.phtml" hash="1b4274ddd36e325dc84e090b281f68c8"/></dir></dir></dir></dir></dir></dir></target><target name="magelib"><dir name="ComproPago"><file name="composer.json" hash="70a402aec7555946304bb4a7d2fa3b0f"/><file name="composer.lock" hash="ed72b41e7fe8743d79f4a133d2889537"/><dir name="vendor"><file name="autoload.php" hash="f8e7491a501134a38e85401b8f496672"/><dir name="composer"><file name="ClassLoader.php" hash="7bcd58ef2df6fe97165bea70fe9c7712"/><file name="LICENSE" hash="955d5fe58c231244f6b49000f383b5e2"/><file name="autoload_classmap.php" hash="8645d3a4e3ad87e7cf4d88a46717aab4"/><file name="autoload_namespaces.php" hash="35e12c7d76c4a81633bcf547c0e229a9"/><file name="autoload_psr4.php" hash="94c7252625076c04000283666cfd7cc0"/><file name="autoload_real.php" hash="abb5f0ab671782a56d9ae75547b4fb4c"/><file name="autoload_static.php" hash="06c9aa99c47004375b559d7b19a1ce02"/><file name="installed.json" hash="a5577d8d8d16c1aad5da584fc96174fe"/></dir><dir name="compropago"><dir name="php-sdk"><file name=".gitignore" hash="50bdd344b09f3c1da26d0cb3dd866533"/><dir name="CompropagoSdk"><file name="Client.php" hash="dc4c66cdc268621264c5b557c07400ae"/><dir name="Factory"><file name="Factory.php" hash="b8ef2e88683b1b78c433639c75877559"/><dir name="Models"><file name="CpOrderInfo.php" hash="dff632bf9453185dc91a0e7306307ee1"/><file name="Customer.php" hash="58676f2a28846294891a4d758a807ced"/><file name="EvalAuthInfo.php" hash="7dcc3ff09bc9a676039cdbeea5a02b50"/><file name="Exchange.php" hash="1e3530fac4193ca85a144e6acae4135b"/><file name="FeeDetails.php" hash="fb42d15d8c6fb59dbb535972de83f9a9"/><file name="InstructionDetails.php" hash="3b52c0f949e36ed84694414f550bff24"/><file name="Instructions.php" hash="43ce5c251286dee105d8dba74d4fa7d9"/><file name="NewOrderInfo.php" hash="850321e76bc10b6e97936063759d6981"/><file name="OrderInfo.php" hash="d468168a61eb53a3a4b1e6cba7e04282"/><file name="PlaceOrderInfo.php" hash="a7cec2b692f56c32e9e5fdd32efc038a"/><file name="Provider.php" hash="f3b064098cd8beb423a2b6ce757a9f84"/><file name="SmsData.php" hash="b99f6aa4b91114019fc943f8ec0c5687"/><file name="SmsInfo.php" hash="f01a4ce603a374003e5cabce9176b9ee"/><file name="SmsObject.php" hash="c086d3a40fb5f293d5f0214d04d3434a"/><file name="Webhook.php" hash="d3d23d4dbd4e77f0f0ec4f61deeee479"/></dir><file name="Serialize.php" hash="a9d5565eadbb5ad538f22efe97f64138"/></dir><file name="Service.php" hash="b212aab622238c09b641625919dc7eef"/><dir name="Tools"><file name="Http.php" hash="0911a2e58d13a0a1896fc2c5d9693044"/><file name="HttpResponse.php" hash="56259aca0a1b021854e6a51517cdddad"/><file name="Request.php" hash="a2308276401fdeb2d876abfb904adabc"/><file name="Validations.php" hash="91e2f42ef5ccd3c429fae27a4a6ea1b7"/><file name="cacerts.pem" hash="a527b93e71b94759d99643641ff3b531"/></dir></dir><file name="LICENSE" hash="abac77493634e3d1c15493847c602b03"/><file name="README.md" hash="3dd6d1589c9865f0fe8b413efca3e0ca"/><file name="composer.json" hash="dc43204ca17c352d5d21ad70da78e84f"/><dir name="tests"><file name="Test.php" hash="1c7f0bcea7712aae96c1072c9f58154a"/><file name="TestRequest.php" hash="079fa7eac60be99b3c35e8582220b751"/></dir><file name="unittest.xml" hash="c16f6c77a527f227dae544f87d968c17"/></dir></dir></dir></dir></target></contents>
-    <compatible/>
-    <dependencies><required><php><min>5.6.0.0</min><max>8.0.0.0</max></php></required></dependencies>
+  <name>Compropago_Payment_Extension</name>
+  <version>3.0.0.1</version>
+  <stability>stable</stability>
+  <license>OSL V3.0</license>
+  <channel>community</channel>
+  <extends />
+  <summary>ComproPago Payment Gateway</summary>
+  <description>ComproPago payment gateways and services</description>
+  <notes>Refactor dependencies and modules configuration</notes>
+  <authors>
+    <author>
+      <name>Eduardo Aguilar</name>
+      <user>danteay</user>
+      <email>dante.aguilar41@gmail.com</email>
+    </author>
+    <author>
+      <name>José Beltrán Solís</name>
+      <user>josebsx</user>
+      <email>j.beltran@live.com.mx</email>
+    </author>
+  </authors>
+  <date>2018-04-18</date>
+  <time>18:11:50</time>
+  <contents>
+    <target name="magelocal">
+      <dir name="compropago">
+        <dir name="Base">
+          <dir name="Helper">
+            <file name="Data.php" hash="e16017e31b9b09dac9105ee0e9f368d2" />
+          </dir>
+          <dir name="Model">
+            <file name="Observer.php" hash="62063810cf72e7bb4757555143f2867f" />
+          </dir>
+          <dir name="etc">
+            <file name="config.xml" hash="6b0ba589d47c6fb09c78c8f85dedaa4d" />
+            <file name="system.xml" hash="85f14460ea5a1709757582081c2f9a3b" />
+          </dir>
+        </dir>
+        <dir name="Cash">
+          <dir name="Block">
+            <file name="Form.php" hash="2ca6febb9fdfff623b12fe798e3a37f2" />
+            <file name="Info.php" hash="2693e8f110060086f0140a86c359d2e7" />
+          </dir>
+          <dir name="Helper">
+            <file name="Data.php" hash="333a2561947d88246a839066397e8b1b" />
+          </dir>
+          <dir name="Model">
+            <file name="Cash.php" hash="3de18f0ae8148ab5f453a810584638c4" />
+            <file name="Observer.php" hash="e019be0653c9976dbf37183e84fd0b66" />
+            <file name="Providers.php" hash="c1746db95ccffa802b89b5b0e30d3695" />
+          </dir>
+          <dir name="etc">
+            <file name="config.xml" hash="88830e304d7320172ba318654d2c178d" />
+            <file name="system.xml" hash="51aa1b6cb8993b063ee3a51c327e8028" />
+          </dir>
+        </dir>
+        <dir name="Spei">
+          <dir name="Block">
+            <file name="Form.php" hash="a4450141a5c406283bea19842d6c9325" />
+            <file name="Info.php" hash="d10057b10515645d83d548b89bc42e5d" />
+          </dir>
+          <dir name="Helper">
+            <file name="Data.php" hash="229a0381f99c7b2f45bbf19214ff3d9f" />
+          </dir>
+          <dir name="Model">
+            <file name="Observer.php" hash="3722b28a147ef42236243ec4957d4124" />
+            <file name="Spei.php" hash="4b7d3ec88878c868ac9b64a95dd36b0a" />
+          </dir>
+          <dir name="etc">
+            <file name="config.xml" hash="ad8c5e4827657ef836482c5248dc1456" />
+            <file name="system.xml" hash="f746d4f7dc74f179d372026a9e3ff63c" />
+          </dir>
+        </dir>
+        <dir name="Webhook">
+          <dir name="Model">
+            <file name="Observer.php" hash="dd0165dbed59e39f7cf13b739f345e6f" />
+          </dir>
+          <dir name="controllers">
+            <file name="WebhookController.php" hash="e8853045d804e9f88e040c7b282d5ea1" />
+          </dir>
+          <dir name="etc">
+            <file name="config.xml" hash="80dd9d06d58702bf73dfae43511b2286" />
+          </dir>
+        </dir>
+      </dir>
+    </target>
+    <target name="mageetc">
+      <dir name="modules">
+        <file name="ComproPago_Cash.xml" hash="21882f4189e6bd5b47c1f6d81d7cc1b4" />
+        <file name="ComproPago_Webhook.xml" hash="6e8fdf5d3081a5407050d7803d7b0da6" />
+        <file name="ComproPago_Base.xml" hash="f66d01e4d6faa49df8d35d5b1e5eb32b" />
+        <file name="ComproPago_Spei.xml" hash="a11d2545e6933810d00ba96306b0586a" />
+      </dir>
+    </target>
+    <target name="magedesign">
+      <dir name="adminhtml">
+        <dir name="base">
+          <dir name="default">
+            <dir name="template">
+              <dir name="compropago">
+                <dir name="cash">
+                  <file name="info.phtml" hash="80d147e87fe4aaa11beeaca3749b419d" />
+                </dir>
+                <dir name="spei">
+                  <file name="info.phtml" hash="80d147e87fe4aaa11beeaca3749b419d" />
+                </dir>
+              </dir>
+            </dir>
+          </dir>
+        </dir>
+      </dir>
+      <dir name="frontend">
+        <dir name="base">
+          <dir name="default">
+            <dir name="layout">
+              <file name="cash.xml" hash="b1a5958449b28ede02706b5d76edbe71" />
+              <file name="spei.xml" hash="b1a5958449b28ede02706b5d76edbe71" />
+            </dir>
+            <dir name="template">
+              <dir name="compropago">
+                <dir name="base">
+                  <file name="mark.phtml" hash="a863057cf606cb61b7c5c3e17a2d8b4b" />
+                  <file name="success.phtml" hash="3816291bfcd461a3074647f9f1e1a263" />
+                </dir>
+                <dir name="cash">
+                  <file name="form.phtml" hash="ec2a4c0ef4abff846f209be4a9aeb097" />
+                  <file name="info.phtml" hash="af9d2ed10b85f184573d83d562597a56" />
+                  <file name="mark.phtml" hash="b598a2836b3ca3b5ca845089e21e1d43" />
+                </dir>
+                <dir name="spei">
+                  <file name="form.phtml" hash="ffb7c29e49faff8f1f6e290819cc9781" />
+                  <file name="info.phtml" hash="af9d2ed10b85f184573d83d562597a56" />
+                  <file name="mark.phtml" hash="1b4274ddd36e325dc84e090b281f68c8" />
+                </dir>
+              </dir>
+            </dir>
+          </dir>
+        </dir>
+      </dir>
+    </target>
+    <target name="magelib">
+      <dir name="compropago">
+        <dir name="vendor">
+          <file name="autoload.php" hash="f8e7491a501134a38e85401b8f496672" />
+          <dir name="composer">
+            <file name="autoload_classmap.php" hash="8645d3a4e3ad87e7cf4d88a46717aab4" />
+            <file name="autoload_namespaces.php" hash="35e12c7d76c4a81633bcf547c0e229a9" />
+            <file name="autoload_psr4.php" hash="94c7252625076c04000283666cfd7cc0" />
+            <file name="autoload_real.php" hash="abb5f0ab671782a56d9ae75547b4fb4c" />
+            <file name="autoload_static.php" hash="06c9aa99c47004375b559d7b19a1ce02" />
+            <file name="ClassLoader.php" hash="7bcd58ef2df6fe97165bea70fe9c7712" />
+            <file name="installed.json" hash="a5577d8d8d16c1aad5da584fc96174fe" />
+            <file name="LICENSE" hash="955d5fe58c231244f6b49000f383b5e2" />
+          </dir>
+          <dir name="compropago">
+            <dir name="php-sdk">
+              <dir name="src">
+                <dir name="Helpers">
+                  <file name="ValidationHelper.php" hash="b8ef2e88683b1b78c433639c75877559" />
+                </dir>
+                <dir name="Resources">
+                  <dir name="Payments">
+                    <file name="Cash.php" hash="1e3530fac4193ca85a144e6acae4135b" />
+                    <file name="Spei.php" hash="fb42d15d8c6fb59dbb535972de83f9a9" />
+                  </dir>
+                  <file name="AbstractResource.php" hash="dff632bf9453185dc91a0e7306307ee1" />
+                  <file name="Sms.php" hash="58676f2a28846294891a4d758a807ced" />
+                  <file name="Webhook.php" hash="7dcc3ff09bc9a676039cdbeea5a02b50" />
+                </dir>
+                <file name="Client.php" hash="dc4c66cdc268621264c5b557c07400ae" />
+              </dir>
+              <file name="LICENSE" hash="abac77493634e3d1c15493847c602b03" />
+              <file name="README.md" hash="3dd6d1589c9865f0fe8b413efca3e0ca" />
+            </dir>
+          </dir>
+          <dir name="rmccue">
+            <dir name="requests">
+              <dir name="library">
+                <dir name="Requests">
+                  <dir name="Auth">
+                    <file name="Basic.php" hash="3b52c0f949e36ed84694414f550bff24" />
+                  </dir>
+                  <dir name="Cookie">
+                    <file name="Jar.php" hash="a2308276401fdeb2d876abfb904adabc" />
+                  </dir>
+                  <dir name="Exception">
+                    <dir name="HTTP">
+                      <file name="304.php" hash="" />
+                      <file name="305.php" hash="" />
+                      <file name="306.php" hash="" />
+                      <file name="400.php" hash="" />
+                      <file name="401.php" hash="" />
+                      <file name="402.php" hash="" />
+                      <file name="403.php" hash="" />
+                      <file name="404.php" hash="" />
+                      <file name="405.php" hash="" />
+                      <file name="406.php" hash="" />
+                      <file name="407.php" hash="" />
+                      <file name="408.php" hash="" />
+                      <file name="409.php" hash="" />
+                      <file name="410.php" hash="" />
+                      <file name="411.php" hash="" />
+                      <file name="412.php" hash="" />
+                      <file name="413.php" hash="" />
+                      <file name="414.php" hash="" />
+                      <file name="415.php" hash="" />
+                      <file name="416.php" hash="" />
+                      <file name="417.php" hash="" />
+                      <file name="418.php" hash="" />
+                      <file name="428.php" hash="" />
+                      <file name="429.php" hash="" />
+                      <file name="431.php" hash="" />
+                      <file name="500.php" hash="" />
+                      <file name="501.php" hash="" />
+                      <file name="502.php" hash="" />
+                      <file name="503.php" hash="" />
+                      <file name="504.php" hash="" />
+                      <file name="505.php" hash="" />
+                      <file name="511.php" hash="" />
+                      <file name="Unknown.php" hash="" />
+                    </dir>
+                    <dir name="Transport">
+                      <file name="cURL.php" hash="1c7f0bcea7712aae96c1072c9f58154a" />
+                    </dir>
+                    <file name="HTTP.php" hash="a527b93e71b94759d99643641ff3b531" />
+                    <file name="Transport.php" hash="dc43204ca17c352d5d21ad70da78e84f" />
+                  </dir>
+                  <dir name="Proxy">
+                    <file name="HTTP.php" hash="91e2f42ef5ccd3c429fae27a4a6ea1b7" />
+                  </dir>
+                  <dir name="Response">
+                    <file name="Headers.php" hash="079fa7eac60be99b3c35e8582220b751" />
+                  </dir>
+                  <dir name="Transport">
+                    <file name="cacert.pem" hash="" />
+                    <file name="cURL.php" hash="" />
+                    <file name="fsockopen.php" hash="" />
+                  </dir>
+                  <dir name="Utility">
+                    <file name="CaseInsensitiveDictionary.php" hash="" />
+                    <file name="FilteredIterator.php" hash="" />
+                  </dir>
+                  <file name="Auth.php" hash="43ce5c251286dee105d8dba74d4fa7d9" />
+                  <file name="Cookie.php" hash="850321e76bc10b6e97936063759d6981" />
+                  <file name="Exception.php" hash="d468168a61eb53a3a4b1e6cba7e04282" />
+                  <file name="Hooker.php" hash="a7cec2b692f56c32e9e5fdd32efc038a" />
+                  <file name="Hooks.php" hash="f3b064098cd8beb423a2b6ce757a9f84" />
+                  <file name="IDNAEncoder.php" hash="b99f6aa4b91114019fc943f8ec0c5687" />
+                  <file name="IPv6.php" hash="f01a4ce603a374003e5cabce9176b9ee" />
+                  <file name="IRI.php" hash="c086d3a40fb5f293d5f0214d04d3434a" />
+                  <file name="Proxy.php" hash="d3d23d4dbd4e77f0f0ec4f61deeee479" />
+                  <file name="Response.php" hash="a9d5565eadbb5ad538f22efe97f64138" />
+                  <file name="Session.php" hash="b212aab622238c09b641625919dc7eef" />
+                  <file name="SSL.php" hash="0911a2e58d13a0a1896fc2c5d9693044" />
+                  <file name="Transport.php" hash="56259aca0a1b021854e6a51517cdddad" />
+                </dir>
+                <file name="Requests.php" hash="c16f6c77a527f227dae544f87d968c17" />
+              </dir>
+            </dir>
+          </dir>
+        </dir>
+      </dir>
+    </target>
+  </contents>
+  <compatible />
+  <dependencies>
+    <required>
+      <php>
+        <min>5.6.0.0</min>
+        <max>8.0.0.0</max>
+      </php>
+    </required>
+  </dependencies>
 </package>
