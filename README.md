@@ -5,7 +5,8 @@
 ## Descripción
 
 Este módulo provee el servicio de ComproPago para poder generar órdenes de pago dentro de la plataforma de 
-eCommerce Magento. Con ComproPago puede recibir pagos en 7Eleven, Extra más tiendas en todo México.
+eCommerce Magento.
+Con ComproPago puede recibir pagos vía SPEI y en efectivo.
 
 - [Registrarse en ComproPago](https://compropago.com/)
 - [Comisiones](https://www.compropago.com/comisiones/)
